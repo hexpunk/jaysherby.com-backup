@@ -10,7 +10,6 @@ find . -maxdepth 1 -type d -not -name '.*' -exec rm -r "{}" \;
 wget --wait=2 \
      --mirror \
      --page-requisites \
-     --user-agent="" \
      --no-parent \
      --convert-links \
      --adjust-extension \
