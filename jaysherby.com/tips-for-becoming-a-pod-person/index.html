@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5"/>
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+  <title>Tips For Becoming A Pod Person | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html" />
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities"/>
+
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="Tips For Becoming A Pod Person">
+<meta name="description" content="I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn&#x27;t a completely hassle-free, drop-in replacement for Docker.  It&#x27;s damn...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Tips For Becoming A Pod Person">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/tips-for-becoming-a-pod-person/">
+<meta property="og:description" content="I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn&#x27;t a completely hassle-free, drop-in replacement for Docker.  It&#x27;s damn...">
+
+  <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/tips-for-becoming-a-pod-person/">
+<meta property="twitter:title" content="Tips For Becoming A Pod Person">
+<meta property="twitter:description" content="I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn&#x27;t a completely hassle-free, drop-in replacement for Docker.  It&#x27;s damn...">
+
+  <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Tips For Becoming A Pod Person",
+    "url": "https://jaysherby.com/tips-for-becoming-a-pod-person/",
+    "description": "I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn&#x27;t a completely hassle-free, drop-in replacement for Docker.  It&#x27;s damn...",
+    "about": {
+      "@type": "Tips For Becoming A Pod Person",
+      "description": "I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn&#x27;t a completely hassle-free, drop-in replacement for Docker.  It&#x27;s damn..."
+    }
+  }
+</script>
+
+  
+
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+
+
+  <style>
+      
+      :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+content {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    Tips For Becoming A Pod Person
+</h1>
+
+<p>
+    <i>
+        <time datetime="2023-03-16" pubdate>
+            16 Mar, 2023
+        </time>
+    </i>
+</p>
+
+
+<content>
+<div><p><img alt="Original art, with apologies to Donald Sutherland" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png"/></p>
+<p>I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn't a completely hassle-free, drop-in replacement for Docker.  It's damn close!  Close enough that I'm willing to use it at home, but it's still finicky and different enough that I'd spend too much time futzing at work trying to use it while keeping everything Docker-compatible for my colleagues.</p>
+<p>Here are some tips if, like me, you're coming from Docker and you just want to get productive.</p>
+<h2 id="i-need-docker-compose">I need Docker Compose</h2>
+<p>A large part of Docker's value to me comes from Docker Compose. If switching to Podman meant losing Docker Compose, I wouldn't have switched.</p>
+<p>Thankfully, Pop!_OS (and probably any other platforms that include Podman in their repos) has a package called <code>podman-docker</code> that satisfies packages that depend on Docker. Just make sure you install <code>podman-docker</code> before or at the same time as <code>docker-compose</code> so APT doesn't try to install Docker to satisfy Docker Compose's dependencies.</p>
+<p>If you're feeling adventurous, <a href="https://github.com/containers/podman-compose">Podman Compose</a> is a thing. But it's not available via my OS's default repositories and Docker Compose is.</p>
+<h2 id="i-need-docker-hub">I need Docker Hub</h2>
+<p>I also wouldn't use Podman if it meant I lost Docker Hub.</p>
+<p>The easiest way to get access to Docker Hub with Podman is to write the following file to <code>$HOME/.config/containers/registries.conf</code>:<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup></p>
+<div class="highlight"><pre class="ini cfg dosini"><span></span><span class="k">[registries.search]</span>
+<span class="na">registries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;docker.io&#39;]</span>
+</pre></div>
+
+<h2 id="potentially-insufficient-uids-or-gids-available-in-user-namespace">Potentially insufficient UIDs or GIDs available in user namespace</h2>
+<p>I had just installed Podman and I wanted use the NodeJS image from Docker Hub.</p>
+<div class="highlight"><pre class="bash sh ksh zsh shell"><span></span>$<span class="w"> </span>podman<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>node
+Resolving<span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="w"> </span>using<span class="w"> </span>unqualified-search<span class="w"> </span>registries<span class="w"> </span><span class="o">(</span>/home/jsherby/.config/containers/registries.conf<span class="o">)</span>
+Trying<span class="w"> </span>to<span class="w"> </span>pull<span class="w"> </span>docker.io/library/node:latest...
+Getting<span class="w"> </span>image<span class="w"> </span><span class="nb">source</span><span class="w"> </span>signatures
+Copying<span class="w"> </span>blob<span class="w"> </span>ca3bce705f6c<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>167c7feebee8<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>e9cdcd4942eb<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>32fb02163b6b<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>d6dfff1f6f3d<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>4f4cf292bc62<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>8347f8b4b86b<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>c5f20f1b0856<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Copying<span class="w"> </span>blob<span class="w"> </span>d220dfa3e187<span class="w"> </span><span class="k">done</span><span class="w">  </span>
+Error:<span class="w"> </span>writing<span class="w"> </span>blob:<span class="w"> </span>adding<span class="w"> </span>layer<span class="w"> </span>with<span class="w"> </span>blob<span class="w"> </span><span class="s2">&quot;sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0&quot;</span>:<span class="w"> </span>Error<span class="w"> </span>processing<span class="w"> </span>tar<span class="w"> </span>file<span class="o">(</span><span class="nb">exit</span><span class="w"> </span>status<span class="w"> </span><span class="m">1</span><span class="o">)</span>:<span class="w"> </span>potentially<span class="w"> </span>insufficient<span class="w"> </span>UIDs<span class="w"> </span>or<span class="w"> </span>GIDs<span class="w"> </span>available<span class="w"> </span><span class="k">in</span><span class="w"> </span>user<span class="w"> </span>namespace<span class="w"> </span><span class="o">(</span>requested<span class="w"> </span><span class="m">0</span>:42<span class="w"> </span><span class="k">for</span><span class="w"> </span>/etc/gshadow<span class="o">)</span>:<span class="w"> </span>Check<span class="w"> </span>/etc/subuid<span class="w"> </span>and<span class="w"> </span>/etc/subgid:<span class="w"> </span>lchown<span class="w"> </span>/etc/gshadow:<span class="w"> </span>invalid<span class="w"> </span>argument
+</pre></div>
+
+<p>This seems to be a common issue.</p>
+<p>First, make sure the <code>fuse-overlayfs</code> package is installed.</p>
+<p>If you look around the internet, you're going to find advice telling you to add the following file at <code>$HOME/.config/containers/storage.conf</code>:<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
+<div class="highlight"><pre class="ini cfg dosini"><span></span><span class="k">[storage]</span>
+<span class="na">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;overlay&quot;</span>
+
+<span class="k">[storage.options.overlay]</span>
+<span class="na">ignore_chown_errors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+</pre></div>
+
+<p><strong>BUT BE WARNED!</strong> This change is meaningful and makes Podman behave differently than you probably expect. I'll quote the manual directly.</p>
+<blockquote>
+<p>ignore_chown_errors can be set to allow a non privileged user running with a single UID within a user namespace to run containers. The user can pull and use any image even those with multiple uids. Note multiple UIDs will be squashed down to the default uid in the container. These images will have no separation between the users in the container.</p>
+</blockquote>
+<p>Although this setup will make Podman stop complaining, there's a good chance this will bite you in the ass later on, especially if you're trying to stay compatible with Docker.</p>
+<p>Instead, I added my user to <code>/etc/subuid</code> and <code>/etc/subgid</code>.  Here's what both files look like on my machine:<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup></p>
+<div class="highlight"><pre class="actionscript3 as3"><span></span><span class="n">jsherby</span><span class="o">:</span><span class="mi">100000</span><span class="o">:</span><span class="mi">65536</span>
+</pre></div>
+
+<p>Then I ran <code>podman system migrate</code> and I was good to go.</p>
+<hr/>
+<section class="footnotes">
+<ol>
+<li id="fn-1"><p><code>/etc/containers/registries.conf</code> is the equivalent system-wide config file.<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
+<li id="fn-2"><p><code>/etc/containers/storage.conf</code> is the equivalent system-wide config file.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
+<li id="fn-3"><p>When supporting namespaces for multiple users, the middle value needs to be offset so the namespaces don't overlap. Check the man pages that come with your local <code>shadow</code> package for details.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
+</ol>
+</section>
+</div>
+</content>
+
+
+
+    <p class="tags">
+    
+        <a href="../blog/index.html%3Fq=docker.html">#docker</a>
+    
+        <a href="../blog/index.html%3Fq=podman.html">#podman</a>
+    
+    </p>
+
+    
+    <small>
+    <form id="upvote-form" action="https://jaysherby.com/upvote/31767/" method="post" style="display: inline">
+        <input hidden name="pk" value="31767" style="display:none"/>
+        <input hidden name="title" style="display:none"/>
+        
+        <button>▵ Toast this post</button>
+        
+    </form>
+    - <small class="upvote-count">2 toasts</small>
+</small>
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.innerText = "▵ Toasted"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)} toasts`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+
+    <style>
+      body:hover {
+        border-image: url("https://jaysherby.com/hit/31767");
+        border-width: 0;
+      }
+    </style>
+  </footer>
+</body>
+</html>
