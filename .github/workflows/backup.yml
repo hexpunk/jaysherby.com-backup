@@ -1,0 +1,26 @@
+name: Back Up Website
+
+on:
+  schedule:
+    - cron: "0 17 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  back-up:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install required packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y findutils git sed wget
+
+      - name: Configure identity
+        run: |
+          git config --global user.email "10983817+hexpunk@users.noreply.github.com"
+          git config --global user.name "hexpunk"
+
+      - name: Run backup script
+        run: sh $GITHUB_WORKSPACE/.github/workflows/backup.sh
