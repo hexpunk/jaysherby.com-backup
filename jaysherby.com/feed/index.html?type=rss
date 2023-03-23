@@ -225,5 +225,187 @@ ignore_chown_errors = "true"
       <guid isPermaLink="false">https://jaysherby.com/tips-for-becoming-a-pod-person/</guid>
       <pubDate>Thu, 16 Mar 2023 00:36:53 +0000</pubDate>
     </item>
+    <item>
+      <title>Back That Blog Up</title>
+      <link>https://jaysherby.com/back-that-blog-up/</link>
+      <description>&lt;div&gt;&lt;p&gt;&lt;img alt="The Sherbmeister. Makin' copies." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679543245-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;There was a post on Hacker News about a week ago titled &lt;a href="https://news.ycombinator.com/item?id=35164819"&gt;"Ask HN: What has your personal website/blog done for you?"&lt;/a&gt;. As someone who has tried to blog for years but only recently started doing it in earnest, a lot of comments rang true to me.&lt;/p&gt;
+&lt;p&gt;I, too, have bounced off of many static site generators. While I strongly agree with the ethos behind static site generators, I find the barrier to writing to be too high. When I'm in the mood to write, I need to be able to load up a web page with a text box and just start writing.&lt;/p&gt;
+&lt;p&gt;Bear Blog, the service I'm currently using to host this site, provides exactly what I need. Kudos to &lt;a href="https://herman.bearblog.dev/"&gt;Herman Martinus&lt;/a&gt; for developing and maintaining this fantastic service.&lt;/p&gt;
+&lt;p&gt;There was something else in that Hacker News thread that made me a little nervous, though. &lt;a href="https://news.ycombinator.com/item?id=35201556"&gt;A particular comment&lt;/a&gt; mentioned keeping copies of their blog posts, which came in handy when their platform of choice shut down. Many others echoed this sentiment of keeping backups of your work, just in case.&lt;/p&gt;
+&lt;p&gt;Herman is doing a fantastic job, but he's only one person, and shit happens sometimes. I decided build a little safety net by using GitHub Actions to automatically back up my blog.&lt;/p&gt;
+&lt;h2 id="a-shell-script"&gt;A shell script&lt;/h2&gt;
+&lt;details&gt;
+&lt;summary&gt;View the complete shell script&lt;/summary&gt;
+&lt;h3 id="github-workflows-backup-sh"&gt;&lt;code&gt;.github/workflows/backup.sh&lt;/code&gt;&lt;/h3&gt;
+&lt;pre class="bash"&gt;#! /bin/sh
+
+set -e
+set -u
+
+# Delete all directories that are not hidden to avoid keeping deleted files.
+find . -maxdepth 1 -type d -not -name '.*' -exec rm -r "{}" \;
+
+# Download website and images, ignoring /hit and /upvote paths.
+wget --wait=2 \
+     --mirror \
+     --page-requisites \
+     --no-parent \
+     --convert-links \
+     --adjust-extension \
+     --span-hosts \
+     --domains="jaysherby.com,digitaloceanspaces.com" \
+     --exclude-directories="hit,upvote" \
+     -e robots=off \
+     https://jaysherby.com
+
+# Delete CSRF tokens since they'll change every page load.
+# Delete last build date tag since it will change often.
+find . -type f -name "*.html*" \
+       -exec sed -i '/&amp;lt;input.*name="csrfmiddlewaretoken".*&amp;gt;/d' {} \; \
+       -exec sed -i '/&amp;lt;lastBuildDate&amp;gt;.*&amp;lt;\/lastBuildDate&amp;gt;/d' {} \;
+
+# Detect any added, changed, or deleted files
+if [ -n "$(git ls-files --modified --deleted --others)" ]; then
+  git add -A
+  git commit -m "Backup $(date)"
+  git push origin main
+fi
+&lt;/pre&gt;
+&lt;/details&gt;
+&lt;p&gt;Let me start with Wget. It's doing the heavy lifting here to basically crawl my site and download everything.&lt;/p&gt;
+&lt;pre class="bash"&gt;wget --wait=2 \
+     --mirror \
+     --page-requisites \
+     --no-parent \
+     --convert-links \
+     --adjust-extension \
+     --span-hosts \
+     --domains="jaysherby.com,digitaloceanspaces.com" \
+     --exclude-directories="hit,upvote" \
+     -e robots=off \
+     https://jaysherby.com
+&lt;/pre&gt;
+&lt;p&gt;Most of these options are copy-pasted from an article I found called &lt;a href="https://simpleit.rocks/linux/how-to-download-a-website-with-wget-the-right-way/"&gt;"How To Download A Website With Wget The Right Way"&lt;/a&gt;. I prefer having the options spelled out long-hand in scripts like this over single character arguments. It's easier to understand.&lt;/p&gt;
+&lt;p&gt;I made a few changes from the example on the site I linked to above.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I removed the &lt;code&gt;--user-agent&lt;/code&gt; argument. Wget's default is fine.&lt;/li&gt;
+&lt;li&gt;I removed the &lt;code&gt;--no-clobber&lt;/code&gt; argument because it's not pertinent in my case for reasons that will become clear in a moment.&lt;/li&gt;
+&lt;li&gt;I removed the &lt;code&gt;--limit-rate=20K&lt;/code&gt; argument because although I understand the purpose of setting &lt;code&gt;--wait=2&lt;/code&gt; to avoid overwhelming the server with a ton of requests all at once, it seems to me like limiting the transfer speed would end up wasting precious time that could be spent serving other clients. It really doesn't matter for the amount of traffic I get anyway.&lt;/li&gt;
+&lt;li&gt;I added &lt;code&gt;--span-hosts&lt;/code&gt; and &lt;code&gt;--domains=&amp;amp;quot;jaysherby.com,digitaloceanspaces.com&amp;amp;quot;&lt;/code&gt; to ensure images are downloaded. Bear Blog is currently hosted on Digital Ocean and images are stored in their Spaces product, which is more or less a clone of AWS S3. This feature is currently configured such that image URLs live in a subdomain of &lt;code&gt;digitaloceanspaces.com&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;I added &lt;code&gt;--exclude-directories=&amp;amp;quot;hit,upvote&amp;amp;quot;&lt;/code&gt;. Wget was downloading files from &lt;code&gt;/hit&lt;/code&gt; which is how Bear Blog powers its analytics service. It's currently implemented by setting URLs in that path as a border image applied to the page body on hover. Clever! But it currently only returns a response of &lt;a href="https://github.com/HermanMartinus/bearblog/blob/89cff8645af2e7b21d382dc59ed7eacfb7b971d3/blogs/views/analytics.py#L69"&gt;"Logged"&lt;/a&gt;, which is useless for my backups and would present as noise in my analytics. The &lt;code&gt;/upvote&lt;/code&gt; path is how posts are "toasted". Wget should never follow these by default since they are form actions, but better safe than sorry.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="bash"&gt;# Delete CSRF tokens since they'll change every page load.
+# Delete last build date tag since it will change often.
+find . -type f -name "*.html*" \
+       -exec sed -i '/&amp;lt;input.*name="csrfmiddlewaretoken".*&amp;gt;/d' {} \; \
+       -exec sed -i '/&amp;lt;lastBuildDate&amp;gt;.*&amp;lt;\/lastBuildDate&amp;gt;/d' {} \;
+&lt;/pre&gt;
+&lt;p&gt;This command looks through the HTML files and removes two patterns from them.&lt;/p&gt;
+&lt;p&gt;The first is a hidden input within the "toast" forms that contains a CSRF token. I'm removing this because, as the comment says, the value will be different on every page load. That will make for a lot of unnecessary noise in my backups.&lt;/p&gt;
+&lt;p&gt;The second is the last build date tag that is found within my blog's RSS file. This is updated on a regular basis whether any content has changed or not. Again, this would make for a lot of noise in my backups.&lt;/p&gt;
+&lt;p&gt;Notice in the second sed command that the slash in the HTML tag is escaped! I originally overlooked this and it bit me. 🤦&lt;/p&gt;
+&lt;p&gt;Quick shout out to &lt;a href="https://sed.js.org/"&gt;this website&lt;/a&gt; that is like &lt;a href="https://regex101.com/"&gt;Regex 101&lt;/a&gt; for sed. It saved me a lot of time testing out my sed commands.&lt;/p&gt;
+&lt;pre class="bash"&gt;# Detect any added, changed, or deleted files
+if [ -n "$(git ls-files --modified --deleted --others)" ]; then
+  git add -A
+  git commit -m "Backup $(date)"
+  git push origin main
+fi
+&lt;/pre&gt;
+&lt;p&gt;This does what it says on the tin.  It uses the &lt;code&gt;git ls-files&lt;/code&gt; command to determine if any files have changed. If so, it makes a commit with the current timestamp in the commit message and pushes it up.&lt;/p&gt;
+&lt;p&gt;Let's skip back to the beginning of the script.&lt;/p&gt;
+&lt;pre class="bash"&gt;# Delete all directories that are not hidden to avoid keeping deleted files.
+find . -maxdepth 1 -type d -not -name '.*' -exec rm -r "{}" \;
+&lt;/pre&gt;
+&lt;p&gt;If the script has run at least once before, the git repository will have two directories at its root: &lt;code&gt;jaysherby.com&lt;/code&gt; and &lt;code&gt;bear-images.sfo2.cdn.digitaloceanspaces.com&lt;/code&gt;. This command is a little idiosyncratic for a shell script, but it mimics what I would do at the command line. It finds and recursively deletes all top-level, non-hidden directories.&lt;/p&gt;
+&lt;p&gt;This is to facilitate the removal of potentially deleted pages and files. For the purposes of my backups, I want the git history to reflect file deletion since I can always recover deleted content.&lt;/p&gt;
+&lt;p&gt;Unfortunately, Wget doesn't have anything built into it like Rsync's various &lt;code&gt;--delete&lt;/code&gt; arguments, which will make sure your source and destination match exactly after synchronization by deleting files from the destination that no longer exist at the source.&lt;/p&gt;
+&lt;p&gt;I find this particularly unfortunate because it means having to download my blog's images on every backup attempt despite Wget's automatic &lt;code&gt;If-Modified-Since&lt;/code&gt; header support and Digital Ocean Spaces' &lt;code&gt;304 Not Modified&lt;/code&gt; support. Bear Blog itself doesn't appear to support &lt;code&gt;If-Modified-Since&lt;/code&gt; request headers at this time. Although that doesn't really matter since I can't leverage it anyway.&lt;/p&gt;
+&lt;h2 id="a-github-actions-workflow"&gt;A GitHub Actions workflow&lt;/h2&gt;
+&lt;details&gt;
+&lt;summary&gt;View the complete YAML file&lt;/summary&gt;
+&lt;h3 id="github-workflows-backup-yml"&gt;&lt;code&gt;.github/workflows/backup.yml&lt;/code&gt;&lt;/h3&gt;
+&lt;pre class="yml"&gt;name: Back Up Website
+
+on:
+  schedule:
+    - cron: "0 17 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  back-up:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v3"
+
+      - name: Install required packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y findutils git sed wget
+
+      - name: Configure identity
+        run: |
+          git config --global user.email "10983817+hexpunk@users.noreply.github.com"
+          git config --global user.name "hexpunk"
+
+      - name: Run backup script
+        run: sh $GITHUB_WORKSPACE/.github/workflows/backup.sh
+&lt;/pre&gt;
+&lt;/details&gt;
+&lt;p&gt;The GitHub Actions workflow file was thankfully straightforward to write.&lt;/p&gt;
+&lt;pre class="yaml"&gt;on:
+  schedule:
+    - cron: "0 17 * * *"
+
+  workflow_dispatch:
+&lt;/pre&gt;
+&lt;p&gt;Run the script daily at noon Central Standard Time, my local time zone, so if it ever fails, I get emailed about it at a reasonable time. GitHub Actions are set to Coordinated Universal Time, hence the offset. I used &lt;a href="https://crontab.guru/"&gt;this website&lt;/a&gt; to refresh my memory of cron expression syntax.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;workflow_dispatch&lt;/code&gt; key is there so I can run the job manually via the web interface if I need to.&lt;/p&gt;
+&lt;pre class="yaml"&gt;jobs:
+  back-up:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v3"
+
+      - name: Install required packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y findutils git sed wget
+&lt;/pre&gt;
+&lt;p&gt;The first step checks out the git repository. The second step installs all required software to run the script. All of these tools are currently installed by default in the &lt;code&gt;ubuntu-latest&lt;/code&gt; job runner. Better safe than sorry, though.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.github.com/en/actions/using-github-hosted-runners/customizing-github-hosted-runners"&gt;Remember to use &lt;code&gt;sudo&lt;/code&gt;&lt;/a&gt; to install software in GitHub's &lt;code&gt;ubuntu-latest&lt;/code&gt; job runner, unlike the usual situation for Docker containers. This one bit me.&lt;/p&gt;
+&lt;pre class="yaml"&gt;- name: Configure identity
+  run: |
+    git config --global user.email "10983817+hexpunk@users.noreply.github.com"
+    git config --global user.name "hexpunk"
+&lt;/pre&gt;
+&lt;p&gt;I was surprised to find out the job runner didn't have any git identity set up by default. I added my own username and GitHub's email alias for my account. If you're not using your email alias on GitHub, &lt;a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address"&gt;you really should be&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="yaml"&gt;- name: Run backup script
+  run: sh $GITHUB_WORKSPACE/.github/workflows/backup.sh
+&lt;/pre&gt;
+&lt;p&gt;Finally, run the script I wrote.&lt;/p&gt;
+&lt;h2 id="setting-permissions"&gt;Setting permissions&lt;/h2&gt;
+&lt;p&gt;One last consideration before this setup is ready to roll. Because the shell script is checking files into git, I had to set up the repository's Actions settings accordingly.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Give Actions read and write permissions." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587165-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;The repository I set up for this is public. GitHub sets a monthly limit to the amount of time Actions can run per month on private repositories before you're either cut off or you have to pay. I don't want randos taking advantage of this to run malicious actions, so I set this setting to disallow unapproved collaborators from triggering Actions.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Strangers shouldn't be able to run Actions on this repository." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587578-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;Finally, I set the repository so only actions authored by me and GitHub can be run. I need to allow GitHub's official actions since I'm using their "checkout" action in my workflow.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Only allow my actions and GitHub's actions." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587709-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;This setting is a little redundant since I've already disallowed unapproved collaborators, but better safe than sorry.&lt;/p&gt;
+&lt;p&gt;That's it. Works like a charm. Every day at noon, it automatically backs up my blog for free.&lt;/p&gt;
+&lt;p&gt;This approach should be adaptable for backing up almost any kind of website.&lt;/p&gt;
+&lt;h2 id="how-might-this-fail"&gt;How might this fail?&lt;/h2&gt;
+&lt;p&gt;Whenever I have to make choices that involve trade-offs, I like to document how my decisions might betray me down the line.&lt;/p&gt;
+&lt;p&gt;First and foremost, I'm completely at Herman's mercy here. He may choose to change how Bear Blog works in ways that will make my script fail. If he changes how analytics, upvotes, or image storage works, it may break my backups in ways I won't immediately notice.&lt;/p&gt;
+&lt;p&gt;Second, I'm also at the mercy of Microsoft since I'm relying on GitHub. In the unlikely event that GitHub completely disappears one day, my backups are gone. Microsoft could also choose to fundamentally change how their Actions product works, or what versions of software packages are available on the platform.&lt;/p&gt;
+&lt;p&gt;Microsoft could also suddenly decide my use of GitHub as a backup storage service runs afoul of their T&amp;amp;C. Seems unlikely. I doubt I'm costing them an entire cent. But it's technically possible.&lt;/p&gt;
+&lt;p&gt;I find these risks acceptable for my use case.&lt;/p&gt;
+&lt;/div&gt;</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/back-that-blog-up/</guid>
+      <pubDate>Wed, 22 Mar 2023 17:17:00 +0000</pubDate>
+    </item>
   </channel>
 </rss>
