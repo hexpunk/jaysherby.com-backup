@@ -9,221 +9,24 @@ I'm an experienced software developer in Chicago....</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
-      <title>Target Optical Mailing List UI</title>
-      <link>https://jaysherby.com/target-optical-mailing-list-ui/</link>
-      <description>&lt;div&gt;&lt;p&gt;I recently received a spam email from Target Optical.  Subject line: "Happy Valentine’s Day! 💕".  Thanks, Target.&lt;/p&gt;
-&lt;p&gt;Naturally, I clicked on the unsubscribe link on the bottom of the email and I was met with...&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Oh, no! I forgot to censor my email address!! Whatever. Worst anyone could do would be re-adding me to Target Optical's mailing list." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678328483-0.png"&gt;&lt;/p&gt;
-&lt;p&gt;I was aghast. I'd already had a rough day with software. This was the little push required to send me over the edge.  I laughed.  I cried.  I called my wife over to mercilessly mock this abject failure of usability.&lt;/p&gt;
-&lt;p&gt;My best guess was to select the "yes" radio button and click the "submit" button.  I didn't have the patience to poke around. But what would "no" and "submit" mean?  Is that meaningfully different from "cancel"?&lt;/p&gt;
-&lt;p&gt;It's not as bad as &lt;a href="https://dinosaurenby.medium.com/a-deep-dive-into-the-ux-of-the-nostromos-self-destruct-procedure-9eda80793fe8"&gt;the self-destruct interface for the Nostromo&lt;/a&gt;. If an alien creature was hunting me while I was trying to unsubscribe from this mailing list, I might not be as charitable.&lt;/p&gt;
-&lt;p&gt;Luckily, my best guess was correct. And my piece of cheese for solving this UX puzzle?&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Unlike the previous image, this one has not been edited. Not one pixel." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678329253-0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Perfect. Ten out of ten.  No notes.  🤦&lt;/p&gt;
-&lt;/div&gt;</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/target-optical-mailing-list-ui/</guid>
-      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Terraform Cloud + CDKTF + Auth0</title>
-      <link>https://jaysherby.com/terraform-cloud-cdktf-auth0/</link>
-      <description>&lt;div&gt;&lt;p&gt;If you want my advice on how to manage Auth0 using CDKTF and Terraform Cloud, here it is: don't.&lt;/p&gt;
-&lt;p&gt;But since you're still reading, I assume you find yourself in the regrettable situation of needing to support just such a setup.  Here are some little nuggets I've learned the hard way that don't seem to be documented elsewhere.&lt;/p&gt;
-&lt;h2 id="rules-hooks-and-string-interpolation"&gt;Rules, Hooks, and String Interpolation&lt;/h2&gt;
-&lt;p&gt;Rules and hooks are nifty features of Auth0 that allow you to run custom Javascript code on Auth0's servers in response to various events, like when a user signs up, logs in, etc.  From what I can tell, they both serve roughly the same purpose, although it seems like hooks are newer, and Auth0 would probably like to deprecate the rules feature very much.  They're both unpleasant to test, just like most kinds of code that run in other people's playgrounds.&lt;/p&gt;
-&lt;p&gt;You may find yourself wanting to deploy the code for your rules and hooks using Terraform.  In the setup I inherited, the CDKTF scripts, written in Typescript, read source files for rules and hooks using &lt;code&gt;fs.readFileSync&lt;/code&gt;, and eventually insert their contents as a string into the JSON config that CDKTF synthesizes.&lt;/p&gt;
-&lt;p&gt;Terraform Cloud sometimes reports errors during the planning step that say things like the following, while pointing the finger at the value for a rule's or hook's "script" key.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;A reference to a resource type must be followed by at least one attribute access, specifying the resource name.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;It'll highlight some seemingly random little bit of the long and mangled string that was once your Javascript source file.&lt;/p&gt;
-&lt;p&gt;Every time I've ever seen this happen, the culprit is string interpolation in the Javascript file.&lt;/p&gt;
-&lt;pre class="javascript"&gt;const domain = `app.${environment}.my-really-cool-app.com`;
-&lt;/pre&gt;
-&lt;p&gt;Terraform's parser sees &lt;code&gt;${&lt;/code&gt; in your string, which happens to be &lt;em&gt;its&lt;/em&gt; string interpolation syntax as well, and falls flat on its face trying to figure out what you're trying to accomplish.&lt;/p&gt;
-&lt;p&gt;There are ways around this.  &lt;a href="https://developer.hashicorp.com/terraform/language/expressions/strings#escape-sequences-1"&gt;According to the docs&lt;/a&gt;, you can escape &lt;code&gt;${&lt;/code&gt; with &lt;code&gt;$${&lt;/code&gt;.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;But are you really going to put &lt;code&gt;$${&lt;/code&gt; in your Javascript?  Absent of this context, &lt;code&gt;$${&lt;/code&gt; looks like a bug!  You could leave a comment explaining the extra &lt;code&gt;$&lt;/code&gt;.  But after the code is deployed, the comment will remain and the extra &lt;code&gt;$&lt;/code&gt; would disappear.  The comment wouldn't make sense if you looked at the code form inside the Auth0 management console.&lt;/p&gt;
-&lt;p&gt;IMHO, doing this is asking for trouble.  Plus it feels gross.&lt;/p&gt;
-&lt;p&gt;Worse yet, what if the name of the variable inside your interpolated string (&lt;code&gt;environment&lt;/code&gt; in the example above) &lt;em&gt;does&lt;/em&gt; mean something to Terraform and it replaces it with a value? The code would probably throw an error if the replaced value wasn't a variable in your script.  What if it was!?  In any case, the code deployed won't match the code in your repository.  Good luck chasing down that bug!&lt;/p&gt;
-&lt;p&gt;The workaround I chose was to avoid template string interpolation all together and revert back to string concatenation like we did in the days before template literals were introduced.&lt;/p&gt;
-&lt;pre class="javascript"&gt;const domain = 'app.' + environment + '.my-really-cool-app.com';
-&lt;/pre&gt;
-&lt;h2 id="terraform-variables-vs-environment-variables"&gt;Terraform Variables vs Environment Variables&lt;/h2&gt;
-&lt;p&gt;Using environment variables when writing your config with CDKTF and deploying with Terraform Cloud can be fraught, to say the least.  There's at least one very good reason to use environment variables when using the Auth0 provider: they recommend it &lt;a href="https://registry.terraform.io/providers/auth0/auth0/0.44.0/docs#environment-variables"&gt;in the docs&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Let's clarify something first.  Because of how CDKTF works, environment variables can be inserted in at least two stages: synthesis and planning.&lt;/p&gt;
-&lt;p&gt;If you do anything in your code using &lt;code&gt;process.env&lt;/code&gt; to get at environment variables, this is at best confusing, at worst incorrect. This is how you'd read environment variables &lt;em&gt;at synthesis time&lt;/em&gt;, which is probably not what you actually want.  Doing this would affect what is output to your Terraform JSON when you run CDKTF's synthesis step.  It essentially becomes a hard-coded value from the point of view of Terraform.&lt;/p&gt;
-&lt;p&gt;What you probably want to do, and what the Auth0 provider documentation is referring to, is environment variables &lt;em&gt;at planning time&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;The environment variables the docs refer to, &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, &lt;code&gt;AUTH0_CLIENT_ID&lt;/code&gt;, and &lt;code&gt;AUTH0_CLIENT_SECRET&lt;/code&gt;, are not &lt;em&gt;directly&lt;/em&gt; accessible to your Terraform config.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; I need to set these values as secrets for one of my hooks.&lt;/p&gt;
-&lt;h3 id="the-most-correcttm-way"&gt;The Most Correct™ Way&lt;/h3&gt;
-&lt;p&gt;As I said, you can't &lt;em&gt;directly&lt;/em&gt; access those environment variables for reasons I'll soon explain.  Terraform-literate readers will already know that the Most Correct™ way to access the values would be &lt;em&gt;indirectly&lt;/em&gt; via the resources that use them.  This is The Terraform Way.&lt;/p&gt;
-&lt;p&gt;If this configuration was written in HCL, this would be comically easy.  But we're using CDKTF for reasons I can't begin to explain.&lt;/p&gt;
-&lt;p&gt;You should be able to access &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, &lt;code&gt;AUTH0_CLIENT_ID&lt;/code&gt;, and &lt;code&gt;AUTH0_CLIENT_SECRET&lt;/code&gt; via &lt;code&gt;Auth0Provider#domainInput&lt;/code&gt;, &lt;code&gt;Client#clientId&lt;/code&gt;, and &lt;code&gt;Client#clientSecret&lt;/code&gt;, respectively.  But my config isn't written in a way that would make this easy.  It would require a ton of refactoring that I don't have the time or patience for at the moment.&lt;/p&gt;
-&lt;h3 id="the-quick-n-hacky-way"&gt;The Quick 'N' Hacky Way&lt;/h3&gt;
-&lt;p&gt;Since I can't access those particular environment variables directly, and I'm unable to access the values indirectly via the resources that consume them, I chose to add some duplicate variables that I &lt;em&gt;could&lt;/em&gt; access like any other variable.&lt;/p&gt;
-&lt;p&gt;The official way to get values into Terraform at planning time via environment variables is to use them in your CDKTF configuration just like any other variable (using the &lt;code&gt;TerraformVariable&lt;/code&gt; class), and set an environment variable in Terraform Cloud with the same name but with a &lt;code&gt;TF_VAR_&lt;/code&gt; prefix.&lt;/p&gt;
-&lt;p&gt;That meant that for my use case, I needed both &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt; &lt;em&gt;and&lt;/em&gt; &lt;code&gt;TF_VAR_AUTH0_DOMAIN&lt;/code&gt; set in my Terraform Cloud variables config page,&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; along with the remaining two variables mentioned earlier, using this same pattern.  If I only set &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, the Auth0 provider will work, but the &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt; &lt;em&gt;Terraform variable&lt;/em&gt; defaulted to an empty string!  If I set &lt;code&gt;TF_VAR_AUTH0_DOMAIN&lt;/code&gt; but not &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, I got the following error during the planning phase.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The argument "domain" is required, but no definition was found.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;I chose to set both &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt; and &lt;code&gt;TF_VAR_AUTH0_DOMAIN&lt;/code&gt; as environment variables in Terraform Cloud because that's ever-so-slightly less confusing IMHO than two variables, both named &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, one a Terraform variable and the other an environment variable.  I figure someone would be more likely to erroneously delete one of the two copies in the future if both variables shared the same exact name but were different variable types.  As always, notes and documentation are your best friends.&lt;/p&gt;
+      <title>Homebrew Shell Completion Is Worth Your Time</title>
+      <link>https://jaysherby.com/homebrew-shell-completion-is-worth-your-time/</link>
+      <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art, nautilus shell" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679798555-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;I finally gave the Auth0 command line tool a try yesterday at work. I installed it via Homebrew since I use a MacBook Pro at work. I was hoping I could use it to quickly automate a repetitive task using a shell script. Unfortunately, Auth0's tool isn't currently able to block user accounts.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;I noticed that their tool had a way to output a shell completion configuration. That led me down a rabbit hole, revealing that lots of tools I've installed via Homebrew ship with shell completions! They just aren't being used by default.&lt;/p&gt;
+&lt;p&gt;I'm not going to repeat the instructions here because Homebrew has &lt;a href="https://docs.brew.sh/Shell-Completion"&gt;a webpage&lt;/a&gt; with concise yet detailed instructions for adding shell completions to your configuration.&lt;/p&gt;
+&lt;p&gt;It's worth your time to set this up. Shell completions are a super power. I'm much less productive if I don't have git shell completions available.&lt;/p&gt;
+&lt;p&gt;I will note that setting this up for zsh, now the default shell in MacOS, is the most involved of all the supported shells. It's worth the 5 minute investment, though.&lt;/p&gt;
 &lt;hr&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;I've seen some bizarre alternative ways of escaping &lt;code&gt;${&lt;/code&gt; suggested on Stack Overflow, but all of my criticism still apply.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;There &lt;em&gt;are&lt;/em&gt; ways you can expose all environment variables as Terraform variables without having to know the variables' keys beforehand, but it's not what The Architects intended.  I've only seen examples of these techniques in HCL.  It might be possible to accomplish in CDKTF, but you'd be fighting your chosen tools so hard that I'd question the whole endeavor.  Just because you &lt;em&gt;can&lt;/em&gt; doesn't mean you &lt;em&gt;should&lt;/em&gt;.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;In case you were wondering, you still need to add the &lt;code&gt;TF_VAR_&lt;/code&gt; prefix yourself in Terraform Cloud. That wasn't immediately clear to me.  I'm guessing it's to support environment variables that don't start with &lt;code&gt;TF_VAR_&lt;/code&gt; since providers (like Auth0 with &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, etc.) aren't required to conform to that pattern.  &lt;img alt="Don't forget TF_VAR_" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678334687-0.png"&gt;&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;I opened &lt;a href="https://github.com/auth0/auth0-cli/issues/683"&gt;a feature ticket&lt;/a&gt;.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
 &lt;/div&gt;</description>
       <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/terraform-cloud-cdktf-auth0/</guid>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>HP Dev One, low disk space on /boot/efi</title>
-      <link>https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/</link>
-      <description>&lt;div&gt;&lt;p&gt;I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don't get me wrong, I'm generally very happy with it.  But HP discontinued the line and my daily driver laptop is a technological dead end.&lt;/p&gt;
-&lt;p&gt;Recently I started receiving warning messages that my boot partition, &lt;code&gt;/boot/efi&lt;/code&gt; is low on space.  Sure enough, the 512 MB boot partition is 96% full.&lt;/p&gt;
-&lt;p&gt;I searched the internet and while there are plenty of people complaining about this issue, there seem to be few fixes.  Many recommend increasing the size of the partition to 1 GB, though they admit it's a complicated process to do so.  The easiest way is a full reinstall of the OS, although you can technically resize the partitions without such a drastic course of action if you're willing to futz around.&lt;/p&gt;
-&lt;p&gt;I tried doing a "system refresh" via means built into Pop!_OS. I didn't lose any of my personal data, but I did have to reinstall all my applications. It seemed to fix the issue, although boot partition usage still hovered on the brink at 95%.&lt;/p&gt;
-&lt;p&gt;That fix lasted all of a week.  There was another kernel update today causing usage to hit 97%. The warning returned.&lt;/p&gt;
-&lt;p&gt;I did some more searching today and found &lt;a href="https://github.com/pop-os/pop/issues/1714"&gt;this GitHub thread&lt;/a&gt;. For posterity, if you're using an HP Dev One laptop like I am, there's a high likelihood that an old, already installed firmware update is hanging around in the boot partition, taking up precious space.&lt;/p&gt;
-&lt;p&gt;It's safe to delete &lt;code&gt;/boot/efi/EFI/HP&lt;/code&gt; and &lt;code&gt;/boot/efi/EFI/pop&lt;/code&gt; directories, which hold firmware update files.&lt;/p&gt;
-&lt;p&gt;After deleting those directories, my boot partition is now down to a relatively safe 82% usage.&lt;/p&gt;
-&lt;/div&gt;</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/</guid>
-      <pubDate>Sun, 12 Mar 2023 20:44:25 +0000</pubDate>
-    </item>
-    <item>
-      <title>Randomizing My MAC Address With NetworkManager</title>
-      <link>https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/</link>
-      <description>&lt;div&gt;&lt;p&gt;My life is harder for knowing and caring about my own privacy and security.  For example, if you've ever connected to the wifi at a Starbucks using a laptop, you'll have noticed the "captive portal" system they use.  That's the page that pops up before you can actually use the internet.  It asks you for your name, email address, and zip code.&lt;/p&gt;
-&lt;p&gt;You may also notice that once you fill out that form, you never have to do it again.  Every time you connect to the Starbucks wifi afterwards, it'll usually still give you a captive portal page, but you'll never have to "log in" again.  This usually holds true &lt;em&gt;even if you visit a different Starbucks with the same computer.&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;Guess what? Starbucks is tracking you.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; I don't like that, so I lie every time I fill out that form.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; &lt;em&gt;Or do I?&lt;/em&gt; 😉&lt;/p&gt;
-&lt;p&gt;The way Starbucks remembers your computer is by recording the MAC address of your wifi adapter.&lt;/p&gt;
-&lt;p&gt;This is a very old, very well-known privacy risk. Most operating systems have made it relatively easy to spoof your MAC address with a semi-randomly generated one to mitigate this risk. Some even do this by default now.&lt;/p&gt;
-&lt;p&gt;Even so, I have particular preferences for how I prefer this feature to work that my system's default settings don't meet.&lt;/p&gt;
-&lt;p&gt;I'm using Pop!_OS, which uses NetworkManager.  I'll show you its default setup, how I changed it, and why.&lt;/p&gt;
-&lt;p&gt;Here's the default config, located at &lt;code&gt;/etc/NetworkManager/NetworkManager.conf&lt;/code&gt;, that shipped with my machine:&lt;/p&gt;
-&lt;pre&gt;[main]
-plugins=ifupdown,keyfile
-
-[ifupdown]
-managed=false
-
-[device]
-wifi.scan-rand-mac-address=no
-
-&lt;/pre&gt;
-&lt;p&gt;Shame on you, Pop!_OS!  See &lt;code&gt;wifi.scan-rand-mac-address=no&lt;/code&gt;?  That turns off MAC randomization during access point scanning! That means you're leaking your MAC address before you even connect to wifi. Passive listeners can track you. This isn't even the default behavior &lt;a href="https://blogs.gnome.org/thaller/2016/08/26/mac-address-spoofing-in-networkmanager-1-4-0/"&gt;as of NetworkManager 1.4.0&lt;/a&gt;. This is pretty embarrassing. Even Android randomizes your MAC address when scanning nowadays.&lt;/p&gt;
-&lt;p&gt;Here are my changes:&lt;/p&gt;
-&lt;pre&gt;[main]
-plugins=ifupdown,keyfile
-
-[ifupdown]
-managed=false
-
-[device]
-wifi.scan-rand-mac-address=yes
-
-[connection]
-ethernet.cloned-mac-address=random
-wifi.cloned-mac-address=random
-&lt;/pre&gt;
-&lt;p&gt;I changed &lt;code&gt;wifi.scan-rand-mac-address&lt;/code&gt; to &lt;code&gt;yes&lt;/code&gt;, even though it's the default behavior. Just to be extra sure.&lt;/p&gt;
-&lt;p&gt;I also added a setting called &lt;code&gt;cloned-mac-address&lt;/code&gt; to both ethernet&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; and wifi, and set it to &lt;code&gt;random&lt;/code&gt;. This setting has a few other possible values. I'll quote the manual.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Beside explicitly specifying a MAC address, the special values "preserve", "permanent", "random" and "stable" are supported. "preserve" means not to touch the MAC address on activation. "permanent" means to use the permanent hardware address if the device has one (otherwise this is treated as "preserve"). "random" creates a random MAC address on each connect. "stable" creates a hashed MAC address based on connection.stable-id and a machine dependent key.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;In other words, &lt;code&gt;permanent&lt;/code&gt; and probably &lt;code&gt;preserve&lt;/code&gt; will leak your physical MAC address when you connect to an access point. &lt;code&gt;stable&lt;/code&gt; won't leak your physical MAC address, but it will result in a given access point seeing the same fake MAC address every time you connect to it.  That doesn't really prevent tracking if every Starbucks access point presents identically.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt; I want &lt;code&gt;random&lt;/code&gt;. It generates a new, random MAC address on every connection.&lt;/p&gt;
-&lt;p&gt;There. No more tracking. Now I just have to fill out that stupid captive portal form every time I go to Starbucks with my laptop.&lt;sup class="footnote-ref" id="fnref-5"&gt;&lt;a href="#fn-5"&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;h2 id="but-what-if-my-router-yells-at-me"&gt;But what if my router yells at me?&lt;/h2&gt;
-&lt;p&gt;This happened to me. My Synology router started sending push notifications to my phone every time I turned on my laptop, asking me if I know this mysterious device that just connected.&lt;/p&gt;
-&lt;p&gt;I needed to make an exception to the rules, but just for this one wifi network.  Happily, the option to change this setting is actually in the GUI.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Oh, no! I forgot to censor my home network's SSID!" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678841041-0.png"&gt;&lt;/p&gt;
-&lt;p&gt;You can see here I've set this particular connection to &lt;code&gt;stable&lt;/code&gt;. Works like a charm.&lt;/p&gt;
-&lt;p&gt;I'm sure there's a way to do this on the command line, or in a configuration file somewhere, but I haven't needed to figure that out yet.&lt;/p&gt;
-&lt;hr&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;I have no idea if Starbucks is actively using the data they're collecting, but they &lt;em&gt;are&lt;/em&gt; collecting it. Even if it's just within log files. I mean, they wouldn't ask you a bunch of personal information if they weren't going to use it for &lt;em&gt;something&lt;/em&gt;, right? I'm sure they tell you what they're doing with it in their T&amp;amp;C. But who reads those?&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;I've noticed that they'll deny you access if you make up random email domains. Gmail addresses seem to always work, though.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;My laptop doesn't have a built-in ethernet port, so this is probably unnecessary. But it's not hurting anything, and it'll protect me in the one-in-a-million chance I ever plug in a USB-to-ethernet dongle.&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-4"&gt;&lt;p&gt;And almost every Starbucks access point does present identically. This is why your phone or laptop will automatically connect to Starbucks wifi even if you've never been to that particular location before.&lt;a class="footnote" href="#fnref-4"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-5"&gt;&lt;p&gt;Yep.  I'm apparently willing to pay that price because I care that much about my privacy.  Do you think I like living this way?  I guess my Walter Mitty daydreams include living in the world of &lt;em&gt;Hackers (1995)&lt;/em&gt;, and running Silk Road from coffee shops but &lt;em&gt;not&lt;/em&gt; getting caught like Ulbricht did.&lt;a class="footnote" href="#fnref-5"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-&lt;/div&gt;</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/</guid>
-      <pubDate>Tue, 14 Mar 2023 23:31:40 +0000</pubDate>
-    </item>
-    <item>
-      <title>Tips For Becoming A Pod Person</title>
-      <link>https://jaysherby.com/tips-for-becoming-a-pod-person/</link>
-      <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art, with apologies to Donald Sutherland" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png"&gt;&lt;/p&gt;
-&lt;p&gt;I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn't a completely hassle-free, drop-in replacement for Docker.  It's damn close!  Close enough that I'm willing to use it at home, but it's still finicky and different enough that I'd spend too much time futzing at work trying to use it while keeping everything Docker-compatible for my colleagues.&lt;/p&gt;
-&lt;p&gt;Here are some tips if, like me, you're coming from Docker and you just want to get productive.&lt;/p&gt;
-&lt;h2 id="i-need-docker-compose"&gt;I need Docker Compose&lt;/h2&gt;
-&lt;p&gt;A large part of Docker's value to me comes from Docker Compose. If switching to Podman meant losing Docker Compose, I wouldn't have switched.&lt;/p&gt;
-&lt;p&gt;Thankfully, Pop!_OS (and probably any other platforms that include Podman in their repos) has a package called &lt;code&gt;podman-docker&lt;/code&gt; that satisfies packages that depend on Docker. Just make sure you install &lt;code&gt;podman-docker&lt;/code&gt; before or at the same time as &lt;code&gt;docker-compose&lt;/code&gt; so APT doesn't try to install Docker to satisfy Docker Compose's dependencies.&lt;/p&gt;
-&lt;p&gt;If you're feeling adventurous, &lt;a href="https://github.com/containers/podman-compose"&gt;Podman Compose&lt;/a&gt; is a thing. But it's not available via my OS's default repositories and Docker Compose is.&lt;/p&gt;
-&lt;h2 id="i-need-docker-hub"&gt;I need Docker Hub&lt;/h2&gt;
-&lt;p&gt;I also wouldn't use Podman if it meant I lost Docker Hub.&lt;/p&gt;
-&lt;p&gt;The easiest way to get access to Docker Hub with Podman is to write the following file to &lt;code&gt;$HOME/.config/containers/registries.conf&lt;/code&gt;:&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;pre&gt;[registries.search]
-registries = ['docker.io']
-&lt;/pre&gt;
-&lt;h2 id="potentially-insufficient-uids-or-gids-available-in-user-namespace"&gt;Potentially insufficient UIDs or GIDs available in user namespace&lt;/h2&gt;
-&lt;p&gt;I had just installed Podman and I wanted use the NodeJS image from Docker Hub.&lt;/p&gt;
-&lt;pre&gt;$ podman run -it --rm node
-Resolving "node" using unqualified-search registries (/home/jsherby/.config/containers/registries.conf)
-Trying to pull docker.io/library/node:latest...
-Getting image source signatures
-Copying blob ca3bce705f6c done  
-Copying blob 167c7feebee8 done  
-Copying blob e9cdcd4942eb done  
-Copying blob 32fb02163b6b done  
-Copying blob d6dfff1f6f3d done  
-Copying blob 4f4cf292bc62 done  
-Copying blob 8347f8b4b86b done  
-Copying blob c5f20f1b0856 done  
-Copying blob d220dfa3e187 done  
-Error: writing blob: adding layer with blob "sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0": Error processing tar file(exit status 1): potentially insufficient UIDs or GIDs available in user namespace (requested 0:42 for /etc/gshadow): Check /etc/subuid and /etc/subgid: lchown /etc/gshadow: invalid argument
-
-&lt;/pre&gt;
-&lt;p&gt;This seems to be a common issue.&lt;/p&gt;
-&lt;p&gt;First, make sure the &lt;code&gt;fuse-overlayfs&lt;/code&gt; package is installed.&lt;/p&gt;
-&lt;p&gt;If you look around the internet, you're going to find advice telling you to add the following file at &lt;code&gt;$HOME/.config/containers/storage.conf&lt;/code&gt;:&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;pre&gt;[storage]
-driver = "overlay"
-
-[storage.options.overlay]
-ignore_chown_errors = "true"
-&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;BUT BE WARNED!&lt;/strong&gt; This change is meaningful and makes Podman behave differently than you probably expect. I'll quote the manual directly.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;ignore_chown_errors can be set to allow a non privileged user running with a single UID within a user namespace to run containers. The user can pull and use any image even those with multiple uids. Note multiple UIDs will be squashed down to the default uid in the container. These images will have no separation between the users in the container.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Although this setup will make Podman stop complaining, there's a good chance this will bite you in the ass later on, especially if you're trying to stay compatible with Docker.&lt;/p&gt;
-&lt;p&gt;Instead, I added my user to &lt;code&gt;/etc/subuid&lt;/code&gt; and &lt;code&gt;/etc/subgid&lt;/code&gt;.  Here's what both files look like on my machine:&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;pre&gt;jsherby:100000:65536
-&lt;/pre&gt;
-&lt;p&gt;Then I ran &lt;code&gt;podman system migrate&lt;/code&gt; and I was good to go.&lt;/p&gt;
-&lt;hr&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;&lt;code&gt;/etc/containers/registries.conf&lt;/code&gt; is the equivalent system-wide config file.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;&lt;code&gt;/etc/containers/storage.conf&lt;/code&gt; is the equivalent system-wide config file.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;When supporting namespaces for multiple users, the middle value needs to be offset so the namespaces don't overlap. Check the man pages that come with your local &lt;code&gt;shadow&lt;/code&gt; package for details.&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-&lt;/div&gt;</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/tips-for-becoming-a-pod-person/</guid>
-      <pubDate>Thu, 16 Mar 2023 00:36:53 +0000</pubDate>
+      <guid isPermaLink="false">https://jaysherby.com/homebrew-shell-completion-is-worth-your-time/</guid>
+      <pubDate>Sun, 26 Mar 2023 02:47:53 +0000</pubDate>
     </item>
     <item>
       <title>Back That Blog Up</title>
@@ -408,24 +211,221 @@ jobs:
       <pubDate>Wed, 22 Mar 2023 17:17:00 +0000</pubDate>
     </item>
     <item>
-      <title>Homebrew Shell Completion Is Worth Your Time</title>
-      <link>https://jaysherby.com/homebrew-shell-completion-is-worth-your-time/</link>
-      <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art, nautilus shell" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679798555-0.png"&gt;&lt;/p&gt;
-&lt;p&gt;I finally gave the Auth0 command line tool a try yesterday at work. I installed it via Homebrew since I use a MacBook Pro at work. I was hoping I could use it to quickly automate a repetitive task using a shell script. Unfortunately, Auth0's tool isn't currently able to block user accounts.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;I noticed that their tool had a way to output a shell completion configuration. That led me down a rabbit hole, revealing that lots of tools I've installed via Homebrew ship with shell completions! They just aren't being used by default.&lt;/p&gt;
-&lt;p&gt;I'm not going to repeat the instructions here because Homebrew has &lt;a href="https://docs.brew.sh/Shell-Completion"&gt;a webpage&lt;/a&gt; with concise yet detailed instructions for adding shell completions to your configuration.&lt;/p&gt;
-&lt;p&gt;It's worth your time to set this up. Shell completions are a super power. I'm much less productive if I don't have git shell completions available.&lt;/p&gt;
-&lt;p&gt;I will note that setting this up for zsh, now the default shell in MacOS, is the most involved of all the supported shells. It's worth the 5 minute investment, though.&lt;/p&gt;
+      <title>Tips For Becoming A Pod Person</title>
+      <link>https://jaysherby.com/tips-for-becoming-a-pod-person/</link>
+      <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art, with apologies to Donald Sutherland" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn't a completely hassle-free, drop-in replacement for Docker.  It's damn close!  Close enough that I'm willing to use it at home, but it's still finicky and different enough that I'd spend too much time futzing at work trying to use it while keeping everything Docker-compatible for my colleagues.&lt;/p&gt;
+&lt;p&gt;Here are some tips if, like me, you're coming from Docker and you just want to get productive.&lt;/p&gt;
+&lt;h2 id="i-need-docker-compose"&gt;I need Docker Compose&lt;/h2&gt;
+&lt;p&gt;A large part of Docker's value to me comes from Docker Compose. If switching to Podman meant losing Docker Compose, I wouldn't have switched.&lt;/p&gt;
+&lt;p&gt;Thankfully, Pop!_OS (and probably any other platforms that include Podman in their repos) has a package called &lt;code&gt;podman-docker&lt;/code&gt; that satisfies packages that depend on Docker. Just make sure you install &lt;code&gt;podman-docker&lt;/code&gt; before or at the same time as &lt;code&gt;docker-compose&lt;/code&gt; so APT doesn't try to install Docker to satisfy Docker Compose's dependencies.&lt;/p&gt;
+&lt;p&gt;If you're feeling adventurous, &lt;a href="https://github.com/containers/podman-compose"&gt;Podman Compose&lt;/a&gt; is a thing. But it's not available via my OS's default repositories and Docker Compose is.&lt;/p&gt;
+&lt;h2 id="i-need-docker-hub"&gt;I need Docker Hub&lt;/h2&gt;
+&lt;p&gt;I also wouldn't use Podman if it meant I lost Docker Hub.&lt;/p&gt;
+&lt;p&gt;The easiest way to get access to Docker Hub with Podman is to write the following file to &lt;code&gt;$HOME/.config/containers/registries.conf&lt;/code&gt;:&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;pre&gt;[registries.search]
+registries = ['docker.io']
+&lt;/pre&gt;
+&lt;h2 id="potentially-insufficient-uids-or-gids-available-in-user-namespace"&gt;Potentially insufficient UIDs or GIDs available in user namespace&lt;/h2&gt;
+&lt;p&gt;I had just installed Podman and I wanted use the NodeJS image from Docker Hub.&lt;/p&gt;
+&lt;pre&gt;$ podman run -it --rm node
+Resolving "node" using unqualified-search registries (/home/jsherby/.config/containers/registries.conf)
+Trying to pull docker.io/library/node:latest...
+Getting image source signatures
+Copying blob ca3bce705f6c done  
+Copying blob 167c7feebee8 done  
+Copying blob e9cdcd4942eb done  
+Copying blob 32fb02163b6b done  
+Copying blob d6dfff1f6f3d done  
+Copying blob 4f4cf292bc62 done  
+Copying blob 8347f8b4b86b done  
+Copying blob c5f20f1b0856 done  
+Copying blob d220dfa3e187 done  
+Error: writing blob: adding layer with blob "sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0": Error processing tar file(exit status 1): potentially insufficient UIDs or GIDs available in user namespace (requested 0:42 for /etc/gshadow): Check /etc/subuid and /etc/subgid: lchown /etc/gshadow: invalid argument
+
+&lt;/pre&gt;
+&lt;p&gt;This seems to be a common issue.&lt;/p&gt;
+&lt;p&gt;First, make sure the &lt;code&gt;fuse-overlayfs&lt;/code&gt; package is installed.&lt;/p&gt;
+&lt;p&gt;If you look around the internet, you're going to find advice telling you to add the following file at &lt;code&gt;$HOME/.config/containers/storage.conf&lt;/code&gt;:&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;pre&gt;[storage]
+driver = "overlay"
+
+[storage.options.overlay]
+ignore_chown_errors = "true"
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;BUT BE WARNED!&lt;/strong&gt; This change is meaningful and makes Podman behave differently than you probably expect. I'll quote the manual directly.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ignore_chown_errors can be set to allow a non privileged user running with a single UID within a user namespace to run containers. The user can pull and use any image even those with multiple uids. Note multiple UIDs will be squashed down to the default uid in the container. These images will have no separation between the users in the container.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Although this setup will make Podman stop complaining, there's a good chance this will bite you in the ass later on, especially if you're trying to stay compatible with Docker.&lt;/p&gt;
+&lt;p&gt;Instead, I added my user to &lt;code&gt;/etc/subuid&lt;/code&gt; and &lt;code&gt;/etc/subgid&lt;/code&gt;.  Here's what both files look like on my machine:&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;pre&gt;jsherby:100000:65536
+&lt;/pre&gt;
+&lt;p&gt;Then I ran &lt;code&gt;podman system migrate&lt;/code&gt; and I was good to go.&lt;/p&gt;
 &lt;hr&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;I opened &lt;a href="https://github.com/auth0/auth0-cli/issues/683"&gt;a feature ticket&lt;/a&gt;.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;&lt;code&gt;/etc/containers/registries.conf&lt;/code&gt; is the equivalent system-wide config file.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;&lt;code&gt;/etc/containers/storage.conf&lt;/code&gt; is the equivalent system-wide config file.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;When supporting namespaces for multiple users, the middle value needs to be offset so the namespaces don't overlap. Check the man pages that come with your local &lt;code&gt;shadow&lt;/code&gt; package for details.&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
 &lt;/div&gt;</description>
       <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/homebrew-shell-completion-is-worth-your-time/</guid>
-      <pubDate>Sun, 26 Mar 2023 02:47:53 +0000</pubDate>
+      <guid isPermaLink="false">https://jaysherby.com/tips-for-becoming-a-pod-person/</guid>
+      <pubDate>Thu, 16 Mar 2023 00:36:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>Randomizing My MAC Address With NetworkManager</title>
+      <link>https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/</link>
+      <description>&lt;div&gt;&lt;p&gt;My life is harder for knowing and caring about my own privacy and security.  For example, if you've ever connected to the wifi at a Starbucks using a laptop, you'll have noticed the "captive portal" system they use.  That's the page that pops up before you can actually use the internet.  It asks you for your name, email address, and zip code.&lt;/p&gt;
+&lt;p&gt;You may also notice that once you fill out that form, you never have to do it again.  Every time you connect to the Starbucks wifi afterwards, it'll usually still give you a captive portal page, but you'll never have to "log in" again.  This usually holds true &lt;em&gt;even if you visit a different Starbucks with the same computer.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Guess what? Starbucks is tracking you.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; I don't like that, so I lie every time I fill out that form.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; &lt;em&gt;Or do I?&lt;/em&gt; 😉&lt;/p&gt;
+&lt;p&gt;The way Starbucks remembers your computer is by recording the MAC address of your wifi adapter.&lt;/p&gt;
+&lt;p&gt;This is a very old, very well-known privacy risk. Most operating systems have made it relatively easy to spoof your MAC address with a semi-randomly generated one to mitigate this risk. Some even do this by default now.&lt;/p&gt;
+&lt;p&gt;Even so, I have particular preferences for how I prefer this feature to work that my system's default settings don't meet.&lt;/p&gt;
+&lt;p&gt;I'm using Pop!_OS, which uses NetworkManager.  I'll show you its default setup, how I changed it, and why.&lt;/p&gt;
+&lt;p&gt;Here's the default config, located at &lt;code&gt;/etc/NetworkManager/NetworkManager.conf&lt;/code&gt;, that shipped with my machine:&lt;/p&gt;
+&lt;pre&gt;[main]
+plugins=ifupdown,keyfile
+
+[ifupdown]
+managed=false
+
+[device]
+wifi.scan-rand-mac-address=no
+
+&lt;/pre&gt;
+&lt;p&gt;Shame on you, Pop!_OS!  See &lt;code&gt;wifi.scan-rand-mac-address=no&lt;/code&gt;?  That turns off MAC randomization during access point scanning! That means you're leaking your MAC address before you even connect to wifi. Passive listeners can track you. This isn't even the default behavior &lt;a href="https://blogs.gnome.org/thaller/2016/08/26/mac-address-spoofing-in-networkmanager-1-4-0/"&gt;as of NetworkManager 1.4.0&lt;/a&gt;. This is pretty embarrassing. Even Android randomizes your MAC address when scanning nowadays.&lt;/p&gt;
+&lt;p&gt;Here are my changes:&lt;/p&gt;
+&lt;pre&gt;[main]
+plugins=ifupdown,keyfile
+
+[ifupdown]
+managed=false
+
+[device]
+wifi.scan-rand-mac-address=yes
+
+[connection]
+ethernet.cloned-mac-address=random
+wifi.cloned-mac-address=random
+&lt;/pre&gt;
+&lt;p&gt;I changed &lt;code&gt;wifi.scan-rand-mac-address&lt;/code&gt; to &lt;code&gt;yes&lt;/code&gt;, even though it's the default behavior. Just to be extra sure.&lt;/p&gt;
+&lt;p&gt;I also added a setting called &lt;code&gt;cloned-mac-address&lt;/code&gt; to both ethernet&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; and wifi, and set it to &lt;code&gt;random&lt;/code&gt;. This setting has a few other possible values. I'll quote the manual.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Beside explicitly specifying a MAC address, the special values "preserve", "permanent", "random" and "stable" are supported. "preserve" means not to touch the MAC address on activation. "permanent" means to use the permanent hardware address if the device has one (otherwise this is treated as "preserve"). "random" creates a random MAC address on each connect. "stable" creates a hashed MAC address based on connection.stable-id and a machine dependent key.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In other words, &lt;code&gt;permanent&lt;/code&gt; and probably &lt;code&gt;preserve&lt;/code&gt; will leak your physical MAC address when you connect to an access point. &lt;code&gt;stable&lt;/code&gt; won't leak your physical MAC address, but it will result in a given access point seeing the same fake MAC address every time you connect to it.  That doesn't really prevent tracking if every Starbucks access point presents identically.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt; I want &lt;code&gt;random&lt;/code&gt;. It generates a new, random MAC address on every connection.&lt;/p&gt;
+&lt;p&gt;There. No more tracking. Now I just have to fill out that stupid captive portal form every time I go to Starbucks with my laptop.&lt;sup class="footnote-ref" id="fnref-5"&gt;&lt;a href="#fn-5"&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h2 id="but-what-if-my-router-yells-at-me"&gt;But what if my router yells at me?&lt;/h2&gt;
+&lt;p&gt;This happened to me. My Synology router started sending push notifications to my phone every time I turned on my laptop, asking me if I know this mysterious device that just connected.&lt;/p&gt;
+&lt;p&gt;I needed to make an exception to the rules, but just for this one wifi network.  Happily, the option to change this setting is actually in the GUI.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Oh, no! I forgot to censor my home network's SSID!" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678841041-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;You can see here I've set this particular connection to &lt;code&gt;stable&lt;/code&gt;. Works like a charm.&lt;/p&gt;
+&lt;p&gt;I'm sure there's a way to do this on the command line, or in a configuration file somewhere, but I haven't needed to figure that out yet.&lt;/p&gt;
+&lt;hr&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;I have no idea if Starbucks is actively using the data they're collecting, but they &lt;em&gt;are&lt;/em&gt; collecting it. Even if it's just within log files. I mean, they wouldn't ask you a bunch of personal information if they weren't going to use it for &lt;em&gt;something&lt;/em&gt;, right? I'm sure they tell you what they're doing with it in their T&amp;amp;C. But who reads those?&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;I've noticed that they'll deny you access if you make up random email domains. Gmail addresses seem to always work, though.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;My laptop doesn't have a built-in ethernet port, so this is probably unnecessary. But it's not hurting anything, and it'll protect me in the one-in-a-million chance I ever plug in a USB-to-ethernet dongle.&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-4"&gt;&lt;p&gt;And almost every Starbucks access point does present identically. This is why your phone or laptop will automatically connect to Starbucks wifi even if you've never been to that particular location before.&lt;a class="footnote" href="#fnref-4"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-5"&gt;&lt;p&gt;Yep.  I'm apparently willing to pay that price because I care that much about my privacy.  Do you think I like living this way?  I guess my Walter Mitty daydreams include living in the world of &lt;em&gt;Hackers (1995)&lt;/em&gt;, and running Silk Road from coffee shops but &lt;em&gt;not&lt;/em&gt; getting caught like Ulbricht did.&lt;a class="footnote" href="#fnref-5"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+&lt;/div&gt;</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/</guid>
+      <pubDate>Tue, 14 Mar 2023 23:31:40 +0000</pubDate>
+    </item>
+    <item>
+      <title>HP Dev One, low disk space on /boot/efi</title>
+      <link>https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/</link>
+      <description>&lt;div&gt;&lt;p&gt;I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don't get me wrong, I'm generally very happy with it.  But HP discontinued the line and my daily driver laptop is a technological dead end.&lt;/p&gt;
+&lt;p&gt;Recently I started receiving warning messages that my boot partition, &lt;code&gt;/boot/efi&lt;/code&gt; is low on space.  Sure enough, the 512 MB boot partition is 96% full.&lt;/p&gt;
+&lt;p&gt;I searched the internet and while there are plenty of people complaining about this issue, there seem to be few fixes.  Many recommend increasing the size of the partition to 1 GB, though they admit it's a complicated process to do so.  The easiest way is a full reinstall of the OS, although you can technically resize the partitions without such a drastic course of action if you're willing to futz around.&lt;/p&gt;
+&lt;p&gt;I tried doing a "system refresh" via means built into Pop!_OS. I didn't lose any of my personal data, but I did have to reinstall all my applications. It seemed to fix the issue, although boot partition usage still hovered on the brink at 95%.&lt;/p&gt;
+&lt;p&gt;That fix lasted all of a week.  There was another kernel update today causing usage to hit 97%. The warning returned.&lt;/p&gt;
+&lt;p&gt;I did some more searching today and found &lt;a href="https://github.com/pop-os/pop/issues/1714"&gt;this GitHub thread&lt;/a&gt;. For posterity, if you're using an HP Dev One laptop like I am, there's a high likelihood that an old, already installed firmware update is hanging around in the boot partition, taking up precious space.&lt;/p&gt;
+&lt;p&gt;It's safe to delete &lt;code&gt;/boot/efi/EFI/HP&lt;/code&gt; and &lt;code&gt;/boot/efi/EFI/pop&lt;/code&gt; directories, which hold firmware update files.&lt;/p&gt;
+&lt;p&gt;After deleting those directories, my boot partition is now down to a relatively safe 82% usage.&lt;/p&gt;
+&lt;/div&gt;</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/</guid>
+      <pubDate>Sun, 12 Mar 2023 20:44:25 +0000</pubDate>
+    </item>
+    <item>
+      <title>Terraform Cloud + CDKTF + Auth0</title>
+      <link>https://jaysherby.com/terraform-cloud-cdktf-auth0/</link>
+      <description>&lt;div&gt;&lt;p&gt;If you want my advice on how to manage Auth0 using CDKTF and Terraform Cloud, here it is: don't.&lt;/p&gt;
+&lt;p&gt;But since you're still reading, I assume you find yourself in the regrettable situation of needing to support just such a setup.  Here are some little nuggets I've learned the hard way that don't seem to be documented elsewhere.&lt;/p&gt;
+&lt;h2 id="rules-hooks-and-string-interpolation"&gt;Rules, Hooks, and String Interpolation&lt;/h2&gt;
+&lt;p&gt;Rules and hooks are nifty features of Auth0 that allow you to run custom Javascript code on Auth0's servers in response to various events, like when a user signs up, logs in, etc.  From what I can tell, they both serve roughly the same purpose, although it seems like hooks are newer, and Auth0 would probably like to deprecate the rules feature very much.  They're both unpleasant to test, just like most kinds of code that run in other people's playgrounds.&lt;/p&gt;
+&lt;p&gt;You may find yourself wanting to deploy the code for your rules and hooks using Terraform.  In the setup I inherited, the CDKTF scripts, written in Typescript, read source files for rules and hooks using &lt;code&gt;fs.readFileSync&lt;/code&gt;, and eventually insert their contents as a string into the JSON config that CDKTF synthesizes.&lt;/p&gt;
+&lt;p&gt;Terraform Cloud sometimes reports errors during the planning step that say things like the following, while pointing the finger at the value for a rule's or hook's "script" key.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A reference to a resource type must be followed by at least one attribute access, specifying the resource name.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It'll highlight some seemingly random little bit of the long and mangled string that was once your Javascript source file.&lt;/p&gt;
+&lt;p&gt;Every time I've ever seen this happen, the culprit is string interpolation in the Javascript file.&lt;/p&gt;
+&lt;pre class="javascript"&gt;const domain = `app.${environment}.my-really-cool-app.com`;
+&lt;/pre&gt;
+&lt;p&gt;Terraform's parser sees &lt;code&gt;${&lt;/code&gt; in your string, which happens to be &lt;em&gt;its&lt;/em&gt; string interpolation syntax as well, and falls flat on its face trying to figure out what you're trying to accomplish.&lt;/p&gt;
+&lt;p&gt;There are ways around this.  &lt;a href="https://developer.hashicorp.com/terraform/language/expressions/strings#escape-sequences-1"&gt;According to the docs&lt;/a&gt;, you can escape &lt;code&gt;${&lt;/code&gt; with &lt;code&gt;$${&lt;/code&gt;.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;But are you really going to put &lt;code&gt;$${&lt;/code&gt; in your Javascript?  Absent of this context, &lt;code&gt;$${&lt;/code&gt; looks like a bug!  You could leave a comment explaining the extra &lt;code&gt;$&lt;/code&gt;.  But after the code is deployed, the comment will remain and the extra &lt;code&gt;$&lt;/code&gt; would disappear.  The comment wouldn't make sense if you looked at the code form inside the Auth0 management console.&lt;/p&gt;
+&lt;p&gt;IMHO, doing this is asking for trouble.  Plus it feels gross.&lt;/p&gt;
+&lt;p&gt;Worse yet, what if the name of the variable inside your interpolated string (&lt;code&gt;environment&lt;/code&gt; in the example above) &lt;em&gt;does&lt;/em&gt; mean something to Terraform and it replaces it with a value? The code would probably throw an error if the replaced value wasn't a variable in your script.  What if it was!?  In any case, the code deployed won't match the code in your repository.  Good luck chasing down that bug!&lt;/p&gt;
+&lt;p&gt;The workaround I chose was to avoid template string interpolation all together and revert back to string concatenation like we did in the days before template literals were introduced.&lt;/p&gt;
+&lt;pre class="javascript"&gt;const domain = 'app.' + environment + '.my-really-cool-app.com';
+&lt;/pre&gt;
+&lt;h2 id="terraform-variables-vs-environment-variables"&gt;Terraform Variables vs Environment Variables&lt;/h2&gt;
+&lt;p&gt;Using environment variables when writing your config with CDKTF and deploying with Terraform Cloud can be fraught, to say the least.  There's at least one very good reason to use environment variables when using the Auth0 provider: they recommend it &lt;a href="https://registry.terraform.io/providers/auth0/auth0/0.44.0/docs#environment-variables"&gt;in the docs&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let's clarify something first.  Because of how CDKTF works, environment variables can be inserted in at least two stages: synthesis and planning.&lt;/p&gt;
+&lt;p&gt;If you do anything in your code using &lt;code&gt;process.env&lt;/code&gt; to get at environment variables, this is at best confusing, at worst incorrect. This is how you'd read environment variables &lt;em&gt;at synthesis time&lt;/em&gt;, which is probably not what you actually want.  Doing this would affect what is output to your Terraform JSON when you run CDKTF's synthesis step.  It essentially becomes a hard-coded value from the point of view of Terraform.&lt;/p&gt;
+&lt;p&gt;What you probably want to do, and what the Auth0 provider documentation is referring to, is environment variables &lt;em&gt;at planning time&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The environment variables the docs refer to, &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, &lt;code&gt;AUTH0_CLIENT_ID&lt;/code&gt;, and &lt;code&gt;AUTH0_CLIENT_SECRET&lt;/code&gt;, are not &lt;em&gt;directly&lt;/em&gt; accessible to your Terraform config.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; I need to set these values as secrets for one of my hooks.&lt;/p&gt;
+&lt;h3 id="the-most-correcttm-way"&gt;The Most Correct™ Way&lt;/h3&gt;
+&lt;p&gt;As I said, you can't &lt;em&gt;directly&lt;/em&gt; access those environment variables for reasons I'll soon explain.  Terraform-literate readers will already know that the Most Correct™ way to access the values would be &lt;em&gt;indirectly&lt;/em&gt; via the resources that use them.  This is The Terraform Way.&lt;/p&gt;
+&lt;p&gt;If this configuration was written in HCL, this would be comically easy.  But we're using CDKTF for reasons I can't begin to explain.&lt;/p&gt;
+&lt;p&gt;You should be able to access &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, &lt;code&gt;AUTH0_CLIENT_ID&lt;/code&gt;, and &lt;code&gt;AUTH0_CLIENT_SECRET&lt;/code&gt; via &lt;code&gt;Auth0Provider#domainInput&lt;/code&gt;, &lt;code&gt;Client#clientId&lt;/code&gt;, and &lt;code&gt;Client#clientSecret&lt;/code&gt;, respectively.  But my config isn't written in a way that would make this easy.  It would require a ton of refactoring that I don't have the time or patience for at the moment.&lt;/p&gt;
+&lt;h3 id="the-quick-n-hacky-way"&gt;The Quick 'N' Hacky Way&lt;/h3&gt;
+&lt;p&gt;Since I can't access those particular environment variables directly, and I'm unable to access the values indirectly via the resources that consume them, I chose to add some duplicate variables that I &lt;em&gt;could&lt;/em&gt; access like any other variable.&lt;/p&gt;
+&lt;p&gt;The official way to get values into Terraform at planning time via environment variables is to use them in your CDKTF configuration just like any other variable (using the &lt;code&gt;TerraformVariable&lt;/code&gt; class), and set an environment variable in Terraform Cloud with the same name but with a &lt;code&gt;TF_VAR_&lt;/code&gt; prefix.&lt;/p&gt;
+&lt;p&gt;That meant that for my use case, I needed both &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt; &lt;em&gt;and&lt;/em&gt; &lt;code&gt;TF_VAR_AUTH0_DOMAIN&lt;/code&gt; set in my Terraform Cloud variables config page,&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; along with the remaining two variables mentioned earlier, using this same pattern.  If I only set &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, the Auth0 provider will work, but the &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt; &lt;em&gt;Terraform variable&lt;/em&gt; defaulted to an empty string!  If I set &lt;code&gt;TF_VAR_AUTH0_DOMAIN&lt;/code&gt; but not &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, I got the following error during the planning phase.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The argument "domain" is required, but no definition was found.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I chose to set both &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt; and &lt;code&gt;TF_VAR_AUTH0_DOMAIN&lt;/code&gt; as environment variables in Terraform Cloud because that's ever-so-slightly less confusing IMHO than two variables, both named &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, one a Terraform variable and the other an environment variable.  I figure someone would be more likely to erroneously delete one of the two copies in the future if both variables shared the same exact name but were different variable types.  As always, notes and documentation are your best friends.&lt;/p&gt;
+&lt;hr&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;I've seen some bizarre alternative ways of escaping &lt;code&gt;${&lt;/code&gt; suggested on Stack Overflow, but all of my criticism still apply.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;There &lt;em&gt;are&lt;/em&gt; ways you can expose all environment variables as Terraform variables without having to know the variables' keys beforehand, but it's not what The Architects intended.  I've only seen examples of these techniques in HCL.  It might be possible to accomplish in CDKTF, but you'd be fighting your chosen tools so hard that I'd question the whole endeavor.  Just because you &lt;em&gt;can&lt;/em&gt; doesn't mean you &lt;em&gt;should&lt;/em&gt;.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;In case you were wondering, you still need to add the &lt;code&gt;TF_VAR_&lt;/code&gt; prefix yourself in Terraform Cloud. That wasn't immediately clear to me.  I'm guessing it's to support environment variables that don't start with &lt;code&gt;TF_VAR_&lt;/code&gt; since providers (like Auth0 with &lt;code&gt;AUTH0_DOMAIN&lt;/code&gt;, etc.) aren't required to conform to that pattern.  &lt;img alt="Don't forget TF_VAR_" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678334687-0.png"&gt;&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+&lt;/div&gt;</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/terraform-cloud-cdktf-auth0/</guid>
+      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Target Optical Mailing List UI</title>
+      <link>https://jaysherby.com/target-optical-mailing-list-ui/</link>
+      <description>&lt;div&gt;&lt;p&gt;I recently received a spam email from Target Optical.  Subject line: "Happy Valentine’s Day! 💕".  Thanks, Target.&lt;/p&gt;
+&lt;p&gt;Naturally, I clicked on the unsubscribe link on the bottom of the email and I was met with...&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Oh, no! I forgot to censor my email address!! Whatever. Worst anyone could do would be re-adding me to Target Optical's mailing list." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678328483-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;I was aghast. I'd already had a rough day with software. This was the little push required to send me over the edge.  I laughed.  I cried.  I called my wife over to mercilessly mock this abject failure of usability.&lt;/p&gt;
+&lt;p&gt;My best guess was to select the "yes" radio button and click the "submit" button.  I didn't have the patience to poke around. But what would "no" and "submit" mean?  Is that meaningfully different from "cancel"?&lt;/p&gt;
+&lt;p&gt;It's not as bad as &lt;a href="https://dinosaurenby.medium.com/a-deep-dive-into-the-ux-of-the-nostromos-self-destruct-procedure-9eda80793fe8"&gt;the self-destruct interface for the Nostromo&lt;/a&gt;. If an alien creature was hunting me while I was trying to unsubscribe from this mailing list, I might not be as charitable.&lt;/p&gt;
+&lt;p&gt;Luckily, my best guess was correct. And my piece of cheese for solving this UX puzzle?&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Unlike the previous image, this one has not been edited. Not one pixel." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678329253-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;Perfect. Ten out of ten.  No notes.  🤦&lt;/p&gt;
+&lt;/div&gt;</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/target-optical-mailing-list-ui/</guid>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
