@@ -9,6 +9,192 @@ I'm an experienced software developer in Chicago....</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>The Two Most Popular Missing Typescript Features</title>
+      <link>https://jaysherby.com/the-two-most-popular-missing-typescript-features/</link>
+      <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art, the suspense is terrible, I hope it'll last" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;There are two features I think should be in Typescript that are currently missing. It's not just &lt;em&gt;my&lt;/em&gt; opinion, either. When I was researching this blog post, I discovered that the tickets requesting these two features are the most discussed tickets with the "suggestion" tag still open. If I could wave a magic wand to change Typescript in any way, I'd add these two features.&lt;/p&gt;
+&lt;h2 id="13219-throws-clause-and-typed-catch-clause"&gt;&lt;a href="https://github.com/microsoft/TypeScript/issues/13219"&gt;#13219&lt;/a&gt; &lt;code&gt;throws&lt;/code&gt; clause and typed catch clause&lt;/h2&gt;
+&lt;p&gt;This missing feature came up in discussion on a pull request of mine at work this week. A particular function had a return type of &lt;code&gt;Promise&amp;amp;lt;boolean&amp;amp;gt;&lt;/code&gt; and included a &lt;code&gt;try...catch&lt;/code&gt; statement in its body. A friend and colleague&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; left a comment asking why the possible error types weren't represented in the return type of the function. Maybe something like &lt;code&gt;Promise&amp;amp;lt;boolean, AppException&amp;amp;gt;&lt;/code&gt;?&lt;/p&gt;
+&lt;p&gt;The answer is that the &lt;code&gt;Promise&lt;/code&gt; type doesn't support a second type variable to describe the value returned on rejection of a promise.&lt;/p&gt;
+&lt;p&gt;As I suspected, the lack of a rejection type mirrors how caught error types are handled. (Or should I say, not handled?)&lt;/p&gt;
+&lt;pre class="typescript"&gt;try {
+  // Code that might throw
+} catch (e) {
+  // What is the type of `e`?
+}
+&lt;/pre&gt;
+&lt;p&gt;Depending on the version of Typescript you're using and how you have configured it, the type of &lt;code&gt;e&lt;/code&gt; in the code above is either &lt;code&gt;any&lt;/code&gt; or &lt;code&gt;unknown&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;That's pretty unsatisfying to me, and it leads to a lot of boilerplate in every &lt;code&gt;catch&lt;/code&gt; block where I have to write a bunch of &lt;code&gt;if&lt;/code&gt; blocks to detect the type of &lt;code&gt;e&lt;/code&gt; and handle it appropriately. And I still have to cover my ass in case I missed a type. I have no way of being absolutely sure I covered everything that might have been thrown.&lt;/p&gt;
+&lt;p&gt;JavaScript is particularly annoying when it comes to &lt;code&gt;throw&lt;/code&gt;-ing things because almost any value can be thrown, not just sub-types of &lt;code&gt;Error&lt;/code&gt;. You can throw strings, numbers, null. Almost anything your heart desires.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;I'd prefer it if Typescript could tell me all the possible types that might be thrown by a particular function or block of code. And I'm not alone. 1,349 people have given the 👍 reaction to &lt;a href="https://github.com/microsoft/TypeScript/issues/13219"&gt;microsoft/Typescript#13219&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The syntax suggested mirrors a feature already present in crusty, old Java.&lt;/p&gt;
+&lt;pre class="java"&gt; public static void fetchFile() throws IOException, NullPointerException {
+    // code that can throw IOException
+
+    // code that can throw NullPointerException
+}
+&lt;/pre&gt;
+&lt;p&gt;The big upshot of this feature in Java, besides your tools being able to warn you when you're not handling something your code might throw, is it enables the following type of &lt;code&gt;try...catch&lt;/code&gt; syntax.&lt;/p&gt;
+&lt;pre class="java"&gt;try {
+    fetchFile();
+} catch (IOException ex1) {
+    // handle IOException appropriately
+} catch (NullPointerException ex2) {
+    // handle NullPointerException appropriately
+}
+&lt;/pre&gt;
+&lt;p&gt;I vastly prefer this syntax over a single &lt;code&gt;catch&lt;/code&gt; block containing repeated &lt;code&gt;if...else&lt;/code&gt; blocks with &lt;code&gt;e instanceof AppError&lt;/code&gt; conditions to detect each type. It's important to note that &lt;a href="https://github.com/microsoft/TypeScript/issues/13219"&gt;microsoft/Typescript#13219&lt;/a&gt; &lt;em&gt;does not&lt;/em&gt; include this new &lt;code&gt;try...catch&lt;/code&gt; syntax. I couldn't find a ticket requesting such a feature. But adding the &lt;code&gt;throws&lt;/code&gt; annotation to function signatures might set the stage for it.&lt;/p&gt;
+&lt;p&gt;When might we see the &lt;code&gt;throws&lt;/code&gt; clause in Typescript? I wouldn't hold my breath. This ticket has been open for 7 years! But a boy can dream, can't he?&lt;/p&gt;
+&lt;h2 id="202-nominal-types"&gt;&lt;a href="https://github.com/microsoft/TypeScript/issues/202"&gt;#202&lt;/a&gt; Nominal types&lt;/h2&gt;
+&lt;p&gt;Typescript has a structural type system. What does this mean?&lt;/p&gt;
+&lt;pre class="typescript"&gt;interface Car {
+  name: string;
+  age: number;
+}
+
+interface Dog {
+  name: string;
+  age: number;
+  breed: string;
+}
+
+function announceCar(car: Car) {
+  console.log(`The ${car.name} is a ${car.age} year old car.`);
+}
+
+const dodgeViper: Car = {
+  name: 'Dodge Viper',
+  age: 31,
+};
+
+announceCar(dodgeViper);
+// The Dodge Viper is a 31 year old car.
+
+const brunoTheDog: Dog = {
+  name: 'Bruno',
+  age: 5,
+  breed: 'terrier',
+};
+
+announceCar(brunoTheDog); // &amp;lt;- Typescript is a-okay with this.
+// The Bruno is a 5 year old car.
+&lt;/pre&gt;
+&lt;p&gt;So, uh... that was weird. I passed a &lt;code&gt;Dog&lt;/code&gt; value to the &lt;code&gt;announceCar&lt;/code&gt; function, which says it accepts a &lt;code&gt;Car&lt;/code&gt; value. And Typescript was fine with it.&lt;/p&gt;
+&lt;p&gt;That's because &lt;code&gt;Dog&lt;/code&gt; is structurally compatible with &lt;code&gt;Car&lt;/code&gt;. &lt;code&gt;Dog&lt;/code&gt; has the same structural properties as &lt;code&gt;Car&lt;/code&gt;, plus a &lt;code&gt;breed&lt;/code&gt; key. Anything that expects a &lt;code&gt;Car&lt;/code&gt; can also accept a &lt;code&gt;Dog&lt;/code&gt;. A &lt;code&gt;Car&lt;/code&gt; can't pass as a &lt;code&gt;Dog&lt;/code&gt;, though, because &lt;code&gt;Car&lt;/code&gt; is missing the &lt;code&gt;breed&lt;/code&gt; key.&lt;/p&gt;
+&lt;p&gt;Compare that to C, which has a nominal type system.&lt;/p&gt;
+&lt;pre class="c"&gt;#include &amp;lt;stdio.h&amp;gt;
+
+typedef struct {
+  char *name;
+  int age;
+} Car;
+
+typedef struct {
+  char *name;
+  int age;
+} Dog;
+
+void announce_car(Car *car) {
+  printf("The %s is a %d year old car.\n", car-&amp;gt;name, car-&amp;gt;age);
+}
+
+int main() {
+  Car dodge_viper = {
+    .name="Dodge Viper",
+    .age=31
+  };
+
+  announce_car(&amp;amp;dodge_viper);
+  // The Dodge Viper is a 31 year old car.
+
+  Dog bruno = {
+    .name="Bruno",
+    .age=5
+  };
+
+  announce_car(&amp;amp;bruno);
+  /*
+   * main.c:31:16: error: incompatible pointer types passing 'Dog *' to parameter of type 'Car *' [-Werror,-Wincompatible-pointer-types]
+   *   announce_car(&amp;amp;bruno);
+   *                ^~~~~~
+   * main.c:13:24: note: passing argument to parameter 'car' here
+   * void announce_car(Car *car) {
+   *                        ^
+   */
+
+  return 0;
+}
+&lt;/pre&gt;
+&lt;p&gt;This C program is almost identical to the Typescript code, except that I've made the &lt;code&gt;Car&lt;/code&gt; and &lt;code&gt;Dog&lt;/code&gt; types structurally identical to one another. C does not let me pass a &lt;code&gt;Dog&lt;/code&gt; to the &lt;code&gt;announce_car&lt;/code&gt; function.&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; If I really wanted to pass a &lt;code&gt;Dog&lt;/code&gt; to &lt;code&gt;announce_car&lt;/code&gt; in a nominally typed language, I'd have to cast it to a &lt;code&gt;Car&lt;/code&gt; or manually create a new &lt;code&gt;Car&lt;/code&gt; with the values from my &lt;code&gt;Dog&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;IMHO, unless you already understand the difference between structural typing and nominal typing, &lt;a href="https://github.com/microsoft/TypeScript/issues/202"&gt;microsoft/Typescript#202&lt;/a&gt; doesn't do a very good job explaining it. But the feature being requested is the ability to opt into nominal typing for a given type. If I could specify that &lt;code&gt;Car&lt;/code&gt; is a nominal type and a function expects a &lt;code&gt;Car&lt;/code&gt;, you'd need to either give it a &lt;code&gt;Car&lt;/code&gt; or cast the value you're passing into a &lt;code&gt;Car&lt;/code&gt; first.&lt;/p&gt;
+&lt;p&gt;But... why? Why do people want this feature so badly?&lt;/p&gt;
+&lt;p&gt;Let me give you the most concrete example I've seen for why nominal typing could be so helpful.&lt;/p&gt;
+&lt;pre class="typescript"&gt;type CarID = number;
+
+interface Car {
+    id: CarID;
+    name: string;
+    age: number;
+}
+
+type DogID = number;
+
+interface Dog {
+    id: DogID;
+    name: string;
+    age: number;
+}
+
+function loadCar(id: CarID): Car {
+    // Loads a Car from the database
+
+    return {} as Car; // Pretend this actually works
+}
+
+function updateCarName(id: CarID, name: string): Car {
+    // Sets a Car's name in the database
+
+    return {} as Car; // Pretend this actually works
+}
+
+function loadDog(id: DogID): Dog {
+    // Loads a Dog from the database
+
+    return {} as Dog; // Pretend this actually works
+}
+
+let bruno = loadDog(1);
+
+updateCarName(bruno.id, "Chevy Bel Air");
+&lt;/pre&gt;
+&lt;p&gt;The problem is in the last line. I'm passing a &lt;code&gt;DogID&lt;/code&gt; to a function that expects a &lt;code&gt;CarID&lt;/code&gt;. This is incorrect and can cause serious data corruption in my database. Typescript doesn't flag this as incorrect currently. Because Typescript's type system is structural, &lt;code&gt;type CarID = number;&lt;/code&gt; causes &lt;code&gt;CarID&lt;/code&gt; to be nothing more than a synonym for &lt;code&gt;number&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Although &lt;code&gt;CarID&lt;/code&gt; and &lt;code&gt;DogID&lt;/code&gt; are technically both numbers, they are &lt;em&gt;not&lt;/em&gt; semantically identical. If they could be declared as nominal types, Typescript would flag my attempt to pass &lt;code&gt;bruno.id&lt;/code&gt; to &lt;code&gt;updateCarName&lt;/code&gt; as a type error.&lt;/p&gt;
+&lt;p&gt;If I was really, &lt;em&gt;really&lt;/em&gt; sure that I was doing the right thing, I could make Typescript accept it by casting, like this:&lt;/p&gt;
+&lt;pre class="typescript"&gt;updateCarName(bruno.id as CarID, "Chevy Bel Air");
+&lt;/pre&gt;
+&lt;p&gt;This may seem like an odd concept, having explicit nominal types in an otherwise structural type system. I tried searching for prior art, but I didn't really find anything that works quite like what's being proposed in &lt;a href="https://github.com/microsoft/TypeScript/issues/202"&gt;microsoft/Typescript#202&lt;/a&gt;. In Elm, you can achieve a similar effect using algebraic data types. Typescript doesn't support algebraic data types and it likely never will as that's a whole different beast.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt; Flow treats classes as nominal types, but that's all. It's not something you can opt into for basic types like numbers.&lt;/p&gt;
+&lt;p&gt;If you read through the &lt;a href="https://github.com/microsoft/TypeScript/issues/202"&gt;microsoft/Typescript#202&lt;/a&gt; ticket, you'll see plenty of people's attempts to achieve the desired effect using Typescript as it exists today. There are multiple libraries available on NPM that attempt to achieve this goal, too. But in my experience, they either fall short or they're not ergonomic enough.&lt;/p&gt;
+&lt;p&gt;Take opaque types, for example. They typically look something like this:&lt;/p&gt;
+&lt;pre class="typescript"&gt;OpaqueType&amp;lt;number, 'DogID'&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;This will achieve the desired outcome &lt;em&gt;if and only if you use them consistently everywhere&lt;/em&gt;. For example, you can't assign a value of type &lt;code&gt;OpaqueType&amp;amp;lt;number, &amp;amp;#x27;DogID&amp;amp;#x27;&amp;amp;gt;&lt;/code&gt; to a variable of type &lt;code&gt;OpaqueType&amp;amp;lt;number, &amp;amp;#x27;CarID&amp;amp;#x27;&amp;amp;gt;&lt;/code&gt;. But you can absolutely assign a bog standard &lt;code&gt;number&lt;/code&gt; to either of them, which kind of defeats the point.&lt;/p&gt;
+&lt;p&gt;You could also wrap values in a class of some kind, but the ergonomics are then shot to hell when you have to wrap and unwrap every time you need to access the underlying value.&lt;/p&gt;
+&lt;p&gt;How does this feature request compare to the &lt;code&gt;throws&lt;/code&gt; feature request from the first half of this blog post? It has fewer 👍 reactions, but more discussion. As the issue number implies, it's been around longer. A whole 9 years! Looking at the request honestly, I think nominal types would be less impactful for the average developer than the &lt;code&gt;throws&lt;/code&gt; feature. But it would still be a nice addition because it could help eliminate an entire class of bugs if used diligently.&lt;/p&gt;
+&lt;hr&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;Shout out to Emily! Thanks for the great question and the inspiration for this blog post. ❤️&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;Interestingly, you can't throw &lt;code&gt;void&lt;/code&gt;. Thank goodness for small favors, I guess.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;Well, it would let me pass a &lt;code&gt;Dog&lt;/code&gt; to &lt;code&gt;announce_car&lt;/code&gt; if I hadn't compiled it with the &lt;code&gt;-Werror&lt;/code&gt; flag. In that case, the compiler emits the same message as a warning and lets me do it anyway, which does work. But it only works because the types are literally the same. If I add a &lt;code&gt;breed&lt;/code&gt; field to &lt;code&gt;Dog&lt;/code&gt; after &lt;code&gt;name&lt;/code&gt; but before &lt;code&gt;age&lt;/code&gt; and set &lt;code&gt;breed&lt;/code&gt; to "terrier", &lt;code&gt;announce_car&lt;/code&gt; will emit "The Bruno is a 4195924 year old car." But that's beyond the scope of the point I'm trying to make here.&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-4"&gt;&lt;p&gt;FWIW, I love algebraic data types. I think they're more expressive than what Typescript currently has. But I don't think ADTs can map cleanly onto JavaScript's type system, meaning it's incompatible with Typescript's design goals.&lt;a class="footnote" href="#fnref-4"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+&lt;/div&gt;</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/the-two-most-popular-missing-typescript-features/</guid>
+      <pubDate>Tue, 28 Mar 2023 18:43:44 +0000</pubDate>
+    </item>
+    <item>
       <title>Homebrew Shell Completion Is Worth Your Time</title>
       <link>https://jaysherby.com/homebrew-shell-completion-is-worth-your-time/</link>
       <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art, nautilus shell" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679798555-0.png"&gt;&lt;/p&gt;

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5"/>
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+  <title>The Two Most Popular Missing Typescript Features | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html" />
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities"/>
+
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="The Two Most Popular Missing Typescript Features">
+<meta name="description" content="There are two features I think should be in Typescript that are currently missing. It&#x27;s not just my opinion, either. When I was researching this blog post, I...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="The Two Most Popular Missing Typescript Features">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/the-two-most-popular-missing-typescript-features/">
+<meta property="og:description" content="There are two features I think should be in Typescript that are currently missing. It&#x27;s not just my opinion, either. When I was researching this blog post, I...">
+
+  <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/the-two-most-popular-missing-typescript-features/">
+<meta property="twitter:title" content="The Two Most Popular Missing Typescript Features">
+<meta property="twitter:description" content="There are two features I think should be in Typescript that are currently missing. It&#x27;s not just my opinion, either. When I was researching this blog post, I...">
+
+  <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "The Two Most Popular Missing Typescript Features",
+    "url": "https://jaysherby.com/the-two-most-popular-missing-typescript-features/",
+    "description": "There are two features I think should be in Typescript that are currently missing. It&#x27;s not just my opinion, either. When I was researching this blog post, I...",
+    "about": {
+      "@type": "The Two Most Popular Missing Typescript Features",
+      "description": "There are two features I think should be in Typescript that are currently missing. It&#x27;s not just my opinion, either. When I was researching this blog post, I..."
+    }
+  }
+</script>
+
+  
+
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+
+
+  <style>
+      
+      :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+content {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+details > summary {
+  cursor: pointer;
+}
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    The Two Most Popular Missing Typescript Features
+</h1>
+
+<p>
+    <i>
+        <time datetime="2023-03-28" pubdate>
+            28 Mar, 2023
+        </time>
+    </i>
+</p>
+
+
+<content>
+<div><p><img alt="Original art, the suspense is terrible, I hope it'll last" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png"/></p>
+<p>There are two features I think should be in Typescript that are currently missing. It's not just <em>my</em> opinion, either. When I was researching this blog post, I discovered that the tickets requesting these two features are the most discussed tickets with the "suggestion" tag still open. If I could wave a magic wand to change Typescript in any way, I'd add these two features.</p>
+<h2 id="13219-throws-clause-and-typed-catch-clause"><a href="https://github.com/microsoft/TypeScript/issues/13219">#13219</a> <code>throws</code> clause and typed catch clause</h2>
+<p>This missing feature came up in discussion on a pull request of mine at work this week. A particular function had a return type of <code>Promise&lt;boolean&gt;</code> and included a <code>try...catch</code> statement in its body. A friend and colleague<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup> left a comment asking why the possible error types weren't represented in the return type of the function. Maybe something like <code>Promise&lt;boolean, AppException&gt;</code>?</p>
+<p>The answer is that the <code>Promise</code> type doesn't support a second type variable to describe the value returned on rejection of a promise.</p>
+<p>As I suspected, the lack of a rejection type mirrors how caught error types are handled. (Or should I say, not handled?)</p>
+<div class="highlight"><pre class="typescript"><span></span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Code that might throw</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// What is the type of `e`?</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Depending on the version of Typescript you're using and how you have configured it, the type of <code>e</code> in the code above is either <code>any</code> or <code>unknown</code>.</p>
+<p>That's pretty unsatisfying to me, and it leads to a lot of boilerplate in every <code>catch</code> block where I have to write a bunch of <code>if</code> blocks to detect the type of <code>e</code> and handle it appropriately. And I still have to cover my ass in case I missed a type. I have no way of being absolutely sure I covered everything that might have been thrown.</p>
+<p>JavaScript is particularly annoying when it comes to <code>throw</code>-ing things because almost any value can be thrown, not just sub-types of <code>Error</code>. You can throw strings, numbers, null. Almost anything your heart desires.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
+<p>I'd prefer it if Typescript could tell me all the possible types that might be thrown by a particular function or block of code. And I'm not alone. 1,349 people have given the 👍 reaction to <a href="https://github.com/microsoft/TypeScript/issues/13219">microsoft/Typescript#13219</a>.</p>
+<p>The syntax suggested mirrors a feature already present in crusty, old Java.</p>
+<div class="highlight"><pre class="java"><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">fetchFile</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="p">,</span><span class="w"> </span><span class="n">NullPointerException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// code that can throw IOException</span>
+
+<span class="w">    </span><span class="c1">// code that can throw NullPointerException</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>The big upshot of this feature in Java, besides your tools being able to warn you when you're not handling something your code might throw, is it enables the following type of <code>try...catch</code> syntax.</p>
+<div class="highlight"><pre class="java"><span></span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">fetchFile</span><span class="p">();</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">ex1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// handle IOException appropriately</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">NullPointerException</span><span class="w"> </span><span class="n">ex2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// handle NullPointerException appropriately</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>I vastly prefer this syntax over a single <code>catch</code> block containing repeated <code>if...else</code> blocks with <code>e instanceof AppError</code> conditions to detect each type. It's important to note that <a href="https://github.com/microsoft/TypeScript/issues/13219">microsoft/Typescript#13219</a> <em>does not</em> include this new <code>try...catch</code> syntax. I couldn't find a ticket requesting such a feature. But adding the <code>throws</code> annotation to function signatures might set the stage for it.</p>
+<p>When might we see the <code>throws</code> clause in Typescript? I wouldn't hold my breath. This ticket has been open for 7 years! But a boy can dream, can't he?</p>
+<h2 id="202-nominal-types"><a href="https://github.com/microsoft/TypeScript/issues/202">#202</a> Nominal types</h2>
+<p>Typescript has a structural type system. What does this mean?</p>
+<div class="highlight"><pre class="typescript"><span></span><span class="kd">interface</span><span class="w"> </span><span class="nx">Car</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Dog</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">breed</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">announceCar</span><span class="p">(</span><span class="nx">car</span><span class="o">:</span><span class="w"> </span><span class="kt">Car</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`The </span><span class="si">${</span><span class="nx">car</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb"> is a </span><span class="si">${</span><span class="nx">car</span><span class="p">.</span><span class="nx">age</span><span class="si">}</span><span class="sb"> year old car.`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">dodgeViper</span><span class="o">:</span><span class="w"> </span><span class="kt">Car</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Dodge Viper&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">31</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="nx">announceCar</span><span class="p">(</span><span class="nx">dodgeViper</span><span class="p">);</span>
+<span class="c1">// The Dodge Viper is a 31 year old car.</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">brunoTheDog</span><span class="o">:</span><span class="w"> </span><span class="kt">Dog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Bruno&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">breed</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;terrier&#39;</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="nx">announceCar</span><span class="p">(</span><span class="nx">brunoTheDog</span><span class="p">);</span><span class="w"> </span><span class="c1">// &lt;- Typescript is a-okay with this.</span>
+<span class="c1">// The Bruno is a 5 year old car.</span>
+</pre></div>
+
+<p>So, uh... that was weird. I passed a <code>Dog</code> value to the <code>announceCar</code> function, which says it accepts a <code>Car</code> value. And Typescript was fine with it.</p>
+<p>That's because <code>Dog</code> is structurally compatible with <code>Car</code>. <code>Dog</code> has the same structural properties as <code>Car</code>, plus a <code>breed</code> key. Anything that expects a <code>Car</code> can also accept a <code>Dog</code>. A <code>Car</code> can't pass as a <code>Dog</code>, though, because <code>Car</code> is missing the <code>breed</code> key.</p>
+<p>Compare that to C, which has a nominal type system.</p>
+<div class="highlight"><pre class="c"><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">Car</span><span class="p">;</span>
+
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">Dog</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">announce_car</span><span class="p">(</span><span class="n">Car</span><span class="w"> </span><span class="o">*</span><span class="n">car</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;The %s is a %d year old car.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">car</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">car</span><span class="o">-&gt;</span><span class="n">age</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Car</span><span class="w"> </span><span class="n">dodge_viper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Dodge Viper&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">age</span><span class="o">=</span><span class="mi">31</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="n">announce_car</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dodge_viper</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// The Dodge Viper is a 31 year old car.</span>
+
+<span class="w">  </span><span class="n">Dog</span><span class="w"> </span><span class="n">bruno</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Bruno&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">age</span><span class="o">=</span><span class="mi">5</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="n">announce_car</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bruno</span><span class="p">);</span>
+<span class="w">  </span><span class="cm">/*</span>
+<span class="cm">   * main.c:31:16: error: incompatible pointer types passing &#39;Dog *&#39; to parameter of type &#39;Car *&#39; [-Werror,-Wincompatible-pointer-types]</span>
+<span class="cm">   *   announce_car(&amp;bruno);</span>
+<span class="cm">   *                ^~~~~~</span>
+<span class="cm">   * main.c:13:24: note: passing argument to parameter &#39;car&#39; here</span>
+<span class="cm">   * void announce_car(Car *car) {</span>
+<span class="cm">   *                        ^</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>This C program is almost identical to the Typescript code, except that I've made the <code>Car</code> and <code>Dog</code> types structurally identical to one another. C does not let me pass a <code>Dog</code> to the <code>announce_car</code> function.<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup> If I really wanted to pass a <code>Dog</code> to <code>announce_car</code> in a nominally typed language, I'd have to cast it to a <code>Car</code> or manually create a new <code>Car</code> with the values from my <code>Dog</code>.</p>
+<p>IMHO, unless you already understand the difference between structural typing and nominal typing, <a href="https://github.com/microsoft/TypeScript/issues/202">microsoft/Typescript#202</a> doesn't do a very good job explaining it. But the feature being requested is the ability to opt into nominal typing for a given type. If I could specify that <code>Car</code> is a nominal type and a function expects a <code>Car</code>, you'd need to either give it a <code>Car</code> or cast the value you're passing into a <code>Car</code> first.</p>
+<p>But... why? Why do people want this feature so badly?</p>
+<p>Let me give you the most concrete example I've seen for why nominal typing could be so helpful.</p>
+<div class="highlight"><pre class="typescript"><span></span><span class="kr">type</span><span class="w"> </span><span class="nx">CarID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Car</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">CarID</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">type</span><span class="w"> </span><span class="nx">DogID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Dog</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">DogID</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">loadCar</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">CarID</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Car</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Loads a Car from the database</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Car</span><span class="p">;</span><span class="w"> </span><span class="c1">// Pretend this actually works</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">updateCarName</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">CarID</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Car</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Sets a Car&#39;s name in the database</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Car</span><span class="p">;</span><span class="w"> </span><span class="c1">// Pretend this actually works</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">loadDog</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">DogID</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Dog</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Loads a Dog from the database</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Dog</span><span class="p">;</span><span class="w"> </span><span class="c1">// Pretend this actually works</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="nx">bruno</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loadDog</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+
+<span class="nx">updateCarName</span><span class="p">(</span><span class="nx">bruno</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Chevy Bel Air&quot;</span><span class="p">);</span>
+</pre></div>
+
+<p>The problem is in the last line. I'm passing a <code>DogID</code> to a function that expects a <code>CarID</code>. This is incorrect and can cause serious data corruption in my database. Typescript doesn't flag this as incorrect currently. Because Typescript's type system is structural, <code>type CarID = number;</code> causes <code>CarID</code> to be nothing more than a synonym for <code>number</code>.</p>
+<p>Although <code>CarID</code> and <code>DogID</code> are technically both numbers, they are <em>not</em> semantically identical. If they could be declared as nominal types, Typescript would flag my attempt to pass <code>bruno.id</code> to <code>updateCarName</code> as a type error.</p>
+<p>If I was really, <em>really</em> sure that I was doing the right thing, I could make Typescript accept it by casting, like this:</p>
+<div class="highlight"><pre class="typescript"><span></span><span class="nx">updateCarName</span><span class="p">(</span><span class="nx">bruno</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">CarID</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Chevy Bel Air&quot;</span><span class="p">);</span>
+</pre></div>
+
+<p>This may seem like an odd concept, having explicit nominal types in an otherwise structural type system. I tried searching for prior art, but I didn't really find anything that works quite like what's being proposed in <a href="https://github.com/microsoft/TypeScript/issues/202">microsoft/Typescript#202</a>. In Elm, you can achieve a similar effect using algebraic data types. Typescript doesn't support algebraic data types and it likely never will as that's a whole different beast.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup> Flow treats classes as nominal types, but that's all. It's not something you can opt into for basic types like numbers.</p>
+<p>If you read through the <a href="https://github.com/microsoft/TypeScript/issues/202">microsoft/Typescript#202</a> ticket, you'll see plenty of people's attempts to achieve the desired effect using Typescript as it exists today. There are multiple libraries available on NPM that attempt to achieve this goal, too. But in my experience, they either fall short or they're not ergonomic enough.</p>
+<p>Take opaque types, for example. They typically look something like this:</p>
+<div class="highlight"><pre class="typescript"><span></span><span class="nx">OpaqueType</span><span class="o">&lt;</span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DogID&#39;</span><span class="o">&gt;</span>
+</pre></div>
+
+<p>This will achieve the desired outcome <em>if and only if you use them consistently everywhere</em>. For example, you can't assign a value of type <code>OpaqueType&lt;number, &#x27;DogID&#x27;&gt;</code> to a variable of type <code>OpaqueType&lt;number, &#x27;CarID&#x27;&gt;</code>. But you can absolutely assign a bog standard <code>number</code> to either of them, which kind of defeats the point.</p>
+<p>You could also wrap values in a class of some kind, but the ergonomics are then shot to hell when you have to wrap and unwrap every time you need to access the underlying value.</p>
+<p>How does this feature request compare to the <code>throws</code> feature request from the first half of this blog post? It has fewer 👍 reactions, but more discussion. As the issue number implies, it's been around longer. A whole 9 years! Looking at the request honestly, I think nominal types would be less impactful for the average developer than the <code>throws</code> feature. But it would still be a nice addition because it could help eliminate an entire class of bugs if used diligently.</p>
+<hr/>
+<section class="footnotes">
+<ol>
+<li id="fn-1"><p>Shout out to Emily! Thanks for the great question and the inspiration for this blog post. ❤️<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
+<li id="fn-2"><p>Interestingly, you can't throw <code>void</code>. Thank goodness for small favors, I guess.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
+<li id="fn-3"><p>Well, it would let me pass a <code>Dog</code> to <code>announce_car</code> if I hadn't compiled it with the <code>-Werror</code> flag. In that case, the compiler emits the same message as a warning and lets me do it anyway, which does work. But it only works because the types are literally the same. If I add a <code>breed</code> field to <code>Dog</code> after <code>name</code> but before <code>age</code> and set <code>breed</code> to "terrier", <code>announce_car</code> will emit "The Bruno is a 4195924 year old car." But that's beyond the scope of the point I'm trying to make here.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
+<li id="fn-4"><p>FWIW, I love algebraic data types. I think they're more expressive than what Typescript currently has. But I don't think ADTs can map cleanly onto JavaScript's type system, meaning it's incompatible with Typescript's design goals.<a class="footnote" href="index.html#fnref-4">↩</a></p></li>
+</ol>
+</section>
+</div>
+</content>
+
+
+
+    <p class="tags">
+    
+        <a href="../blog/index.html%3Fq=typescript.html">#typescript</a>
+    
+        <a href="../blog/index.html%3Fq=programming&#32;language&#32;theory.html">#programming language theory</a>
+    
+    </p>
+
+    
+    <small>
+    <form id="upvote-form" action="https://jaysherby.com/upvote/32835/" method="post" style="display: inline">
+        <input hidden name="pk" value="32835" style="display:none"/>
+        <input hidden name="title" style="display:none"/>
+        
+        <button>▵ Toast this post</button>
+        
+    </form>
+    - <small class="upvote-count">1 toast</small>
+</small>
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.innerText = "▵ Toasted"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)} toasts`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+
+    <style>
+      body:hover {
+        border-image: url("https://jaysherby.com/hit/32835");
+        border-width: 0;
+      }
+    </style>
+  </footer>
+</body>
+</html>
