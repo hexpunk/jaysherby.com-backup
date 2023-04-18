@@ -205,6 +205,42 @@ ul.blog-posts li span {
 ul.blog-posts li a:visited {
     color: var(--visited-color);
 }
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  display: flex;
+  flex-direction: column;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
 content img {
   display: block;
   margin-left: auto;
@@ -251,6 +287,17 @@ main {
 <content>
     
     <ul class="blog-posts">
+        
+        <li>
+            <span>
+                <i>
+                    <time datetime="2023-04-17" pubdate>
+                        17 Apr, 2023
+                    </time>
+                </i>
+            </span>
+            <a href="../permission-to-treat-the-ai-as-hostile-your-honor/index.html">Permission To Treat The AI As Hostile, Your Honor?</a>
+        </li>
         
         <li>
             <span>
@@ -366,9 +413,13 @@ main {
             
                 <a href="index.html%3Fq=podman.html">#podman</a>
             
+                <a href="index.html%3Fq=political%3F.html">#political?</a>
+            
                 <a href="index.html%3Fq=pop_os.html">#pop_os</a>
             
                 <a href="index.html%3Fq=programming&#32;language&#32;theory.html">#programming language theory</a>
+            
+                <a href="index.html%3Fq=rant.html">#rant</a>
             
                 <a href="index.html%3Fq=spam.html">#spam</a>
             
