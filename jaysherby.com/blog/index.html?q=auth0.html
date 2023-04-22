@@ -213,8 +213,13 @@ blockquote.them {
   padding: 0 16px;
   
   /* Prevent margin collapse */
-  display: flex;
-  flex-direction: column;
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
 }
 
 blockquote.me {
@@ -224,11 +229,19 @@ blockquote.me {
   margin: 20px 0 20px 20%;
 }
 
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
 blockquote.them {
   background-color: #e5e7eb;
   border-radius: 10px 10px 10px 0;
   color: #444;
   margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
 }
 
 blockquote.me p,
@@ -292,6 +305,17 @@ main {
     </small>
     
     <ul class="blog-posts">
+        
+        <li>
+            <span>
+                <i>
+                    <time datetime="2023-04-22" pubdate>
+                        22 Apr, 2023
+                    </time>
+                </i>
+            </span>
+            <a href="../block-users-in-auth0-from-the-command-line/index.html">Block Users In Auth0 From The Command Line</a>
+        </li>
         
         <li>
             <span>
