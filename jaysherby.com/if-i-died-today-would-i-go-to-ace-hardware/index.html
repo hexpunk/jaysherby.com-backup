@@ -222,8 +222,13 @@ blockquote.them {
   padding: 0 16px;
   
   /* Prevent margin collapse */
-  display: flex;
-  flex-direction: column;
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
 }
 
 blockquote.me {
@@ -233,11 +238,19 @@ blockquote.me {
   margin: 20px 0 20px 20%;
 }
 
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
 blockquote.them {
   background-color: #e5e7eb;
   border-radius: 10px 10px 10px 0;
   color: #444;
   margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
 }
 
 blockquote.me p,
@@ -346,7 +359,7 @@ main {
         <button>▵ Toast this post</button>
         
     </form>
-    - <small class="upvote-count">4 toasts</small>
+    - <small class="upvote-count">5 toasts</small>
 </small>
 <script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
