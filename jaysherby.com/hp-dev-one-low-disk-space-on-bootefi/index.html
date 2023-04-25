@@ -17,6 +17,9 @@
 <meta name="jaysherby" content="look-for-the-bear-necessities"/>
 
 
+
+
+
 <!-- Primary Meta Tags -->
 <meta name="title" content="HP Dev One, low disk space on /boot/efi">
 <meta name="description" content="I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don&#x27;t get me wrong, I...">
@@ -316,7 +319,7 @@ main {
 
 
 <content>
-<div><p>I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don't get me wrong, I'm generally very happy with it.  But HP discontinued the line and my daily driver laptop is a technological dead end.</p>
+<p>I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don't get me wrong, I'm generally very happy with it.  But HP discontinued the line and my daily driver laptop is a technological dead end.</p>
 <p>Recently I started receiving warning messages that my boot partition, <code>/boot/efi</code> is low on space.  Sure enough, the 512 MB boot partition is 96% full.</p>
 <p>I searched the internet and while there are plenty of people complaining about this issue, there seem to be few fixes.  Many recommend increasing the size of the partition to 1 GB, though they admit it's a complicated process to do so.  The easiest way is a full reinstall of the OS, although you can technically resize the partitions without such a drastic course of action if you're willing to futz around.</p>
 <p>I tried doing a "system refresh" via means built into Pop!_OS. I didn't lose any of my personal data, but I did have to reinstall all my applications. It seemed to fix the issue, although boot partition usage still hovered on the brink at 95%.</p>
@@ -324,7 +327,6 @@ main {
 <p>I did some more searching today and found <a href="https://github.com/pop-os/pop/issues/1714">this GitHub thread</a>. For posterity, if you're using an HP Dev One laptop like I am, there's a high likelihood that an old, already installed firmware update is hanging around in the boot partition, taking up precious space.</p>
 <p>It's safe to delete <code>/boot/efi/EFI/HP</code> and <code>/boot/efi/EFI/pop</code> directories, which hold firmware update files.</p>
 <p>After deleting those directories, my boot partition is now down to a relatively safe 82% usage.</p>
-</div>
 </content>
 
 
@@ -368,7 +370,10 @@ main {
   </main>
   <footer style="padding:25px 0;">
     
-Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+
+<span>
+    Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
 
     <style>
       body:hover {
