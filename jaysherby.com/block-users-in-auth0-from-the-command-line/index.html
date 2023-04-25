@@ -17,6 +17,9 @@
 <meta name="jaysherby" content="look-for-the-bear-necessities"/>
 
 
+
+
+
 <!-- Primary Meta Tags -->
 <meta name="title" content="Block Users In Auth0 From The Command Line">
 <meta name="description" content="As previously established, I use Auth0 at work. Whenever a client decides not to renew their contract, which I&#x27;m thankful is an uncommon event1, I have to co...">
@@ -320,7 +323,7 @@ main {
 
 
 <content>
-<div><p><img alt="Original art, one of the Blockheads from Gumby" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png"/></p>
+<p><img alt="Original art, one of the Blockheads from Gumby" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png"/></p>
 <p>As <a href="../terraform-cloud-cdktf-auth0/index.html">previously established</a>, I use Auth0 at work. Whenever a client decides not to renew their contract, which I'm thankful is an uncommon event<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, I have to collect each user's email address from our application, search for their account in the Auth0 web app, and block each user.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> It's a tedious process.</p>
 <p>I've only had to do this process once so far. But being a developer, I immediately wanted to automate this process with a shell script. With Auth0's web app, it takes a copy/paste and 4 clicks <em>per user</em> I'm blocking. That's unacceptable. After the first half-dozen users, my eyes lose focus and my mind starts to wander. And that's when the odds I'll make a mistake spike.</p>
 <p>This was the push I needed to finally install Auth0's command line tool, <a href="https://github.com/auth0/auth0-cli">auth0-cli</a>.</p>
@@ -349,7 +352,6 @@ main {
 <li id="fn-4"><p><a href="https://xkcd.com/1205/">https://xkcd.com/1205/</a><a class="footnote" href="index.html#fnref-4">↩</a></p></li>
 </ol>
 </section>
-</div>
 </content>
 
 
@@ -393,7 +395,10 @@ main {
   </main>
   <footer style="padding:25px 0;">
     
-Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+
+<span>
+    Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
 
     <style>
       body:hover {
