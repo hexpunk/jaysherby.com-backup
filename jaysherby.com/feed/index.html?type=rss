@@ -9,6 +9,78 @@ I'm an experienced software developer in Chicago....</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Counting My Chickens Before They Hatch</title>
+      <link>https://jaysherby.com/counting-my-chickens-before-they-hatch/</link>
+      <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art: Cucco from The Legend of Zelda: Breath of the Wild" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682818406-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;I made &lt;a href="https://jaysherby.com/three-hens-three-eggs-three-days/"&gt;a post&lt;/a&gt; yesterday about a particular word problem.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"3 hens lay 3 eggs in 3 days. How many eggs do 12 hens give in 12 days?"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I eventually looked at the problem from the point of view of a pattern recognition problem to see if the incorrect answer of 12 would ever make sense.&lt;/p&gt;
+&lt;p&gt;As I was falling asleep last night, that pattern was stuck in my head.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;3, 3, 3, 12, 12, 48&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;I described it in my blog post as two sequences happening simultaneously.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;One sequence is [...] taking the previous value and multiplying it by 4. But also, the number of times that value is repeated in the sequence is reduced by 1 each time.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This explanation didn't satisfy me. There's something else going on here.&lt;/p&gt;
+&lt;p&gt;I got out of bed and went to my whiteboard. The first thing I did was assign each place in the sequence a value.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;a, b, c, x, y, z&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;a&lt;/em&gt; and &lt;em&gt;x&lt;/em&gt; are the number of hens&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;b&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt; are the number of days&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;c&lt;/em&gt; is the number of eggs we already know relative to the values of &lt;em&gt;a&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;z&lt;/em&gt; is the number of eggs we want to figure out relative to the values of &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There's a relationship here. If you plug in the example problem of &lt;em&gt;3, 3, 3, 12, 12, 48&lt;/em&gt;, the relationship soon emerges.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;x&lt;/em&gt; / &lt;em&gt;a&lt;/em&gt; = 4.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;y&lt;/em&gt; / &lt;em&gt;b&lt;/em&gt; = 4.&lt;/p&gt;
+&lt;p&gt;4 * 4 = 16.&lt;/p&gt;
+&lt;p&gt;16 * &lt;em&gt;c&lt;/em&gt; = 48.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;z&lt;/em&gt; / &lt;em&gt;c&lt;/em&gt; = 16.&lt;/p&gt;
+&lt;p&gt;I tried different combinations of numbers, especially including values where &lt;em&gt;x&lt;/em&gt; / &lt;em&gt;a&lt;/em&gt; ≠ &lt;em&gt;y&lt;/em&gt; / &lt;em&gt;b&lt;/em&gt;. The relationship held.&lt;/p&gt;
+&lt;p&gt;Next, I generalized the relationship into an algebraic equation.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;z&lt;/em&gt; = ( &lt;em&gt;x&lt;/em&gt; / &lt;em&gt;a&lt;/em&gt; ) * ( &lt;em&gt;y&lt;/em&gt; / &lt;em&gt;b&lt;/em&gt; ) * &lt;em&gt;c&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Because multiplication is commutative, the assigned values of &lt;em&gt;a&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt; can be swapped so long as &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt; are also swapped. But &lt;em&gt;c&lt;/em&gt; and &lt;em&gt;z&lt;/em&gt; must be the produced quantities.&lt;/p&gt;
+&lt;h2 id="enter-leibniz"&gt;Enter Leibniz&lt;/h2&gt;
+&lt;p&gt;What the hell did I just discover? After a little research this morning, this appears to be an application of the &lt;a href="https://en.wikipedia.org/wiki/Product_rule"&gt;product rule&lt;/a&gt;, originally discovered by Gottfried Leibniz in the late 1600s.&lt;/p&gt;
+&lt;h2 id="about-those-sat-questions"&gt;About those SAT questions&lt;/h2&gt;
+&lt;p&gt;In my blog post from yesterday, I mentioned how much I hate those SAT pattern recognition questions because the human mind is capable of finding a pattern to fit almost any sequence. Does this formula constitute a pattern?&lt;/p&gt;
+&lt;p&gt;The variables in my equation have very specific meanings. Plugging in random numbers will always result in an answer, but it will be devoid of meaning.&lt;/p&gt;
+&lt;p&gt;We &lt;em&gt;can&lt;/em&gt; turn this into a sequence, though. Every sixth number in the sequence is the result of plugging the previous five numbers into my formula. We can keep going on like that forever.&lt;/p&gt;
+&lt;p&gt;There's a precedent for this type of relationship: the Fibonacci sequence. It's a sequence. It's right there in the name. It's a much simpler sequence from mine since each number is calculated using only the previous &lt;em&gt;two&lt;/em&gt; elements of the sequence.&lt;/p&gt;
+&lt;p&gt;Nonetheless, I have successfully defined a sequence. The problem with this is, if I'm allowed to introduce constants into my equation, given enough time I can deduce an equation that will fit any of the possible answers given to me in a multiple choice SAT question. All answers are equally valid. That means every question like this should be answered with the "not enough information" choice.&lt;/p&gt;
+&lt;p&gt;As much as I'd like to blow up this entire class of question, there is one major exception. My explanation only holds &lt;em&gt;if the element you're being asked to identify is the next element in the sequence&lt;/em&gt;. If you are given elements of the sequence after the one you're being asked to identify, the number of equations that can describe the sequence is finite.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;In case you were interested, here are the first 20 elements of the pattern. It's not too interesting since it almost immediately flies off towards infinity.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;3&lt;/li&gt;
+&lt;li&gt;3&lt;/li&gt;
+&lt;li&gt;3&lt;/li&gt;
+&lt;li&gt;12&lt;/li&gt;
+&lt;li&gt;12&lt;/li&gt;
+&lt;li&gt;48&lt;/li&gt;
+&lt;li&gt;768&lt;/li&gt;
+&lt;li&gt;12288&lt;/li&gt;
+&lt;li&gt;3145728&lt;/li&gt;
+&lt;li&gt;51539607552&lt;/li&gt;
+&lt;li&gt;54043195528445952&lt;/li&gt;
+&lt;li&gt;928455029464035206174343168&lt;/li&gt;
+&lt;li&gt;66902235595591869424607154817945084517941248&lt;/li&gt;
+&lt;li&gt;20705239040371691362304267586831076357353326916511159665487572671397888&lt;/li&gt;
+&lt;li&gt;461742260113997803268895001173557974278278194575766953140019063331004552009732936852510932674432605165702671761408&lt;/li&gt;
+&lt;li&gt;12747311827602410368550116957259247055910234825448766156786659316809685436660453825739900054365502856053343907669916024368317904103664973745828479490398096446651950500049437256761475072&lt;/li&gt;
+&lt;li&gt;1961990857885010963650680631823733783986947287058472181598664041205476778182866435229245078397880599598867198945714990524634665440110438312253035444585920679431378376737835263443800281688666590920035555814156459042403919909802020427093300283095165328595800136295143219176104095151237375519507873792&lt;/li&gt;
+&lt;li&gt;8336703089455133366253152637284505809216106471025844872390916830078815575581716044809646733032619265778616285213946759452207573085365746121822190631552401897417984702241327995637007318439703819819237017739078217612263549262265907559878444210418396373430070436733784433880601967804216389727083671042268193066961537250359120881286712926652917288624603217799822741930541296725501513875590257340980893439367556323057845622863001578088832839595986733772796229913557054493030117443371008&lt;/li&gt;
+&lt;li&gt;21808713661883597881563482374816415506066458402606988584590146896407494641065003461831469007829236921156939848394548172685483468715249357409552864052535890566787091743536561319816497267475461380795954996794821697173460608140121128860067371567611284145986832882650074993192221238569222473848150948841889432872711728052735326108039592413636631969494641800703444401927343994874942236492255358796779598962031186861060517805812614909395833001503943326406130958029852004294995639392298626246110742915597698101176592399241095915330685964471084067208889434900400998183916750423928183756736534872617595679477941742688478064711541163297658079970897067805016422557754150686381214242124153995378971740082925111939907759963687990210368621967550245292511732835681608681678929932964441461096448&lt;/li&gt;
+&lt;li&gt;60604256854022455093416113615681329650788523232643268568446634166405803425760396292576876300156809099996745624104215236437174153009846337725481235827858011322629332419404707777286667575322924328823740197618709269757729497276279418795160516272276681232893064946547876708458499090359385417773135547670386025358232488397503658100102738605685493774721048809628900878842525522041634515650698010767584128105038647212056710796143039680022833147354811277939756240661313557159264926210709840939253717480829082139147488902509754199282883647950287165352778879846479794425781195146308500281075929994839691232702249051198079689462500764679392797712366748255171373161585181058901273664905793866974434550689497775178372280249086096851329412585713177961696929890483108780291025804376980672734520729475599923391166557111156608828732488219244373540917445750173201442703216860370344268672583211344894439092265361992781877161021646396073051125966332668484609638585655435717364152897091976636524200621392911128114208469486815282540111983881432019772211891335584199847624097880333496939806842751687644513206237638629944268587441328304542108028079325327137992235014007415763478728662561674659220731113476318565711033678672613928453409029313113871212397039223962680514829246978326528&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/counting-my-chickens-before-they-hatch/</guid>
+      <pubDate>Sat, 29 Apr 2023 17:45:29 +0000</pubDate>
+    </item>
+    <item>
       <title>Three Hens, Three Eggs, Three Days</title>
       <link>https://jaysherby.com/three-hens-three-eggs-three-days/</link>
       <description>&lt;div&gt;&lt;p&gt;&lt;img alt="Original art: Exeggcute, an egg-like Pokémon" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682722199-0.png"&gt;&lt;/p&gt;
@@ -52,6 +124,8 @@ I'm an experienced software developer in Chicago....</description>
 &lt;p&gt;Therefore, the correct answer to the question of what the next number in the sequence &lt;em&gt;3, 3, 3, 12, 12, ?&lt;/em&gt; cannot be determined without more information about the sequence.&lt;/p&gt;
 &lt;h2 id="the-moral"&gt;The moral&lt;/h2&gt;
 &lt;p&gt;The moral to the story, if there is one at all, is not to trust your lizard brain when it comes to logic problems. Or trust, but also verify. Our brains are &lt;em&gt;so&lt;/em&gt; good at finding patterns and correlations, we tend to see them where they don't exist at all.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Wanna see more chicken-egg-day shenanigans? I wrote &lt;a href="https://jaysherby.com/counting-my-chickens-before-they-hatch/"&gt;even more&lt;/a&gt; about this the day after this post.&lt;/p&gt;
 &lt;/div&gt;</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/three-hens-three-eggs-three-days/</guid>
@@ -970,70 +1044,6 @@ ignore_chown_errors = "true"
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/tips-for-becoming-a-pod-person/</guid>
       <pubDate>Thu, 16 Mar 2023 00:36:53 +0000</pubDate>
-    </item>
-    <item>
-      <title>Randomizing My MAC Address With NetworkManager</title>
-      <link>https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/</link>
-      <description>&lt;div&gt;&lt;p&gt;My life is harder for knowing and caring about my own privacy and security.  For example, if you've ever connected to the wifi at a Starbucks using a laptop, you'll have noticed the "captive portal" system they use.  That's the page that pops up before you can actually use the internet.  It asks you for your name, email address, and zip code.&lt;/p&gt;
-&lt;p&gt;You may also notice that once you fill out that form, you never have to do it again.  Every time you connect to the Starbucks wifi afterwards, it'll usually still give you a captive portal page, but you'll never have to "log in" again.  This usually holds true &lt;em&gt;even if you visit a different Starbucks with the same computer.&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;Guess what? Starbucks is tracking you.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; I don't like that, so I lie every time I fill out that form.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; &lt;em&gt;Or do I?&lt;/em&gt; 😉&lt;/p&gt;
-&lt;p&gt;The way Starbucks remembers your computer is by recording the MAC address of your wifi adapter.&lt;/p&gt;
-&lt;p&gt;This is a very old, very well-known privacy risk. Most operating systems have made it relatively easy to spoof your MAC address with a semi-randomly generated one to mitigate this risk. Some even do this by default now.&lt;/p&gt;
-&lt;p&gt;Even so, I have particular preferences for how I prefer this feature to work that my system's default settings don't meet.&lt;/p&gt;
-&lt;p&gt;I'm using Pop!_OS, which uses NetworkManager.  I'll show you its default setup, how I changed it, and why.&lt;/p&gt;
-&lt;p&gt;Here's the default config, located at &lt;code&gt;/etc/NetworkManager/NetworkManager.conf&lt;/code&gt;, that shipped with my machine:&lt;/p&gt;
-&lt;pre&gt;[main]
-plugins=ifupdown,keyfile
-
-[ifupdown]
-managed=false
-
-[device]
-wifi.scan-rand-mac-address=no
-
-&lt;/pre&gt;
-&lt;p&gt;Shame on you, Pop!_OS!  See &lt;code&gt;wifi.scan-rand-mac-address=no&lt;/code&gt;?  That turns off MAC randomization during access point scanning! That means you're leaking your MAC address before you even connect to wifi. Passive listeners can track you. This isn't even the default behavior &lt;a href="https://blogs.gnome.org/thaller/2016/08/26/mac-address-spoofing-in-networkmanager-1-4-0/"&gt;as of NetworkManager 1.4.0&lt;/a&gt;. This is pretty embarrassing. Even Android randomizes your MAC address when scanning nowadays.&lt;/p&gt;
-&lt;p&gt;Here are my changes:&lt;/p&gt;
-&lt;pre&gt;[main]
-plugins=ifupdown,keyfile
-
-[ifupdown]
-managed=false
-
-[device]
-wifi.scan-rand-mac-address=yes
-
-[connection]
-ethernet.cloned-mac-address=random
-wifi.cloned-mac-address=random
-&lt;/pre&gt;
-&lt;p&gt;I changed &lt;code&gt;wifi.scan-rand-mac-address&lt;/code&gt; to &lt;code&gt;yes&lt;/code&gt;, even though it's the default behavior. Just to be extra sure.&lt;/p&gt;
-&lt;p&gt;I also added a setting called &lt;code&gt;cloned-mac-address&lt;/code&gt; to both ethernet&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; and wifi, and set it to &lt;code&gt;random&lt;/code&gt;. This setting has a few other possible values. I'll quote the manual.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Beside explicitly specifying a MAC address, the special values "preserve", "permanent", "random" and "stable" are supported. "preserve" means not to touch the MAC address on activation. "permanent" means to use the permanent hardware address if the device has one (otherwise this is treated as "preserve"). "random" creates a random MAC address on each connect. "stable" creates a hashed MAC address based on connection.stable-id and a machine dependent key.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;In other words, &lt;code&gt;permanent&lt;/code&gt; and probably &lt;code&gt;preserve&lt;/code&gt; will leak your physical MAC address when you connect to an access point. &lt;code&gt;stable&lt;/code&gt; won't leak your physical MAC address, but it will result in a given access point seeing the same fake MAC address every time you connect to it.  That doesn't really prevent tracking if every Starbucks access point presents identically.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt; I want &lt;code&gt;random&lt;/code&gt;. It generates a new, random MAC address on every connection.&lt;/p&gt;
-&lt;p&gt;There. No more tracking. Now I just have to fill out that stupid captive portal form every time I go to Starbucks with my laptop.&lt;sup class="footnote-ref" id="fnref-5"&gt;&lt;a href="#fn-5"&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;h2 id="but-what-if-my-router-yells-at-me"&gt;But what if my router yells at me?&lt;/h2&gt;
-&lt;p&gt;This happened to me. My Synology router started sending push notifications to my phone every time I turned on my laptop, asking me if I know this mysterious device that just connected.&lt;/p&gt;
-&lt;p&gt;I needed to make an exception to the rules, but just for this one wifi network.  Happily, the option to change this setting is actually in the GUI.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Oh, no! I forgot to censor my home network's SSID!" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678841041-0.png"&gt;&lt;/p&gt;
-&lt;p&gt;You can see here I've set this particular connection to &lt;code&gt;stable&lt;/code&gt;. Works like a charm.&lt;/p&gt;
-&lt;p&gt;I'm sure there's a way to do this on the command line, or in a configuration file somewhere, but I haven't needed to figure that out yet.&lt;/p&gt;
-&lt;hr&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;I have no idea if Starbucks is actively using the data they're collecting, but they &lt;em&gt;are&lt;/em&gt; collecting it. Even if it's just within log files. I mean, they wouldn't ask you a bunch of personal information if they weren't going to use it for &lt;em&gt;something&lt;/em&gt;, right? I'm sure they tell you what they're doing with it in their T&amp;amp;C. But who reads those?&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;I've noticed that they'll deny you access if you make up random email domains. Gmail addresses seem to always work, though.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;My laptop doesn't have a built-in ethernet port, so this is probably unnecessary. But it's not hurting anything, and it'll protect me in the one-in-a-million chance I ever plug in a USB-to-ethernet dongle.&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-4"&gt;&lt;p&gt;And almost every Starbucks access point does present identically. This is why your phone or laptop will automatically connect to Starbucks wifi even if you've never been to that particular location before.&lt;a class="footnote" href="#fnref-4"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-5"&gt;&lt;p&gt;Yep.  I'm apparently willing to pay that price because I care that much about my privacy.  Do you think I like living this way?  I guess my Walter Mitty daydreams include living in the world of &lt;em&gt;Hackers (1995)&lt;/em&gt;, and running Silk Road from coffee shops but &lt;em&gt;not&lt;/em&gt; getting caught like Ulbricht did.&lt;a class="footnote" href="#fnref-5"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-&lt;/div&gt;</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/</guid>
-      <pubDate>Tue, 14 Mar 2023 23:31:40 +0000</pubDate>
     </item>
   </channel>
 </rss>
