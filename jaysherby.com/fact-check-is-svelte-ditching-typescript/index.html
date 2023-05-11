@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5"/>
+  
+  <title>Fact Check: Is Svelte Ditching Typescript? | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html" />
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities"/>
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="Fact Check: Is Svelte Ditching Typescript?">
+<meta name="description" content="Claim:
+
+Svelte is dropping Typescript in favor of JSDoc comments.
+
+Rating:
+&lt;✅|❌&gt; Mixed
+
+A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev co...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Fact Check: Is Svelte Ditching Typescript?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/fact-check-is-svelte-ditching-typescript/">
+<meta property="og:description" content="Claim:
+
+Svelte is dropping Typescript in favor of JSDoc comments.
+
+Rating:
+&lt;✅|❌&gt; Mixed
+
+A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev co...">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/fact-check-is-svelte-ditching-typescript/">
+<meta property="twitter:title" content="Fact Check: Is Svelte Ditching Typescript?">
+<meta property="twitter:description" content="Claim:
+
+Svelte is dropping Typescript in favor of JSDoc comments.
+
+Rating:
+&lt;✅|❌&gt; Mixed
+
+A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev co...">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Fact Check: Is Svelte Ditching Typescript?",
+    "url": "https://jaysherby.com/fact-check-is-svelte-ditching-typescript/",
+    "description": "Claim:
+
+Svelte is dropping Typescript in favor of JSDoc comments.
+
+Rating:
+&lt;✅|❌&gt; Mixed
+
+A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev co...",
+    "about": {
+      "@type": "Fact Check: Is Svelte Ditching Typescript?",
+      "description": "Claim:
+
+Svelte is dropping Typescript in favor of JSDoc comments.
+
+Rating:
+&lt;✅|❌&gt; Mixed
+
+A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev co..."
+    }
+  }
+</script>
+
+  
+
+
+
+
+
+
+
+
+  
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+
+  <style>
+      
+      :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+content {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    Fact Check: Is Svelte Ditching Typescript?
+</h1>
+
+<p>
+    <i>
+        <time datetime="2023-05-10" pubdate>
+            10 May, 2023
+        </time>
+    </i>
+</p>
+
+
+<content>
+<hr/>
+<h2 id="claim">Claim:</h2>
+<blockquote>
+<p>Svelte is dropping Typescript in favor of JSDoc comments.</p>
+</blockquote>
+<h2 id="rating">Rating:</h2>
+<p><✅|❌> <strong>Mixed</strong></p>
+<hr/>
+<p>A choice made by Svelte's creator, Rich Harris, rocked the web dev community today. If you're unfamiliar, Svelte is a front-end component framework that rides the fence between JavaScript framework and programming language. The seemingly contentious decision was to alter how the internal compiler uses Typescript.</p>
+<p><a href="https://github.com/sveltejs/svelte/pull/8569">The pull request</a>, which was locked as "too heated" earlier today after it trended on Hacker News, at first glance may look like Typescript is being ditched for plain, old JavaScript. However, looks can be deceiving.</p>
+<p>As explained in <a href="https://youtu.be/MJHO6FSioPI">a video</a> and <a href="https://twitter.com/Rich_Harris/status/1350436286948122625">a tweet</a> by Harris, Typescript is <em>not</em> being ditched. Instead, the Svelte compiler code is moving towards an interesting and often overlooked feature of Typescript: <a href="https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html">JSDoc Typescript</a>.</p>
+<p>I've been using Typescript as my primary front-end language for about five years now, and I must admit I didn't know JSDoc TS was a thing until today. And I think Harris may be on to something here.</p>
+<p>JSDoc TS uses special doc comment annotations that the Typescript compiler understands to add most of the benefits of Typescript's type checking to bog standard JavaScript code. The major advantage, which is the primary reason behind Harris's choice, is that you get the rich type-checking guarantees of Typescript without the required build step to strip out the Typescript and turn your code back into JavaScript.</p>
+<p>I remember a time when there were no build steps required to develop a rich, interactive website. Then we started breaking out our files into modules, which is generally a good thing. But this requires a build step to at least concatenate all of your source files together before your code can run in the browser. More build steps were added until we ended up with a build <em>pipeline</em>.</p>
+<p>Lamenting the loss of the simplicity of web development is so common that it's become a meme in developer circles. But the good news is that with overwhelming support of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">modules</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap">import maps</a> in browsers, I think we're closer than ever to returning to a build-less front-end world. But I don't want to give up the advantages of Typescript.</p>
+<p>Maybe JSDoc TS is the best of both worlds? I'm willing to give it a shot next time I start a small personal project.</p>
+</content>
+
+
+
+    <p class="tags">
+    
+    </p>
+
+    
+    <small>
+    <form id="upvote-form" action="https://jaysherby.com/upvote/36750/" method="post" style="display: inline">
+        <input hidden name="pk" value="36750" style="display:none"/>
+        <input hidden name="title" style="display:none"/>
+        
+        <button>▵ Toast this post</button>
+        
+    </form>
+    - <small class="upvote-count">1 toast</small>
+</small>
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.innerText = "▵ Toasted"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)} toasts`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+    <style>
+      body:hover {
+        border-image: url("https://jaysherby.com/hit/36750");
+        border-width: 0;
+      }
+    </style>
+  </footer>
+</body>
+</html>
