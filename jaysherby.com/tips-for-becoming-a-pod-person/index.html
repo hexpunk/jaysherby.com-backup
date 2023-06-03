@@ -334,6 +334,11 @@ main {
 <p>A large part of Docker's value to me comes from Docker Compose. If switching to Podman meant losing Docker Compose, I wouldn't have switched.</p>
 <p>Thankfully, Pop!_OS (and probably any other platforms that include Podman in their repos) has a package called <code>podman-docker</code> that satisfies packages that depend on Docker. Just make sure you install <code>podman-docker</code> before or at the same time as <code>docker-compose</code> so APT doesn't try to install Docker to satisfy Docker Compose's dependencies.</p>
 <p>If you're feeling adventurous, <a href="https://github.com/containers/podman-compose">Podman Compose</a> is a thing. But it's not available via my OS's default repositories and Docker Compose is.</p>
+<h3 id="permissionerror-errno-13-permission-denied">PermissionError: [Errno 13] Permission denied</h3>
+<p>I recently received this error when I tried running Docker Compose. I had already installed <code>podman-docker</code> like I mentioned. The solution was to add this to my <code>.bash_profile</code>:</p>
+<div class="highlight"><pre class="bash"><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">DOCKER_HOST</span><span class="o">=</span>unix:///run/user/<span class="nv">$UID</span>/podman/podman.sock
+</pre></div>
+
 <h2 id="i-need-docker-hub">I need Docker Hub</h2>
 <p>I also wouldn't use Podman if it meant I lost Docker Hub.</p>
 <p>The easiest way to get access to Docker Hub with Podman is to write the following file to <code>$HOME/.config/containers/registries.conf</code>:<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup></p>
