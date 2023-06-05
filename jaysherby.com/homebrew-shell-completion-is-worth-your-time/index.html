@@ -4,17 +4,15 @@
 <head>
   
   
-  
-  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
   
   <title>Homebrew Shell Completion Is Worth Your Time | Jay&#x27;s blog</title>
-  <link rel="canonical" href="index.html" />
+  <link rel="canonical" href="index.html">
   
 
 
-<meta name="jaysherby" content="look-for-the-bear-necessities"/>
+<meta name="jaysherby" content="look-for-the-bear-necessities">
 
 <!-- Primary Meta Tags -->
 <meta name="title" content="Homebrew Shell Completion Is Worth Your Time">
@@ -65,12 +63,12 @@
 
 
   
-  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
 
   <style>
       
       
-      :root {
+:root {
     --width: 800px;
     --font-main: Verdana, sans-serif;
     --font-secondary: Verdana, sans-serif;
@@ -289,6 +287,29 @@ header {
 main {
   flex-grow: 1;
 }
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+body:hover {
+    border-image: url("https://jaysherby.com/hit/32640/");
+    border-width: 0;
+}
+
+
       
   </style>
 </head>
@@ -319,7 +340,7 @@ main {
 
 <p>
     <i>
-        <time datetime="2023-03-26" pubdate>
+        <time datetime="2023-03-26">
             26 Mar, 2023
         </time>
     </i>
@@ -352,10 +373,11 @@ main {
     </p>
 
     
+    
+<form id="upvote-form" action="https://jaysherby.com/upvote/32640/" method="post" style="display: inline">
     <small>
-    <form id="upvote-form" action="https://jaysherby.com/upvote/32640/" method="post" style="display: inline">
-        <input hidden name="pk" value="32640" style="display:none"/>
-        <input hidden name="title" style="display:none"/>
+        <input hidden name="pk" value="32640" style="display:none">
+        <input hidden name="title" style="display:none">
         
         <button
             class="upvote-button"
@@ -368,28 +390,9 @@ main {
             </svg>
             <small class="upvote-count">5</small>
         </button>
-        
-    </form>
-    
-</small>
-<style>
-.upvote-button {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    background-color: inherit;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.upvote-button.upvoted {
-    color: salmon;
-}
-.upvote-count {
-    margin-top: -3px;
-}
-</style>
+    </small>        
+</form>
+
 <script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -417,12 +420,6 @@ main {
     Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
 </span>
 
-    <style>
-      body:hover {
-        border-image: url("https://jaysherby.com/hit/32640");
-        border-width: 0;
-      }
-    </style>
   </footer>
 </body>
 </html>
