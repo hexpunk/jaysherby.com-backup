@@ -139,7 +139,7 @@ button {
     cursor: pointer;
 }
 
-content {
+main {
     line-height: 1.6;
 }
 
@@ -347,8 +347,6 @@ body:hover {
     </i>
 </p>
 
-
-<content>
 <p>If you want my advice on how to manage Auth0 using CDKTF and Terraform Cloud, here it is: don't.</p>
 <p>But since you're still reading, I assume you find yourself in the regrettable situation of needing to support just such a setup.  Here are some little nuggets I've learned the hard way that don't seem to be documented elsewhere.</p>
 <h2 id="rules-hooks-and-string-interpolation">Rules, Hooks, and String Interpolation</h2>
@@ -398,7 +396,6 @@ body:hover {
 <li id="fn-3"><p>In case you were wondering, you still need to add the <code>TF_VAR_</code> prefix yourself in Terraform Cloud. That wasn't immediately clear to me.  I'm guessing it's to support environment variables that don't start with <code>TF_VAR_</code> since providers (like Auth0 with <code>AUTH0_DOMAIN</code>, etc.) aren't required to conform to that pattern.  <img alt="Don't forget TF_VAR_" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678334687-0.png"/><a class="footnote" href="index.html#fnref-3">↩</a></p></li>
 </ol>
 </section>
-</content>
 
 
 
