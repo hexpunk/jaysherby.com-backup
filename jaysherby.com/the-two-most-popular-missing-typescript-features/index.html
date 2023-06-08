@@ -138,7 +138,7 @@ button {
     cursor: pointer;
 }
 
-content {
+main {
     line-height: 1.6;
 }
 
@@ -346,8 +346,6 @@ body:hover {
     </i>
 </p>
 
-
-<content>
 <p><img alt="Original art, the suspense is terrible, I hope it'll last" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png"/></p>
 <p>There are two features I think should be in Typescript that are currently missing. It's not just <em>my</em> opinion, either. When I was researching this blog post, I discovered that the tickets requesting these two features are the most discussed tickets with the "suggestion" tag still open. If I could wave a magic wand to change Typescript in any way, I'd add these two features.</p>
 <h2 id="13219-throws-clause-and-typed-catch-clause"><a href="https://github.com/microsoft/TypeScript/issues/13219">#13219</a> <code>throws</code> clause and typed catch clause</h2>
@@ -529,7 +527,6 @@ body:hover {
 <li id="fn-5"><p>The way most opaque type implementations work amounts to lying to the type system. Take <a href="https://github.com/ts-essentials/ts-essentials/tree/master/lib/opaque">the implementation from ts-essentials</a> for example. The implementation is only 9 lines long. It's got some interesting conditional types in there. I'm not exactly sure what bug it's trying to protect against. At the end of the day, the actual, literal type of <code>Opaque&lt;number, &#x27;CarID&#x27;&gt;</code> would be <code>number &amp; { [__OPAQUE_TYPE__]: &#x27;CarID&#x27; }</code>. But that's a lie. Numeric literals are "turned into" the opaque type via assertion: <code>5 as CarID</code>. There is no <code>__OPAQUE_TYPE__</code> on the value. <code>(1 as UserID)[__OPAQUE_TYPE__]</code> is valid according to the compiler. The ts-essentials implementation prevents us from being able to call its bluff by declaring <code>__OPAQUE_TYPE__</code> as a unique symbol that's never actually created or given a value, much less exported, so it's impossible to actually access that value since there's no way to access it. <a href="https://www.typescriptlang.org/play?#code/C4TwDgpgBAysBOBLAdgcwDKOBeBDANgDwAq4EAfFALxSmRQQAe2yAJgM5TsIqpQD8UABTckaBswhtOdaIOQQAbjigAuWmQCUaqAuXwA3ACgjrCAGN8ueNHMB7ZNygB9ZwHkACgEEAigFUAUWdiAE0PIOd1AFdkRABHKOh2EABbACM7fGMjUHoAdSwACzcwXASIEjsAaykJFg4uHjRKGgBvIygoG1xWB3wQKABtV09fQOCwiIBddWJqqWMAX2zc6BKyxJIyABpaeeQ6qQbRXha9moOmes44MQwsHAJKi8pBWSgAMigC4GLS8ueUko6j0OBWZCgAGFrABJAAi1Cg6wByCi6RwuwA5ND4PDMeRsvgIMAoIhWABGdQ4+GI8lQXCcalw7L2RyZCAAOnwdlQQjJ5OG7m8-iCoXCrimmgMQA">Try it in the playground</a> to see what I mean. I've copied and pasted the code from ts-essentials. It compiles fine but throws an error at runtime.<a class="footnote" href="index.html#fnref-5">↩</a></p></li>
 </ol>
 </section>
-</content>
 
 
 
