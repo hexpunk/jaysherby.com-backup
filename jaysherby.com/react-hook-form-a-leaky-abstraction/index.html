@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>React Hook Form: A Leaky Abstraction | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="React Hook Form: A Leaky Abstraction">
+<meta name="description" content="I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form1, sp...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="React Hook Form: A Leaky Abstraction">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/react-hook-form-a-leaky-abstraction/">
+<meta property="og:description" content="I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form1, sp...">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/react-hook-form-a-leaky-abstraction/">
+<meta property="twitter:title" content="React Hook Form: A Leaky Abstraction">
+<meta property="twitter:description" content="I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form1, sp...">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "React Hook Form: A Leaky Abstraction",
+    "url": "https://jaysherby.com/react-hook-form-a-leaky-abstraction/",
+    "description": "I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form1, sp...",
+    "about": {
+      "@type": "React Hook Form: A Leaky Abstraction",
+      "description": "I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form1, sp..."
+    }
+  }
+</script>
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+
+  
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+
+  <style>
+      
+      
+:root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+body:hover {
+    border-image: url("https://jaysherby.com/hit/39984/");
+    border-width: 0;
+}
+
+
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    React Hook Form: A Leaky Abstraction
+</h1>
+
+<p>
+    <i>
+        <time datetime="2023-06-10">
+            10 Jun, 2023
+        </time>
+    </i>
+</p>
+
+<p>I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.</p>
+<p>However, this past week I ran into a weird edge case. To set the stage, a friend and colleague<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a <code>&lt;select&gt;</code> style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.</p>
+<p>Here's a tiny example:</p>
+<div class="highlight"><pre class="typescript"><span></span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">groups</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useUser</span><span class="p">();</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">userHasMultipleGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">groups</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">defaultValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">group</span><span class="o">:</span><span class="w"> </span><span class="kt">userHasMultipleGroups</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">groups</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">value</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">control</span><span class="p">,</span><span class="w"> </span><span class="nx">handleSubmit</span><span class="p">,</span><span class="w"> </span><span class="nx">formState</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">errors</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useForm</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">defaultValues</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">resolver</span><span class="o">:</span><span class="w"> </span><span class="kt">yupResolver</span><span class="p">(</span><span class="nx">schema</span><span class="p">),</span>
+<span class="p">});</span>
+
+<span class="c1">// ...snip...</span>
+
+<span class="o">&lt;</span><span class="nx">Controller</span>
+<span class="w">  </span><span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">TextInput</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">}</span>
+<span class="w">  </span><span class="nx">control</span><span class="o">=</span><span class="p">{</span><span class="nx">control</span><span class="p">}</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span>
+<span class="err">/&gt;</span>
+
+<span class="p">{</span><span class="nx">userHasMultipleGroups</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="nx">Controller</span>
+<span class="w">    </span><span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">SelectInput</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">}</span>
+<span class="w">    </span><span class="nx">control</span><span class="o">=</span><span class="p">{</span><span class="nx">control</span><span class="p">}</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span>
+<span class="w">    </span><span class="nx">options</span><span class="o">=</span><span class="p">{</span><span class="nx">groups</span><span class="p">}</span>
+<span class="w">  </span><span class="o">/&gt;</span>
+<span class="p">)}</span>
+</pre></div>
+
+<p>Let me break this down in words briefly to make sure we're on the same page.</p>
+<p>This component checks a user's groups, which is provided by a custom hook called <code>useUser</code>.</p>
+<p>The form's default value for <code>group</code> is a blank string if the given user has multiple groups available to them. If the user has just one group, which is the most common case, their group's value is automatically the default value for that form input.</p>
+<p>Later, we choose to only render the <code>group</code> field if there are multiple choices to choose from.</p>
+<p>In practice, <em>this won't work</em>. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the <code>&quot;group&quot;</code> field.</p>
+<p>What gives? We set the default value for that field! Making things even more confusing, if we add a logging statement like <code>console.log(getValues())</code>, it will log an empty object until we start interacting with the form. It's like the default values aren't being used at all.</p>
+<p>After futzing around for a couple of hours and getting nowhere, here's the result.</p>
+<ol>
+<li><code>getValues()</code> doesn't know anything about <code>defaultValues</code>.</li>
+<li>The values in <code>defaultValues</code> won't propagate into the form's values unless the form <em>actually renders an input</em>.</li>
+<li>Similarly, using <code>setValue()</code> in a <code>useEffect</code> hook, for example, won't work for any field in the form that doesn't have an actual input rendered on the page.</li>
+</ol>
+<p>This is actually mentioned in the documentation, but it's not exactly front and center.</p>
+<blockquote>
+<ul>
+<li><p>Its not default state for the form, to include additional form values:</p>
+<ol>
+<li><p>Register hidden input: <code>&lt;input type=&quot;hidden&quot; ref={register} name=&quot;test&quot; /&gt;</code></p>
+</li>
+<li><p>Combine values at onSubmit callback.</p>
+</li>
+</ol>
+</li>
+</ul>
+<p>-- <a href="https://legacy.react-hook-form.com/v6/api#useForm">React Hook Form docs for <code>useForm</code>, specifically under <code>defaultValues</code></a></p>
+</blockquote>
+<p>This little tidbit is what tipped me off to this situation.<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup></p>
+<p>There's also a clue in the FAQs for v7 in the answer for the question, "How to work with modal or tab forms?"</p>
+<blockquote>
+<p>It's important to understand React Hook Form embraces native form behavior by storing input state inside each input (except custom <code>register</code> at <code>useEffect</code>). One of the common misconceptions is that when working with modal or tab forms, by mounting and unmounting form/inputs that inputs state will remain. That is incorrect. Instead, the correct solution would be to build a new form for your form inside each modal or tab and capture your submission data in local or global state and then do something with the combined data.</p>
+<p>-- <a href="https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms">React Hook Form FAQs, "How to work with modal or tab forms?"</a></p>
+</blockquote>
+<p>These bits of information, pieced together, answer the question of why every piece of data in a React Hook Form-based form must have an input associated with it, even if it's a hidden input.</p>
+<h2 id="a-leaky-abstraction">A Leaky Abstraction</h2>
+<p>I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.</p>
+<h3 id="the-abstraction">The Abstraction</h3>
+<p>I'm using React Hook Form to reduce the boilerplate of form state management.  I could write my own state management for any given form using only React built-ins like <code>useReducer</code> or I guess a dozen or so <code>useState</code> instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup></p>
+<p>I would assume when I'm using a form state management library, it's doing this same stuff for me behind the scenes. It's just handling all of that tedious boilerplate code for me, but I assume the semantics, like a separation between data and view, would remain the same.</p>
+<h3 id="the-leak">The Leak</h3>
+<p>As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.</p>
+<p>I'm willing to believe that my form is the edge case here. Most forms on the web can be built using React Hook Form and you'll never need to know about these implementation details. Most forms probably show all inputs every render. But we were improving UX so that users don't need to care about a required dropdown input if there's only one option to select from.</p>
+<p>I want to make it clear here that I'm not calling React Hook Form a leaky abstraction as an insult. I still mostly like the library, even if it's not built the same way I would choose to build it. I'm going to continue using it. I still prefer it to Formik. But this is an implementation detail, or perhaps a consequential design philosophy, that users should be aware of.</p>
+<hr/>
+<section class="footnotes">
+<ol>
+<li id="fn-1"><p>Because I regularly confuse the name as <code>react-form-hook</code>, I've given up and lovingly refer to it as <code>react-man-door-hand-hook-car-door</code> instead. I'm sure my coworkers have become tired of this joke.<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
+<li id="fn-2"><p>This is the second shout out to Emily on my blog! ❤️<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
+<li id="fn-3"><p>Note the docs' mention of combining the default data at the time of submission of the form. I did consider this approach after I'd already implemented an input component that intelligently used a hidden input when it made sense. But this approach wouldn't have worked in my case because I'm using schema validation to validate the form. Before I even got the chance to inject my default value, the validation would have failed and my submit function wouldn't have been called. I could have moved validation into my submit function, but then I'd lose the convenience of React Hook Form's built-in error messages. I guess I could make two versions of the schema, but who knows what unexpected gotchas that would uncover? It's a house of cards situation, and using a hidden input was the best choice.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
+<li id="fn-4"><p>It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.<a class="footnote" href="index.html#fnref-4">↩</a></p></li>
+</ol>
+</section>
+
+
+
+    
+
+    
+    
+<form id="upvote-form" action="https://jaysherby.com/upvote/39984/" method="post" style="display: inline">
+    <small>
+        <input hidden name="pk" value="39984" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">2</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+  </footer>
+</body>
+</html>
