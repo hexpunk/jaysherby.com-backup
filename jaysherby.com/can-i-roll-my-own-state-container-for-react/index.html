@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Can I Roll My Own State Container For React? | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="Can I Roll My Own State Container For React?">
+<meta name="description" content="I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.
+I was surprised wh...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Can I Roll My Own State Container For React?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/can-i-roll-my-own-state-container-for-react/">
+<meta property="og:description" content="I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.
+I was surprised wh...">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/can-i-roll-my-own-state-container-for-react/">
+<meta property="twitter:title" content="Can I Roll My Own State Container For React?">
+<meta property="twitter:description" content="I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.
+I was surprised wh...">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Can I Roll My Own State Container For React?",
+    "url": "https://jaysherby.com/can-i-roll-my-own-state-container-for-react/",
+    "description": "I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.
+I was surprised wh...",
+    "about": {
+      "@type": "Can I Roll My Own State Container For React?",
+      "description": "I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.
+I was surprised wh..."
+    }
+  }
+</script>
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+
+  
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+
+  <style>
+      
+      
+:root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+body:hover {
+    border-image: url("https://jaysherby.com/hit/41988/");
+    border-width: 0;
+}
+
+
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    Can I Roll My Own State Container For React?
+</h1>
+
+<p>
+    <i>
+        <time datetime="2023-06-29">
+            29 Jun, 2023
+        </time>
+    </i>
+</p>
+
+<p>I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.</p>
+<p>I was surprised when others brought up some libraries I hadn't heard of called <a href="https://recoiljs.org/">Recoil</a> and <a href="https://github.com/pmndrs/zustand">Zustand</a>. I've reviewed them briefly, and it looks like they each bring interesting benefits and improvements over bog-standard Redux. Without having actually used either of them, that's really the most I can say about them.</p>
+<p>The last time I worked on a React app that benefited from the type of state container that Redux provides was around five years ago. I used Redux at that time. I've still used React since then, but the apps I've worked on have synchronized their Big State™️ via their back-ends. I've found React's built-in hooks to be adequate for the rest. I'll reach for third-party libraries for form management, but otherwise the built-in hooks and custom hooks composed from them tend to do the job.</p>
+<p>At some point since the <code>useReducer</code> hook landed, the notion that Redux isn't really necessary anymore stuck in my brain. You should be able to roll your own version using React's core features now, right?</p>
+<p>When I think of Redux, I think of three main features: The Reducer™️, the ability to access the state container from arbitrary components without having to pass stuff up and down the tree, and selectors. In the version I'm going to throw together here, the reducer and state container are provided by <code>useReducer</code>, and the arbitrary component state container access will be provided by a React context. Selectors should be an implementation detail. 👀</p>
+<p>Let's start with the bit that should be the same across any application.</p>
+<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span><span class="o">,</span> <span class="p">{</span>
+  <span class="n">Context</span><span class="p">,</span>
+  <span class="n">Dispatch</span><span class="p">,</span>
+  <span class="n">ReactNode</span><span class="p">,</span>
+  <span class="n">Reducer</span><span class="p">,</span>
+  <span class="n">createContext</span><span class="p">,</span>
+  <span class="n">useContext</span><span class="p">,</span>
+  <span class="n">useReducer</span>
+<span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+
+<span class="nb">type</span> <span class="n">StoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">Context</span><span class="o">&lt;</span><span class="p">{</span> <span class="n">state</span><span class="p">:</span> <span class="n">S</span><span class="p">;</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n">Dispatch</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">Props</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="n">context</span><span class="p">:</span> <span class="n">StoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="n">reducer</span><span class="p">:</span> <span class="n">Reducer</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="n">children</span><span class="p">:</span> <span class="n">ReactNode</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">export</span> <span class="n">function</span> <span class="n">createStoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">(</span><span class="n">initialState</span><span class="p">:</span> <span class="n">S</span><span class="p">):</span> <span class="n">StoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">createContext</span><span class="p">({</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">initialState</span><span class="p">,</span>
+    <span class="n">dispatch</span><span class="p">:</span> <span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">Dispatch</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="n">export</span> <span class="n">function</span> <span class="n">Store</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">({</span>
+  <span class="n">children</span><span class="p">,</span>
+  <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span>
+  <span class="n">reducer</span>
+<span class="p">}:</span> <span class="n">Props</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">const</span> <span class="p">{</span> <span class="n">state</span><span class="p">:</span> <span class="n">initialState</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useContext</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+  <span class="n">const</span> <span class="p">[</span><span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">=</span> <span class="n">useReducer</span><span class="p">(</span><span class="n">reducer</span><span class="p">,</span> <span class="n">initialState</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">Context</span><span class="o">.</span><span class="n">Provider</span> <span class="n">value</span><span class="o">=</span><span class="p">{{</span> <span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span> <span class="p">}}</span><span class="o">&gt;</span><span class="p">{</span><span class="n">children</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">Context</span><span class="o">.</span><span class="n">Provider</span><span class="o">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>I've created a convenience function called <code>createStoreContext</code> that takes an initial state and returns a context that will hold your app's state. The only thing that might be considered tricky here is that I'm using a no-op function as the placeholder for the dispatch function until the context is provided to the <code>Store</code> component.</p>
+<p>The <code>Store</code> component is what I'd call a surrogate context provider component. I made up that word salad just now to describe it, but it's a common pattern. It acts like a context provider, but it adds the logic for how the context is going to be used. In this case, that logic is just the <code>useReducer</code> function.</p>
+<p>Next, I'll set up the app-specific types and logic for a contrived example app. This app has two pieces of state: a string and a number.</p>
+<div class="highlight"><pre class="typescript"><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createStoreContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./Store&quot;</span><span class="p">;</span>
+
+<span class="kd">interface</span><span class="w"> </span><span class="nx">State</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">number</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">type</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;INCREMENT_NUMBER&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;DECREMENT_NUMBER&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CHANGE_TEXT&quot;</span><span class="p">;</span><span class="w"> </span><span class="nx">updatedText</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">initialState</span><span class="o">:</span><span class="w"> </span><span class="kt">State</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">number</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;initial text&quot;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">reduceText</span><span class="p">(</span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">Action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="kr">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;CHANGE_TEXT&quot;</span><span class="o">:</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">action</span><span class="p">.</span><span class="nx">updatedText</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">default</span><span class="o">:</span>
+<span class="w">      </span><span class="kt">return</span><span class="w"> </span><span class="nx">state</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">reduceNumber</span><span class="p">(</span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">Action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="kr">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;INCREMENT_NUMBER&quot;</span><span class="o">:</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">state</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;DECREMENT_NUMBER&quot;</span><span class="o">:</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">state</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">default</span><span class="o">:</span>
+<span class="w">      </span><span class="kt">return</span><span class="w"> </span><span class="nx">state</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">reducer</span><span class="p">(</span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="kt">State</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">Action</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">State</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">number</span><span class="o">:</span><span class="w"> </span><span class="nx">reduceNumber</span><span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="kt">reduceText</span><span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="p">)</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">AppState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createStoreContext</span><span class="o">&lt;</span><span class="nx">State</span><span class="p">,</span><span class="w"> </span><span class="nx">Action</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">initialState</span><span class="p">);</span>
+</pre></div>
+
+<p>I hope you were able to stay awake through all that. I made some opinionated choices about composing reducers, but any valid reducer function will work.</p>
+<p>I decided to create the context instance in this file rather than in the root <code>App</code> component to make the dependency tree a little cleaner since every component that connects to our state container will depend on that context instance.</p>
+<p>Speaking of the root <code>App</code> component, I'll make that now.</p>
+<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="p">{</span> <span class="n">Store</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./Store&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="p">{</span> <span class="n">AppState</span><span class="p">,</span> <span class="n">reducer</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./state&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">TextView</span> <span class="kn">from</span> <span class="s2">&quot;./TextView&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">NumberView</span> <span class="kn">from</span> <span class="s2">&quot;./NumberView&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="s2">&quot;./styles.css&quot;</span><span class="p">;</span>
+
+<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">Store</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="n">AppState</span><span class="p">}</span> <span class="n">reducer</span><span class="o">=</span><span class="p">{</span><span class="n">reducer</span><span class="p">}</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">div</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;App&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Here</span><span class="s1">&#39;s a sample app!&lt;/h1&gt;</span>
+        <span class="o">&lt;</span><span class="n">TextView</span> <span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">NumberView</span> <span class="o">/&gt;</span>
+      <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">Store</span><span class="o">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>I'm passing the <code>AppState</code> context into the <code>Store</code> component as well as the app's reducer. I'm going to write two components that directly utilize the app state: TextView and NumberView.</p>
+<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span><span class="o">,</span> <span class="p">{</span> <span class="n">ChangeEventHandler</span><span class="p">,</span> <span class="n">useCallback</span><span class="p">,</span> <span class="n">useContext</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="p">{</span> <span class="n">AppState</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./state&quot;</span><span class="p">;</span>
+
+<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">TextView</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">const</span> <span class="p">{</span> <span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useContext</span><span class="p">(</span><span class="n">AppState</span><span class="p">);</span>
+  <span class="n">const</span> <span class="n">handleChange</span> <span class="o">=</span> <span class="n">useCallback</span><span class="o">&lt;</span><span class="n">ChangeEventHandler</span><span class="o">&lt;</span><span class="n">HTMLInputElement</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="o">=&gt;</span>
+      <span class="n">dispatch</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;CHANGE_TEXT&quot;</span><span class="p">,</span> <span class="n">updatedText</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">value</span> <span class="p">}),</span>
+    <span class="p">[</span><span class="n">dispatch</span><span class="p">]</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="n">Change</span> <span class="n">my</span> <span class="n">text</span><span class="err">!</span><span class="o">&lt;/</span><span class="n">h2</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nb">input</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span> <span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="p">}</span> <span class="n">onChange</span><span class="o">=</span><span class="p">{</span><span class="n">handleChange</span><span class="p">}</span> <span class="o">/&gt;</span>
+    <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span><span class="o">,</span> <span class="p">{</span> <span class="n">ReactEventHandler</span><span class="p">,</span> <span class="n">useCallback</span><span class="p">,</span> <span class="n">useContext</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="p">{</span> <span class="n">AppState</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./state&quot;</span><span class="p">;</span>
+
+<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">NumberView</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">const</span> <span class="p">{</span> <span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useContext</span><span class="p">(</span><span class="n">AppState</span><span class="p">);</span>
+  <span class="n">const</span> <span class="n">handleIncrement</span> <span class="o">=</span> <span class="n">useCallback</span><span class="o">&lt;</span><span class="n">ReactEventHandler</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">dispatch</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;INCREMENT_NUMBER&quot;</span> <span class="p">}),</span>
+    <span class="p">[</span><span class="n">dispatch</span><span class="p">]</span>
+  <span class="p">);</span>
+  <span class="n">const</span> <span class="n">handleDecrement</span> <span class="o">=</span> <span class="n">useCallback</span><span class="o">&lt;</span><span class="n">ReactEventHandler</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">dispatch</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;DECREMENT_NUMBER&quot;</span> <span class="p">}),</span>
+    <span class="p">[</span><span class="n">dispatch</span><span class="p">]</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="n">Current</span> <span class="n">number</span><span class="p">:</span> <span class="p">{</span><span class="n">state</span><span class="o">.</span><span class="n">number</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">h2</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">button</span> <span class="n">onClick</span><span class="o">=</span><span class="p">{</span><span class="n">handleIncrement</span><span class="p">}</span><span class="o">&gt;+&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">button</span> <span class="n">onClick</span><span class="o">=</span><span class="p">{</span><span class="n">handleDecrement</span><span class="p">}</span><span class="o">&gt;-&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>At this point, the app works. I'm using React's <code>useContext</code> hook directly to access the state and the dispatch function.</p>
+<p><img alt="My beautiful app" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1688085276-0.png"/></p>
+<p>But there's a pretty big problem. Because each component depends on the entire application state, every component re-renders on every state change regardless of whether the change was actually relevant to the component in question. In other words, I need selectors.</p>
+<p>This is where my hand-rolled scheme falls apart. There's currently no way to avoid these types of unnecessary re-renders while using a single context. No matter what kind of memoization strategies you employ, the <code>useContext</code> hook will trigger a re-render of every component attached to the context upon a state change.</p>
+<p>I'm not the only one out there who thinks this is a glaring omission from React's API. There's <a href="https://github.com/reactjs/rfcs/pull/119">an open RFC</a> for just such a feature that's been hanging out since 2019.</p>
+<p>If you were <em>really</em> determined to write your own app container only using React primitives, the next place I'd look would be the relatively new <a href="https://react.dev/reference/react/useSyncExternalStore"><code>useSyncExternalStore</code> hook</a>. I'm almost certain you can achieve the desired effects with that hook, but it's just not as interesting. You'd be building Redux from bare JavaScript to interface with the <code>useSyncExternalStore</code> API without being able to lean on any other built-in hooks. At that point, just use a library.</p>
+
+
+
+    
+    <p class="tags">
+    
+        <a href="../blog/index.html%3Fq=react.html">#react</a>
+    
+        <a href="../blog/index.html%3Fq=redux.html">#redux</a>
+    
+    </p>
+    
+
+    
+    
+<form id="upvote-form" action="https://jaysherby.com/upvote/41988/" method="post" style="display: inline">
+    <small>
+        <input hidden name="pk" value="41988" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+  </footer>
+</body>
+</html>
