@@ -517,6 +517,14 @@ body:hover {
 <p>This is where my hand-rolled scheme falls apart. There's currently no way to avoid these types of unnecessary re-renders while using a single context. No matter what kind of memoization strategies you employ, the <code>useContext</code> hook will trigger a re-render of every component attached to the context upon a state change.</p>
 <p>I'm not the only one out there who thinks this is a glaring omission from React's API. There's <a href="https://github.com/reactjs/rfcs/pull/119">an open RFC</a> for just such a feature that's been hanging out since 2019.</p>
 <p>If you were <em>really</em> determined to write your own app container only using React primitives, the next place I'd look would be the relatively new <a href="https://react.dev/reference/react/useSyncExternalStore"><code>useSyncExternalStore</code> hook</a>. I'm almost certain you can achieve the desired effects with that hook, but it's just not as interesting. You'd be building Redux from bare JavaScript to interface with the <code>useSyncExternalStore</code> API without being able to lean on any other built-in hooks. At that point, just use a library.</p>
+<h2 id="update">UPDATE</h2>
+<p>After discussing this with a friend and former co-worker<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, this could probably also be accomplished using a higher-order component to conditionally re-render components. I personally dislike the ergonomics of HOCs in this era of hooks. Besides <code>React.memo</code>, which could be argued isn't a "true" HOC, I haven't had to use HOCs in years.</p>
+<hr/>
+<section class="footnotes">
+<ol>
+<li id="fn-1"><p>Shout out to <a href="https://medium.com/@wtgjxj">James</a> this time.<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
+</ol>
+</section>
 
 
 
