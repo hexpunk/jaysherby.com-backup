@@ -176,6 +176,14 @@ export default function NumberView() {
 &lt;p&gt;This is where my hand-rolled scheme falls apart. There's currently no way to avoid these types of unnecessary re-renders while using a single context. No matter what kind of memoization strategies you employ, the &lt;code&gt;useContext&lt;/code&gt; hook will trigger a re-render of every component attached to the context upon a state change.&lt;/p&gt;
 &lt;p&gt;I'm not the only one out there who thinks this is a glaring omission from React's API. There's &lt;a href="https://github.com/reactjs/rfcs/pull/119"&gt;an open RFC&lt;/a&gt; for just such a feature that's been hanging out since 2019.&lt;/p&gt;
 &lt;p&gt;If you were &lt;em&gt;really&lt;/em&gt; determined to write your own app container only using React primitives, the next place I'd look would be the relatively new &lt;a href="https://react.dev/reference/react/useSyncExternalStore"&gt;&lt;code&gt;useSyncExternalStore&lt;/code&gt; hook&lt;/a&gt;. I'm almost certain you can achieve the desired effects with that hook, but it's just not as interesting. You'd be building Redux from bare JavaScript to interface with the &lt;code&gt;useSyncExternalStore&lt;/code&gt; API without being able to lean on any other built-in hooks. At that point, just use a library.&lt;/p&gt;
+&lt;h2 id="update"&gt;UPDATE&lt;/h2&gt;
+&lt;p&gt;After discussing this with a friend and former co-worker&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, this could probably also be accomplished using a higher-order component to conditionally re-render components. I personally dislike the ergonomics of HOCs in this era of hooks. Besides &lt;code&gt;React.memo&lt;/code&gt;, which could be argued isn't a "true" HOC, I haven't had to use HOCs in years.&lt;/p&gt;
+&lt;hr&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;Shout out to &lt;a href="https://medium.com/@wtgjxj"&gt;James&lt;/a&gt; this time.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
 &lt;/div&gt;</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/can-i-roll-my-own-state-container-for-react/</guid>
