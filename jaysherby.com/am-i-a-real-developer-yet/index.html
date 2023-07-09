@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Am I A &quot;Real Developer&quot; Yet? | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="Am I A &quot;Real Developer&quot; Yet?">
+<meta name="description" content="I&#x27;ve fallen into the &quot;real programmer&quot; trap. Despite being gainfully employed as a software developer for all of the past 13 years, I&#x27;m finally feeling that ...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Am I A &quot;Real Developer&quot; Yet?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/am-i-a-real-developer-yet/">
+<meta property="og:description" content="I&#x27;ve fallen into the &quot;real programmer&quot; trap. Despite being gainfully employed as a software developer for all of the past 13 years, I&#x27;m finally feeling that ...">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/am-i-a-real-developer-yet/">
+<meta property="twitter:title" content="Am I A &quot;Real Developer&quot; Yet?">
+<meta property="twitter:description" content="I&#x27;ve fallen into the &quot;real programmer&quot; trap. Despite being gainfully employed as a software developer for all of the past 13 years, I&#x27;m finally feeling that ...">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Am I A &quot;Real Developer&quot; Yet?",
+    "url": "https://jaysherby.com/am-i-a-real-developer-yet/",
+    "description": "I&#x27;ve fallen into the &quot;real programmer&quot; trap. Despite being gainfully employed as a software developer for all of the past 13 years, I&#x27;m finally feeling that ...",
+    "about": {
+      "@type": "Am I A &quot;Real Developer&quot; Yet?",
+      "description": "I&#x27;ve fallen into the &quot;real programmer&quot; trap. Despite being gainfully employed as a software developer for all of the past 13 years, I&#x27;m finally feeling that ..."
+    }
+  }
+</script>
+
+  
+
+
+
+
+
+
+
+
+  
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+
+  <style>
+      
+      
+:root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+body:hover {
+    border-image: url("https://jaysherby.com/hit/42874/");
+    border-width: 0;
+}
+
+
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    Am I A &quot;Real Developer&quot; Yet?
+</h1>
+
+<p>
+    <i>
+        <time datetime="2023-07-08">
+            08 Jul, 2023
+        </time>
+    </i>
+</p>
+
+<p>I've fallen into the "real programmer" trap. Despite being gainfully employed as a software developer for all of the past 13 years, I'm finally feeling that impostor syndrome everyone keeps talking about.</p>
+<p>I started learning the Rust programming language maybe six years ago or so. I had mostly overcome that steep learning curve. I was starting to actually write non-trivial programs. I chose to use Rust to do my coding interview for a job I landed in early 2020. I was getting comfortable with it.</p>
+<p>Things changed, though. I went to a meetup of Rust users and found them to be just intolerable as a community. A new major version of Rust landed and my old code needed a some changes to run again, and a lot more changes to be considered idiomatic. The new async features landed. It felt like I had to learn a new language all over again.</p>
+<p>Maybe this would be acceptable if Rust was my daily language. Coding in Rust was a hobby. Depending on what is happening in my life, I may go weeks or even months between opportunities to return to my hobby projects. It wasn't a tenable choice if I wanted to <em>get things done</em>.</p>
+<p>I resolved to learn C. Changes in C are infrequent. The language changes at a glacial pace. But it retains some of the features I found desirable in Rust. It runs very close to the metal compared to other languages, so it tends to be fast. Deployment of artifacts is as simple as sharing a single binary, assuming your dependencies are statically linked.</p>
+<p>The truth is, I'm struggling. And it's not the language itself. C as a language is pretty reasonable. Sure, there are some rough edges. Pointers aren't hard, but you can get tangled up in them pretty fast. Implicit integer conversion can be a real headache. Overall, though, it's pretty straightforward.</p>
+<p>What hamstrings C is not the language itself but rather its tooling, or lack thereof. I'm used to relying on a variety of tools when I develop software: formatters, linters, type checkers, unit test runners, package managers, task runners, etc. C's tooling story is spartan, and it really hinders my progress with the language. My experience developing in C is death by a thousand cuts.</p>
+<p>Let's start with compilation. Compiling a single C source file into an executable that only relies on the standard library can be done with a single command. As a program grows, I'm naturally going to want to separate my code into units in the form of files. There are tons of tools out there to help with this, but the most ubiquitous is Make.</p>
+<p>I struggle with Make. I've read multiple books, <em>whole-ass books</em>, about Make and I still can't fully understand it. At its most basic, it's a language-agnostic tool for taking files as input and doing some process to them which then creates new files. Make is brilliant at this use case. It tracks timestamps on files to do the least amount of work necessary when you run your Makefile. I think my main problem with Make is due to how agnostic it is. I'm used to build systems where I only need to point the tool at my entry point and it can figure out the rest. Make can't do that because it doesn't know anything about C. That puts the responsibility on me to code my dependency graph into my Makefile. That's a lot of work! I'm not used to that amount of work to set up a build process. It's very frustrating when I decide to factor certain bits of code out into their own units because I have to update my Makefile as well. I haven't found any way to make this trivial yet. Ideally, I want my build tool to understand C source code enough that I can point it at my entry points and it can build the dependency graph for me.</p>
+<hr/>
+<p>C predates the concept of unit tests. That's kind of an insane statement. It explains why there are no default unit test facilities that ship with C's standard library. I'd expect unit tests to be a solved problem for any decently popular language by now. I can't seem to find any unit test libraries or frameworks for C that don't have a huge red flag. There's plenty of "single header file" projects that have a single developer who has thrown them onto Github ten years ago and then abandoned. There are ones that require <em>so much boilerplate</em>. There are ones that have more dependencies than the program I'm writing. And there's Unity, which requires Ruby to run.</p>
+<p>I tried writing my own simple unit test setup. How hard can it be if legions of programmers have uploaded theirs on Github and abandoned them? The biggest source of boilerplate in writing unit tests in C seems to be having to add each unit test function to your runner. I made the function definition part of creating a test into a macro that adds the function to a list automatically. In order to do this, I had to go off spec and use GCC-specific code, which I find annoying. I guess it works. 🤷</p>
+<hr/>
+<p>One of the reasons garbage-collected languages are the norm nowadays is because programmers supposedly can't manage memory themselves. Languages like Rust and Zig use ownership models to manage memory more deterministically. How hard can it be, though? For every <code>malloc</code>, you must also <code>free</code>. Or so I thought. This is one of those situations where I'd expect static analysis tools to shine. I'd love it if a linter could yell at me in my editor. I haven't found such a tool. I have tried using Valgrind, but I don't understand what it's telling me. It says I'm leaking memory, but I don't understand how. Each <code>malloc</code> has a corresponding <code>free</code>, and yet.</p>
+<hr/>
+<p>The biggest things I miss from every language I've ever touched are dynamic arrays and associative arrays. Despite the fact that every non-trivial program ever written uses them, the C standard library doesn't have either of these. Because I want to be a "real programmer" I tried to implement them myself. 🙄 I guess I'm just not hardcore enough. I didn't get a traditional Computer Science education, so I missed out on the joys of accomplishing these feats with the added pressure of a university environment. I understand both of these data structures <em>in principle</em>. Doing it in practice is a different story. Especially trying to do it in a generic way that would work with any kind of data type.</p>
+<p>I could grab Glib or something that has these structures built-in, but then I lose portability and I have to accept the opinionated way in which the authors have chosen to implement them. I hate opinionated libraries.</p>
+<hr/>
+<p>What's the problem? I'm not a "real programmer", I guess. Despite supporting my family for over a decade on a very generous income afforded to me by my profession, despite earning the respect of my coworkers, despite being a tutor and mentor to others, I'm not a "real programmer". I guess I'm just too soft. I grew up with garbage collectors and Visual Studio. I never had it rough. I was born just barely too late for the microcomputers that came with thick manuals and booted into BASIC interpreters. I'm obsessed with dumb concepts like "correctness" and "best practices". I am not a "real programmer". But I guess I want to be...?</p>
+<p>Linus Torvalds, an impressive programmer, but not exactly an ideal coworker, said "If it compiles, it is good; if it boots up, it is perfect." I wish I could be that cavalier.</p>
+
+
+
+    
+    <p class="tags">
+    
+        <a href="../blog/index.html%3Fq=c.html">#c</a>
+    
+        <a href="../blog/index.html%3Fq=impostor&#32;syndrome.html">#impostor syndrome</a>
+    
+    </p>
+    
+
+    
+    
+<form id="upvote-form" action="https://jaysherby.com/upvote/42874/" method="post" style="display: inline">
+    <small>
+        <input hidden name="pk" value="42874" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">2</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+  </footer>
+</body>
+</html>
