@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
   
-  <title>HP Dev One, low disk space on /boot/efi | Jay&#x27;s blog</title>
+  <title>Résumé | Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
 
@@ -15,22 +15,58 @@
 <meta name="jaysherby" content="look-for-the-bear-necessities">
 
 <!-- Primary Meta Tags -->
-<meta name="title" content="HP Dev One, low disk space on /boot/efi">
-<meta name="description" content="I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don&#x27;t get me wrong, I...">
+<meta name="title" content="Résumé">
+<meta name="description" content="Jay Sherby
+Staff Software Developer
+resume2023@jaysherby.com
+
+Employment
+
+
+Staff Software Engineer, Vyne Medical
+    Mar 2022 — Present
+  
+
+
+Stepped into a l...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
-<meta property="og:title" content="HP Dev One, low disk space on /boot/efi">
+<meta property="og:title" content="Résumé">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/">
-<meta property="og:description" content="I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don&#x27;t get me wrong, I...">
+<meta property="og:url" content="https://jaysherby.com/resume/">
+<meta property="og:description" content="Jay Sherby
+Staff Software Developer
+resume2023@jaysherby.com
+
+Employment
+
+
+Staff Software Engineer, Vyne Medical
+    Mar 2022 — Present
+  
+
+
+Stepped into a l...">
 
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary">
-<meta property="twitter:url" content="https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/">
-<meta property="twitter:title" content="HP Dev One, low disk space on /boot/efi">
-<meta property="twitter:description" content="I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don&#x27;t get me wrong, I...">
+<meta property="twitter:url" content="https://jaysherby.com/resume/">
+<meta property="twitter:title" content="Résumé">
+<meta property="twitter:description" content="Jay Sherby
+Staff Software Developer
+resume2023@jaysherby.com
+
+Employment
+
+
+Staff Software Engineer, Vyne Medical
+    Mar 2022 — Present
+  
+
+
+Stepped into a l...">
 
 
 
@@ -39,12 +75,36 @@
   {
     "@context": "http://schema.org",
     "@type": "article",
-    "name": "HP Dev One, low disk space on /boot/efi",
-    "url": "https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/",
-    "description": "I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don&#x27;t get me wrong, I...",
+    "name": "Résumé",
+    "url": "https://jaysherby.com/resume/",
+    "description": "Jay Sherby
+Staff Software Developer
+resume2023@jaysherby.com
+
+Employment
+
+
+Staff Software Engineer, Vyne Medical
+    Mar 2022 — Present
+  
+
+
+Stepped into a l...",
     "about": {
-      "@type": "HP Dev One, low disk space on /boot/efi",
-      "description": "I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don&#x27;t get me wrong, I..."
+      "@type": "Résumé",
+      "description": "Jay Sherby
+Staff Software Developer
+resume2023@jaysherby.com
+
+Employment
+
+
+Staff Software Engineer, Vyne Medical
+    Mar 2022 — Present
+  
+
+
+Stepped into a l..."
     }
   }
 </script>
@@ -310,7 +370,7 @@ body.page #upvote-form {
 }
 
 body:hover {
-    border-image: url("https://jaysherby.com/hit/31568/");
+    border-image: url("https://jaysherby.com/hit/44134/");
     border-width: 0;
 }
 
@@ -319,7 +379,7 @@ body:hover {
   </style>
 </head>
 
-<body class="post ">
+<body class="page ">
   <header>
     <a class="title" href="../index.html">
       <h1>
@@ -328,7 +388,7 @@ body:hover {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href="../index.html">Home</a> <a href="index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
 
     </nav>
   </header>
@@ -339,42 +399,162 @@ body:hover {
 
 
 
-<h1>
-    HP Dev One, low disk space on /boot/efi
-</h1>
+<style>
+h3 {
+  border-style: solid;
+  border-width: 0 0 4px;
+}
 
-<p>
-    <i>
-        <time datetime="2023-03-12">
-            12 Mar, 2023
-        </time>
-    </i>
-</p>
+li {
+  margin-bottom: 0.5rem;
+}
 
-<p>I always seem to back the wrong horse when it comes to laptops.  Long story short, I was one of the suckers who bought the HP Dev One.  Don't get me wrong, I'm generally very happy with it.  But HP discontinued the line and my daily driver laptop is a technological dead end.</p>
-<p>Recently I started receiving warning messages that my boot partition, <code>/boot/efi</code> is low on space.  Sure enough, the 512 MB boot partition is 96% full.</p>
-<p>I searched the internet and while there are plenty of people complaining about this issue, there seem to be few fixes.  Many recommend increasing the size of the partition to 1 GB, though they admit it's a complicated process to do so.  The easiest way is a full reinstall of the OS, although you can technically resize the partitions without such a drastic course of action if you're willing to futz around.</p>
-<p>I tried doing a "system refresh" via means built into Pop!_OS. I didn't lose any of my personal data, but I did have to reinstall all my applications. It seemed to fix the issue, although boot partition usage still hovered on the brink at 95%.</p>
-<p>That fix lasted all of a week.  There was another kernel update today causing usage to hit 97%. The warning returned.</p>
-<p>I did some more searching today and found <a href="https://github.com/pop-os/pop/issues/1714">this GitHub thread</a>. For posterity, if you're using an HP Dev One laptop like I am, there's a high likelihood that an old, already installed firmware update is hanging around in the boot partition, taking up precious space.</p>
-<p>It's safe to delete <code>/boot/efi/EFI/HP</code> and <code>/boot/efi/EFI/pop</code> directories, which hold firmware update files.</p>
-<p>After deleting those directories, my boot partition is now down to a relatively safe 82% usage.</p>
+dt {
+  display: flex;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+dd > ul {
+  padding: 0px;
+}
+
+.columns-4 {
+  columns: 4;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.m-1 {
+  margin: 0.25rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+@media print {
+  body {
+    font-size: small;
+  }
+
+  body > header,
+  body > footer {
+    display: none !important;
+  }
+
+  a {
+    color: black;
+  }
+}
+</style>
+<div class="text-center">
+<h1 class="uppercase m-1" id="jay-sherby">Jay Sherby</h1>
+<h2 class="m-1" id="staff-software-developer">Staff Software Developer</h2>
+<a href="mailto:resume2023@jaysherby.com">resume2023@jaysherby.com</a>
+</div>
+<h3 id="employment">Employment</h3>
+<dl>
+<dt>
+<span class="grow">Staff Software Engineer, Vyne Medical</span>
+    Mar 2022 — Present
+  </dt>
+<dd>
+<ul>
+<li>Stepped into a leadership role post-team turnover, driving the advancement and maintenance of the Connected Care app</li>
+<li>Led end-to-end development of patient form feature, enhancing application capabilities</li>
+</ul>
+</dd>
+<dt>
+<span class="grow">Senior Software Engineer, Fast Radius</span>
+    Mar 2020 — Feb 2022
+  </dt>
+<dd>
+<ul>
+<li>Developed UPS API integration for realistic shipping estimates, enhancing customer experience and streamlining order processing</li>
+<li>Optimized app performance for large orders, ensuring scalability and system stability</li>
+<ul>
+</ul></ul></dd>
+<dt>
+<span class="grow">Lead Software Engineer, Jellyvision</span>
+    Feb 2014 — Jan 2020
+  </dt>
+<dd>
+<ul>
+<li>Developed "The Calculator": service for optimized medical and dental plan choices, introducing robust testing tools for seamless updates</li>
+<li>Created "Rogue": Game-changing tool accelerated product customizations, revolutionizing billing structures and streamlining workflows</li>
+<li>Pioneered "Talent Show": Innovative low-code/no-code authoring tool for pre-scripted interactive conversations</li>
+<ul>
+</ul></ul></dd>
+<dt>
+<span class="grow">
+      Software Developer, Re-Factor, <em>Freelance</em>
+</span>
+    Nov 2018 — Jul 2019
+  </dt>
+<dd>
+<ul>
+<li>Enhanced job recruiter application with modern tech (Typescript, React, GraphQL), optimizing feature development</li>
+</ul>
+</dd>
+<dt>
+<span class="grow">Software Developer, Threadless</span>
+    May 2013 — Jan 2014
+  </dt>
+<dd>
+<ul>
+<li>Developed artist dashboard for real-time analytics and sales data, enhancing user experience and artist engagement</li>
+</ul>
+</dd>
+<dt>
+<span class="grow">Software Developer, Mintel</span>
+    Aug 2011 — May 2013
+  </dt>
+<dd></dd>
+<dt>
+<span class="grow">Associate Developer II, Applied Systems</span>
+    Sep 2010 — Jul 2011
+  </dt>
+<dd></dd>
+</dl>
+<h3 id="skills">Skills</h3>
+<ul class="columns-4">
+<li>Agile</li>
+<li>Django</li>
+<li>Docker</li>
+<li>Ecto</li>
+<li>Elixir</li>
+<li>Git</li>
+<li>JavaScript</li>
+<li>Node.js</li>
+<li>PostgreSQL</li>
+<li>React</li>
+<li>Typescript</li>
+</ul>
+<h3 id="education">Education</h3>
+<dl>
+<dt>
+<span class="grow">DeVry University, Merrillville, IN</span>
+    2007 — 2010
+  </dt>
+<dd>B.Sc. in Computer Information Systems, May 2010</dd>
+</dl>
 
 
 
     
-    <p class="tags">
-    
-        <a href="../blog/index.html%3Fq=pop_os.html">#pop_os</a>
-    
-    </p>
-    
 
     
     
-<form id="upvote-form" action="https://jaysherby.com/upvote/31568/" method="post" style="display: inline">
+<form id="upvote-form" action="https://jaysherby.com/upvote/44134/" method="post" style="display: inline">
     <small>
-        <input hidden name="pk" value="31568" style="display:none">
+        <input hidden name="pk" value="44134" style="display:none">
         <input hidden name="title" style="display:none">
         
         <button
@@ -386,7 +566,7 @@ body:hover {
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
-            <small class="upvote-count">8</small>
+            <small class="upvote-count">1</small>
         </button>
     </small>        
 </form>
