@@ -12,22 +12,22 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Ode To A Desoldering Pump</title>
       <link>https://jaysherby.com/ode-to-a-desoldering-pump/</link>
-      <description>&lt;div&gt;&lt;p&gt;Sometimes I solder electronics. I take no joy in it. I do it as a means to an end. I consider myself an experienced beginner and hobbyist. &lt;em&gt;I am not an expert.&lt;/em&gt;&lt;/p&gt;
+      <description>&lt;p&gt;Sometimes I solder electronics. I take no joy in it. I do it as a means to an end. I consider myself an experienced beginner and hobbyist. &lt;em&gt;I am not an expert.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The most personally frustrating part of soldering for me is correcting a mistake. I've soldered the wrong resistor into a spot on a really cramped board. I've already snipped the leads. Now what?&lt;/p&gt;
 &lt;p&gt;Previously, I'd curse myself a few times, break out the desoldering braid, and pray. Desoldering braid, in my experience, is &lt;em&gt;terrible&lt;/em&gt;. I can count on one hand the number of occasions it worked without issue.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Desoldering Pump" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351068-0.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Desoldering Pump" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351068-0.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;During my most recent solder session, I got the chance to finally break out my &lt;strong&gt;Hakko FR301-03/P Portable Desoldering Tool with Precise Temperature Control&lt;/strong&gt;. I'm going to warn you, it's eye-wateringly expensive, but it's worth every penny! I corrected my mistake in less than a minute.&lt;/p&gt;
 &lt;p&gt;I don't blame you if you want to look around for cheaper alternatives. But I will never go back to braid or those cheap, spring-loaded solder suckers that never really work again. A heated tip with a vacuum pump is just too convenient.&lt;/p&gt;
 &lt;p&gt;While the desoldering pump is the biggest game-changing tool I've added to my hobby electronics arsenal, I want to share some other recommendations that have vastly improved my experience.&lt;/p&gt;
 &lt;p&gt;Most people know about "helping hands" tools that hold boards and components for you while you solder. The most common variations are a heavy chunk of metal with a bunch of ball joints with wing nuts to loosen and tighten the joint. They typically have two alligator clip "hands" and a magnifying glass. And they're &lt;em&gt;garbage&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Omnifixo Helping Hands" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351083-0.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Omnifixo Helping Hands" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351083-0.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;Check out &lt;strong&gt;&lt;a href="https://omnifixo.com/"&gt;Omnifixo&lt;/a&gt;&lt;/strong&gt; instead. It's designed by a guy from Sweden, and it's amazing. Go check out the website to see its genius design and all of the clever little features. I can attest that it exceeds all expectations I had for a helping hands tool. If you're used to paying under $10 for the cheap versions of this tool, you might experience a bit of sticker shock. But this is another tool that's well worth the price.&lt;/p&gt;
 &lt;p&gt;Finally, what the hell is &lt;em&gt;that&lt;/em&gt; component? I can't read the label on it. It's got a number printed on it. I searched it on the web and figured it out, but that took like 10 minutes. Now that I know what it is, how can I be sure it's even working?&lt;/p&gt;
-&lt;p&gt;&lt;img alt="T7 Multi-function Component Tester" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351116-0.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="T7 Multi-function Component Tester" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351116-0.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;There's a tool for that. Search your favorite marketplace that drop-ships cheap knock-offs from China (i.e. Amazon, eBay, AliExpress, etc.) for "&lt;strong&gt;LCR-T7&lt;/strong&gt;" or "&lt;strong&gt;T7 Tester&lt;/strong&gt;". You should be able to find a small device with a screen, a teal zero insertion force socket, and a single yellow button for around $20.&lt;/p&gt;
 &lt;p&gt;This thing is amazing! Plug in almost any passive component and it'll tell you what it is. It'll tell you the resistance of resistors, the capacitance of capacitors, and the direction of diodes. It'll identify the pins of transistors. And it does it all in mere seconds.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;In case it wasn't obvious, I'm not making any commissions, kickbacks, or money of any kind by recommending these tools. The only one I linked to was the Omniflexo because you can only buy it from its website right now. There are no affiliate links or anything like that.&lt;/em&gt;&lt;/p&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/ode-to-a-desoldering-pump/</guid>
       <pubDate>Tue, 03 Oct 2023 16:19:55 +0000</pubDate>
@@ -35,7 +35,7 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Vintage Computer Festival Midwest 18</title>
       <link>https://jaysherby.com/vintage-computer-festival-midwest-18/</link>
-      <description>&lt;div&gt;&lt;p&gt;I visited &lt;a href="https://www.vcfmw.org/"&gt;Vintage Computer Festival Midwest&lt;/a&gt; today. This is my second year attending.&lt;/p&gt;
+      <description>&lt;p&gt;I visited &lt;a href="https://www.vcfmw.org/"&gt;Vintage Computer Festival Midwest&lt;/a&gt; today. This is my second year attending.&lt;/p&gt;
 &lt;h1 id="last-year"&gt;Last year&lt;/h1&gt;
 &lt;p&gt;When I visited last year, the theme was Commodore 64 as it was the 40th anniversary of the popular micro's release. It was thrilling and a little overwhelming. I spent a fair amount of money on a C64 with all the modern bells and whistles. It needs a little love to strengthen the video signal, but it's in great condition otherwise.&lt;/p&gt;
 &lt;p&gt;I'm embarrassed to say I haven't found the time to do the necessary repair, so the machine has been sitting atop my printer since I brought it home.&lt;/p&gt;
@@ -68,7 +68,7 @@ Hiring? Check my résumé to see if we're a match....</description>
 &lt;p&gt;I had an idea for more attendee engagement that I'd love if someone stole for next year. I was following the #vcfmw hashtag on Mastodon to see other people's pictures of cool stuff. Why not encourage attendees to use the hashtag with a little signage and hook up a vintage computer to a large monitor or a projector and display people's messages?&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/SuperIlu/DOStodon"&gt;DOStodon&lt;/a&gt; on a Pentium would be a good choice since it has some image support. There's also a &lt;a href="https://github.com/FujiNetWIFI/fujinet-apps/tree/master/mastodon"&gt;FujiNet Mastodon app&lt;/a&gt; that works on the big 3 micros: Apple ][, C64, and Atari 8-bits.&lt;/p&gt;
 &lt;p&gt;I hope to see you there next year!&lt;/p&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/vintage-computer-festival-midwest-18/</guid>
       <pubDate>Sun, 10 Sep 2023 01:42:53 +0000</pubDate>
@@ -76,7 +76,7 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Computer Science Primer For Writers And Authors</title>
       <link>https://jaysherby.com/computer-science-primer-for-writers-and-authors/</link>
-      <description>&lt;div&gt;&lt;p&gt;It's a very tumultuous time for creative humans at the moment. Writers, musicians, and artists are being told they're at risk of being replaced by AI. The irony is not lost on me that rather than trying to automate away the drudgery of life, AI tech bros seem focused on automating the very things that are uniquely human, the things most of us would prefer to spend our time on. Those who seek to commercialize these AI tools must not put much value on art if they think it can be automated and mass-produced. It's not just an insult to those who produce art, but to those who consume it.&lt;/p&gt;
+      <description>&lt;p&gt;It's a very tumultuous time for creative humans at the moment. Writers, musicians, and artists are being told they're at risk of being replaced by AI. The irony is not lost on me that rather than trying to automate away the drudgery of life, AI tech bros seem focused on automating the very things that are uniquely human, the things most of us would prefer to spend our time on. Those who seek to commercialize these AI tools must not put much value on art if they think it can be automated and mass-produced. It's not just an insult to those who produce art, but to those who consume it.&lt;/p&gt;
 &lt;p&gt;I read &lt;a href="https://www.techdirt.com/2023/08/08/the-fear-of-ai-just-killed-a-very-useful-tool/"&gt;an article from Techdirt&lt;/a&gt; today that concerned me, however. A person named Benji Smith created a website called Prosecraft that analyzed commercial books and provided interesting statistics. A number of authors whose books' statistics appeared on the site were very unhappy about it. The resulting backlash led to Prosecraft being taken down.&lt;/p&gt;
 &lt;p&gt;The backlash, however, seems a bit misguided. If you're a computer scientist or a software developer, the reason it's misguided is probably obvious. If you're a layman, I completely understand your confusion. The Techdirt article doesn't really explain why lumping Prosecraft in with the AI that people are rightly concerned about is unfair.&lt;/p&gt;
 &lt;p&gt;In this post, I aim to break down the terminology so that even if you don't know a nibble from a byte, you can have an informed opinion about artificial intelligence.&lt;/p&gt;
@@ -120,7 +120,7 @@ Hiring? Check my résumé to see if we're a match....</description>
 &lt;li id="fn-1"&gt;&lt;p&gt;I think this is an important point about things like ChatGPT as well. We're often told to use tools like that cautiously and skeptically. We should be skeptical of what ChatGPT tells us because it might not be telling the truth. (Not lying per se, as that implies intent.) But we should be cautious about what we tell ChatGPT, not because it might learn our personal details and tell them to someone else, but because we're throwing data onto someone else's computer. ChatGPT isn't the risk. Hackers, humans, are the risk.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/computer-science-primer-for-writers-and-authors/</guid>
       <pubDate>Thu, 10 Aug 2023 00:00:00 +0000</pubDate>
@@ -128,7 +128,7 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Am I A "Real Developer" Yet?</title>
       <link>https://jaysherby.com/am-i-a-real-developer-yet/</link>
-      <description>&lt;div&gt;&lt;p&gt;I've fallen into the "real programmer" trap. Despite being gainfully employed as a software developer for all of the past 13 years, I'm finally feeling that impostor syndrome everyone keeps talking about.&lt;/p&gt;
+      <description>&lt;p&gt;I've fallen into the "real programmer" trap. Despite being gainfully employed as a software developer for all of the past 13 years, I'm finally feeling that impostor syndrome everyone keeps talking about.&lt;/p&gt;
 &lt;p&gt;I started learning the Rust programming language maybe six years ago or so. I had mostly overcome that steep learning curve. I was starting to actually write non-trivial programs. I chose to use Rust to do my coding interview for a job I landed in early 2020. I was getting comfortable with it.&lt;/p&gt;
 &lt;p&gt;Things changed, though. I went to a meetup of Rust users and found them to be just intolerable as a community. A new major version of Rust landed and my old code needed a some changes to run again, and a lot more changes to be considered idiomatic. The new async features landed. It felt like I had to learn a new language all over again.&lt;/p&gt;
 &lt;p&gt;Maybe this would be acceptable if Rust was my daily language. Coding in Rust was a hobby. Depending on what is happening in my life, I may go weeks or even months between opportunities to return to my hobby projects. It wasn't a tenable choice if I wanted to &lt;em&gt;get things done&lt;/em&gt;.&lt;/p&gt;
@@ -137,18 +137,18 @@ Hiring? Check my résumé to see if we're a match....</description>
 &lt;p&gt;What hamstrings C is not the language itself but rather its tooling, or lack thereof. I'm used to relying on a variety of tools when I develop software: formatters, linters, type checkers, unit test runners, package managers, task runners, etc. C's tooling story is spartan, and it really hinders my progress with the language. My experience developing in C is death by a thousand cuts.&lt;/p&gt;
 &lt;p&gt;Let's start with compilation. Compiling a single C source file into an executable that only relies on the standard library can be done with a single command. As a program grows, I'm naturally going to want to separate my code into units in the form of files. There are tons of tools out there to help with this, but the most ubiquitous is Make.&lt;/p&gt;
 &lt;p&gt;I struggle with Make. I've read multiple books, &lt;em&gt;whole-ass books&lt;/em&gt;, about Make and I still can't fully understand it. At its most basic, it's a language-agnostic tool for taking files as input and doing some process to them which then creates new files. Make is brilliant at this use case. It tracks timestamps on files to do the least amount of work necessary when you run your Makefile. I think my main problem with Make is due to how agnostic it is. I'm used to build systems where I only need to point the tool at my entry point and it can figure out the rest. Make can't do that because it doesn't know anything about C. That puts the responsibility on me to code my dependency graph into my Makefile. That's a lot of work! I'm not used to that amount of work to set up a build process. It's very frustrating when I decide to factor certain bits of code out into their own units because I have to update my Makefile as well. I haven't found any way to make this trivial yet. Ideally, I want my build tool to understand C source code enough that I can point it at my entry points and it can build the dependency graph for me.&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;p&gt;C predates the concept of unit tests. That's kind of an insane statement. It explains why there are no default unit test facilities that ship with C's standard library. I'd expect unit tests to be a solved problem for any decently popular language by now. I can't seem to find any unit test libraries or frameworks for C that don't have a huge red flag. There's plenty of "single header file" projects that have a single developer who has thrown them onto Github ten years ago and then abandoned. There are ones that require &lt;em&gt;so much boilerplate&lt;/em&gt;. There are ones that have more dependencies than the program I'm writing. And there's Unity, which requires Ruby to run.&lt;/p&gt;
 &lt;p&gt;I tried writing my own simple unit test setup. How hard can it be if legions of programmers have uploaded theirs on Github and abandoned them? The biggest source of boilerplate in writing unit tests in C seems to be having to add each unit test function to your runner. I made the function definition part of creating a test into a macro that adds the function to a list automatically. In order to do this, I had to go off spec and use GCC-specific code, which I find annoying. I guess it works. 🤷&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;p&gt;One of the reasons garbage-collected languages are the norm nowadays is because programmers supposedly can't manage memory themselves. Languages like Rust and Zig use ownership models to manage memory more deterministically. How hard can it be, though? For every &lt;code&gt;malloc&lt;/code&gt;, you must also &lt;code&gt;free&lt;/code&gt;. Or so I thought. This is one of those situations where I'd expect static analysis tools to shine. I'd love it if a linter could yell at me in my editor. I haven't found such a tool. I have tried using Valgrind, but I don't understand what it's telling me. It says I'm leaking memory, but I don't understand how. Each &lt;code&gt;malloc&lt;/code&gt; has a corresponding &lt;code&gt;free&lt;/code&gt;, and yet.&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;p&gt;The biggest things I miss from every language I've ever touched are dynamic arrays and associative arrays. Despite the fact that every non-trivial program ever written uses them, the C standard library doesn't have either of these. Because I want to be a "real programmer" I tried to implement them myself. 🙄 I guess I'm just not hardcore enough. I didn't get a traditional Computer Science education, so I missed out on the joys of accomplishing these feats with the added pressure of a university environment. I understand both of these data structures &lt;em&gt;in principle&lt;/em&gt;. Doing it in practice is a different story. Especially trying to do it in a generic way that would work with any kind of data type.&lt;/p&gt;
 &lt;p&gt;I could grab Glib or something that has these structures built-in, but then I lose portability and I have to accept the opinionated way in which the authors have chosen to implement them. I hate opinionated libraries.&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;p&gt;What's the problem? I'm not a "real programmer", I guess. Despite supporting my family for over a decade on a very generous income afforded to me by my profession, despite earning the respect of my coworkers, despite being a tutor and mentor to others, I'm not a "real programmer". I guess I'm just too soft. I grew up with garbage collectors and Visual Studio. I never had it rough. I was born just barely too late for the microcomputers that came with thick manuals and booted into BASIC interpreters. I'm obsessed with dumb concepts like "correctness" and "best practices". I am not a "real programmer". But I guess I want to be...?&lt;/p&gt;
 &lt;p&gt;Linus Torvalds, an impressive programmer, but not exactly an ideal coworker, said "If it compiles, it is good; if it boots up, it is perfect." I wish I could be that cavalier.&lt;/p&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/am-i-a-real-developer-yet/</guid>
       <pubDate>Sat, 08 Jul 2023 18:41:02 +0000</pubDate>
@@ -156,7 +156,7 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Can I Roll My Own State Container For React?</title>
       <link>https://jaysherby.com/can-i-roll-my-own-state-container-for-react/</link>
-      <description>&lt;div&gt;&lt;p&gt;I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.&lt;/p&gt;
+      <description>&lt;p&gt;I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.&lt;/p&gt;
 &lt;p&gt;I was surprised when others brought up some libraries I hadn't heard of called &lt;a href="https://recoiljs.org/"&gt;Recoil&lt;/a&gt; and &lt;a href="https://github.com/pmndrs/zustand"&gt;Zustand&lt;/a&gt;. I've reviewed them briefly, and it looks like they each bring interesting benefits and improvements over bog-standard Redux. Without having actually used either of them, that's really the most I can say about them.&lt;/p&gt;
 &lt;p&gt;The last time I worked on a React app that benefited from the type of state container that Redux provides was around five years ago. I used Redux at that time. I've still used React since then, but the apps I've worked on have synchronized their Big State™️ via their back-ends. I've found React's built-in hooks to be adequate for the rest. I'll reach for third-party libraries for form management, but otherwise the built-in hooks and custom hooks composed from them tend to do the job.&lt;/p&gt;
 &lt;p&gt;At some point since the &lt;code&gt;useReducer&lt;/code&gt; hook landed, the notion that Redux isn't really necessary anymore stuck in my brain. You should be able to roll your own version using React's core features now, right?&lt;/p&gt;
@@ -316,20 +316,20 @@ export default function NumberView() {
 }
 &lt;/pre&gt;
 &lt;p&gt;At this point, the app works. I'm using React's &lt;code&gt;useContext&lt;/code&gt; hook directly to access the state and the dispatch function.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="My beautiful app" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1688085276-0.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="My beautiful app" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1688085276-0.png"/&gt;&lt;/p&gt;
 &lt;p&gt;But there's a pretty big problem. Because each component depends on the entire application state, every component re-renders on every state change regardless of whether the change was actually relevant to the component in question. In other words, I need selectors.&lt;/p&gt;
 &lt;p&gt;This is where my hand-rolled scheme falls apart. There's currently no way to avoid these types of unnecessary re-renders while using a single context. No matter what kind of memoization strategies you employ, the &lt;code&gt;useContext&lt;/code&gt; hook will trigger a re-render of every component attached to the context upon a state change.&lt;/p&gt;
 &lt;p&gt;I'm not the only one out there who thinks this is a glaring omission from React's API. There's &lt;a href="https://github.com/reactjs/rfcs/pull/119"&gt;an open RFC&lt;/a&gt; for just such a feature that's been hanging out since 2019.&lt;/p&gt;
 &lt;p&gt;If you were &lt;em&gt;really&lt;/em&gt; determined to write your own app container only using React primitives, the next place I'd look would be the relatively new &lt;a href="https://react.dev/reference/react/useSyncExternalStore"&gt;&lt;code&gt;useSyncExternalStore&lt;/code&gt; hook&lt;/a&gt;. I'm almost certain you can achieve the desired effects with that hook, but it's just not as interesting. You'd be building Redux from bare JavaScript to interface with the &lt;code&gt;useSyncExternalStore&lt;/code&gt; API without being able to lean on any other built-in hooks. At that point, just use a library.&lt;/p&gt;
 &lt;h2 id="update"&gt;UPDATE&lt;/h2&gt;
 &lt;p&gt;After discussing this with a friend and former co-worker&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, this could probably also be accomplished using a higher-order component to conditionally re-render components. I personally dislike the ergonomics of HOCs in this era of hooks. Besides &lt;code&gt;React.memo&lt;/code&gt;, which could be argued isn't a "true" HOC, I haven't had to use HOCs in years.&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
 &lt;li id="fn-1"&gt;&lt;p&gt;Shout out to &lt;a href="https://medium.com/@wtgjxj"&gt;James&lt;/a&gt; this time.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/can-i-roll-my-own-state-container-for-react/</guid>
       <pubDate>Thu, 29 Jun 2023 22:29:33 +0000</pubDate>
@@ -337,11 +337,11 @@ export default function NumberView() {
     <item>
       <title>Typescript, Show Me The Whole Error!</title>
       <link>https://jaysherby.com/typescript-show-me-the-whole-error/</link>
-      <description>&lt;div&gt;&lt;p&gt;Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the error!&lt;/p&gt;
+      <description>&lt;p&gt;Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the error!&lt;/p&gt;
 &lt;p&gt;This is the default behavior for some reason. I'm not a fan. I know long error messages scare a lot of developers, but I'd rather have a long and helpful error message than a short and useless one.&lt;/p&gt;
 &lt;p&gt;Good news! Error message salvation is one &lt;code&gt;tsconfig.json&lt;/code&gt; setting away. Set &lt;a href="https://www.typescriptlang.org/tsconfig#noErrorTruncation"&gt;&lt;code&gt;noErrorTruncation&lt;/code&gt;&lt;/a&gt; to &lt;code&gt;false&lt;/code&gt; and you'll be all set.&lt;/p&gt;
 &lt;p&gt;Personally, I'd rather opt in to truncation than opt out, but at least it's an easy fix.&lt;/p&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/typescript-show-me-the-whole-error/</guid>
       <pubDate>Wed, 21 Jun 2023 19:26:47 +0000</pubDate>
@@ -349,7 +349,7 @@ export default function NumberView() {
     <item>
       <title>React Hook Form: A Leaky Abstraction</title>
       <link>https://jaysherby.com/react-hook-form-a-leaky-abstraction/</link>
-      <description>&lt;div&gt;&lt;p&gt;I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.&lt;/p&gt;
+      <description>&lt;p&gt;I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.&lt;/p&gt;
 &lt;p&gt;However, this past week I ran into a weird edge case. To set the stage, a friend and colleague&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a &lt;code&gt;&amp;amp;lt;select&amp;amp;gt;&lt;/code&gt; style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.&lt;/p&gt;
 &lt;p&gt;Here's a tiny example:&lt;/p&gt;
 &lt;pre class="typescript"&gt;const { groups } = useUser();
@@ -425,7 +425,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;p&gt;As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.&lt;/p&gt;
 &lt;p&gt;I'm willing to believe that my form is the edge case here. Most forms on the web can be built using React Hook Form and you'll never need to know about these implementation details. Most forms probably show all inputs every render. But we were improving UX so that users don't need to care about a required dropdown input if there's only one option to select from.&lt;/p&gt;
 &lt;p&gt;I want to make it clear here that I'm not calling React Hook Form a leaky abstraction as an insult. I still mostly like the library, even if it's not built the same way I would choose to build it. I'm going to continue using it. I still prefer it to Formik. But this is an implementation detail, or perhaps a consequential design philosophy, that users should be aware of.&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
 &lt;li id="fn-1"&gt;&lt;p&gt;Because I regularly confuse the name as &lt;code&gt;react-form-hook&lt;/code&gt;, I've given up and lovingly refer to it as &lt;code&gt;react-man-door-hand-hook-car-door&lt;/code&gt; instead. I'm sure my coworkers have become tired of this joke.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
@@ -434,7 +434,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;li id="fn-4"&gt;&lt;p&gt;It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.&lt;a class="footnote" href="#fnref-4"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/react-hook-form-a-leaky-abstraction/</guid>
       <pubDate>Sat, 10 Jun 2023 15:33:11 +0000</pubDate>
@@ -442,7 +442,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
     <item>
       <title>A formal letter of apology to Batman</title>
       <link>https://jaysherby.com/a-formal-letter-of-apology-to-batman/</link>
-      <description>&lt;div&gt;&lt;p&gt;Dear Batman,&lt;/p&gt;
+      <description>&lt;p&gt;Dear Batman,&lt;/p&gt;
 &lt;p&gt;I hope this letter finds you well. It is with deep remorse and a heavy heart that I pen this formal apology to you. Recently, a rather unpleasant incident occurred within the confines of the sacred Bat Cave, an incident for which I must take full responsibility. I am truly sorry to inform you that I, Robin, was the culprit behind the unfortunate emission of flatulence in our esteemed headquarters.&lt;/p&gt;
 &lt;p&gt;As a trusted member of the Dynamic Duo and your loyal crime-fighting companion, I understand the solemnity and sanctity of our crime-fighting operations. The Bat Cave serves as the epicenter of our collaborative efforts, where we strategize, analyze, and prepare for the challenges that await us in the perilous streets of Gotham City. It is a place of utmost professionalism, focus, and, of course, fresh air.&lt;/p&gt;
 &lt;p&gt;The events leading up to the aforementioned mishap were rather innocuous. In hindsight, I admit to having consumed a hearty meal of beans, onions, and broccoli before our mission. My intentions were pure, as I sought to replenish my energy reserves for the arduous night of crime-fighting that lay ahead. Alas, the subsequent effects were unforeseen and regrettable.&lt;/p&gt;
@@ -452,7 +452,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;p&gt;Once again, Batman, I extend my sincere apologies for defiling the sanctity of the Bat Cave with my untimely flatulence. I hope you can find it in your heart to forgive me, and that our partnership may continue with the same unwavering strength and camaraderie as before.&lt;/p&gt;
 &lt;p&gt;With the sincerest apologies and the utmost respect,&lt;/p&gt;
 &lt;p&gt;Robin&lt;/p&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/a-formal-letter-of-apology-to-batman/</guid>
       <pubDate>Thu, 18 May 2023 19:35:52 +0000</pubDate>
@@ -460,7 +460,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
     <item>
       <title>HATEOAS: I want to believe</title>
       <link>https://jaysherby.com/hateoas-i-want-to-believe/</link>
-      <description>&lt;div&gt;&lt;p&gt;There's a growing voice in the web dev community. I'm going to call them "web fundamentalists". They hold certain beliefs about web development.&lt;/p&gt;
+      <description>&lt;p&gt;There's a growing voice in the web dev community. I'm going to call them "web fundamentalists". They hold certain beliefs about web development.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Single-page apps (SPAs) make for a poor user experience.&lt;/li&gt;
 &lt;li&gt;SPAs are bad for accessibility.&lt;/li&gt;
@@ -548,7 +548,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;p&gt;I am critical of JSON HATEOAS implementations. Without some kind of tools for metaprogramming, I've found it leads to boilerplate fatigue. I don't enjoy churning out CRUD endpoints. I also hate when adding a new endpoint leads to a large impact radius in the code. Adding one new model, for example, is one thing. But then I have to modify all the endpoints of all the other models that contain relationships to the new endpoint that I want to utilize.&lt;/p&gt;
 &lt;p&gt;I don't think JSON HATEOAS implementations are inherently bad. How can they be? They're implementations. I don't think hypermedia is bad. How could I? The whole web is built on it. I do think that hypermedia is often an inappropriate medium to drive some of the applications we use it for. But, to its credit, hypermedia is adaptable enough that we can usually bend it into something resembling the shape we desire.&lt;/p&gt;
 &lt;p&gt;I have found that GraphQL, as a query language, seems a lot more powerful than JSON HATEOAS implementations to quickly produce maintainable web applications. But it's mostly due to the quality of its assistive tools. If I had to write GraphQL queries by hand with nothing to help me, I would probably be complaining about it, too.&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
 &lt;li id="fn-1"&gt;&lt;p&gt;REST is an architectural style, not a standard. Therefore, "correctness" is up to interpretation.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
@@ -560,7 +560,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;li id="fn-7"&gt;&lt;p&gt;I haven't tried this myself yet, but I'm very intrigued by the concept. The ultimate would be if all response bodies are complete HTML pages. I'm not sure how that would work. Iframes everywhere seems too heavy. It just feels weird to me to return HTML &lt;em&gt;fragments&lt;/em&gt; from a back-end.&lt;a class="footnote" href="#fnref-7"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/hateoas-i-want-to-believe/</guid>
       <pubDate>Tue, 16 May 2023 00:00:00 +0000</pubDate>
@@ -568,14 +568,14 @@ const { control, handleSubmit, formState: { errors } } = useForm({
     <item>
       <title>Fact Check: Is Svelte Ditching Typescript?</title>
       <link>https://jaysherby.com/fact-check-is-svelte-ditching-typescript/</link>
-      <description>&lt;div&gt;&lt;hr&gt;
+      <description>&lt;hr/&gt;
 &lt;h2 id="claim"&gt;Claim:&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Svelte is dropping Typescript in favor of JSDoc comments.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id="rating"&gt;Rating:&lt;/h2&gt;
 &lt;p&gt;&amp;lt;✅|❌&amp;gt; &lt;strong&gt;Mixed&lt;/strong&gt;&lt;/p&gt;
-&lt;hr&gt;
+&lt;hr/&gt;
 &lt;p&gt;A choice made by Svelte's creator, Rich Harris, rocked the web dev community today. If you're unfamiliar, Svelte is a front-end component framework that rides the fence between JavaScript framework and programming language. The seemingly contentious decision was to alter how the internal compiler uses Typescript.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/sveltejs/svelte/pull/8569"&gt;The pull request&lt;/a&gt;, which was locked as "too heated" earlier today after it trended on Hacker News, at first glance may look like Typescript is being ditched for plain, old JavaScript. However, looks can be deceiving.&lt;/p&gt;
 &lt;p&gt;As explained in &lt;a href="https://youtu.be/MJHO6FSioPI"&gt;a video&lt;/a&gt; and &lt;a href="https://twitter.com/Rich_Harris/status/1350436286948122625"&gt;a tweet&lt;/a&gt; by Harris, Typescript is &lt;em&gt;not&lt;/em&gt; being ditched. Instead, the Svelte compiler code is moving towards an interesting and often overlooked feature of Typescript: &lt;a href="https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html"&gt;JSDoc Typescript&lt;/a&gt;.&lt;/p&gt;
@@ -584,7 +584,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;p&gt;I remember a time when there were no build steps required to develop a rich, interactive website. Then we started breaking out our files into modules, which is generally a good thing. But this requires a build step to at least concatenate all of your source files together before your code can run in the browser. More build steps were added until we ended up with a build &lt;em&gt;pipeline&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Lamenting the loss of the simplicity of web development is so common that it's become a meme in developer circles. But the good news is that with overwhelming support of &lt;a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"&gt;modules&lt;/a&gt; and &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap"&gt;import maps&lt;/a&gt; in browsers, I think we're closer than ever to returning to a build-less front-end world. But I don't want to give up the advantages of Typescript.&lt;/p&gt;
 &lt;p&gt;Maybe JSDoc TS is the best of both worlds? I'm willing to give it a shot next time I start a small personal project.&lt;/p&gt;
-&lt;/div&gt;</description>
+</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/fact-check-is-svelte-ditching-typescript/</guid>
       <pubDate>Wed, 10 May 2023 22:38:39 +0000</pubDate>
