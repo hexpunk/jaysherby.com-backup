@@ -361,7 +361,8 @@ body:hover {
     </i>
 </p>
 
-<p>There's a growing voice in the web dev community. I'm going to call them "web fundamentalists". They hold certain beliefs about web development.</p>
+
+    <p>There's a growing voice in the web dev community. I'm going to call them "web fundamentalists". They hold certain beliefs about web development.</p>
 <ul>
 <li>Single-page apps (SPAs) make for a poor user experience.</li>
 <li>SPAs are bad for accessibility.</li>
@@ -392,14 +393,14 @@ body:hover {
 <h2 id="only-love-can-conquer-hateoas">Only love can conquer HATEOAS</h2>
 <p>Hypermedia as the engine of application state, or HATEOAS. The name that just rolls off the tongue.</p>
 <p>I'm not going to explain it in extreme detail here, but the idea, roughly, is that your API returns JSON objects that look like this:</p>
-<div class="highlight"><pre class="json"><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;firstName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stephen&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;lastName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;King&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;birthday&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1947-09-21T05:00:00.000Z&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;books&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/authors/123/books&quot;</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stephen"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"King"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1947-09-21T05:00:00.000Z"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"books"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/authors/123/books"</span>
 <span class="w">    </span><span class="p">}</span><span class="w"> </span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -409,16 +410,16 @@ body:hover {
 <p>Honestly, at first blush, this seems like a really reasonable way to do things. It could benefit from some kind of library or something to automatically parse these things, but it's simple enough that almost any developer could probably roll their own.</p>
 <p>However, there's at least one glaring flaw to me where the rubber meets the road, and it's when you need to traverse more than one relationship in the graph.</p>
 <p>Suppose, for example, my front-end is consuming an API like the one that would generate that Stephen King model above. I want to get a list of publishers who have published Stephen King's books. Imagine the <code>book</code> model looks like this:</p>
-<div class="highlight"><pre class="json"><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;book&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">720</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The Dead Zone&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;pages&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">428</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;publicationDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1979-08-30T05:00:00.000Z&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;isbn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;978-0-670-26077-5&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/authors/123&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;publisher&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/publishers/902&quot;</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"book"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">720</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Dead Zone"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">428</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"publicationDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1979-08-30T05:00:00.000Z"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"isbn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"978-0-670-26077-5"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/authors/123"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"publisher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/publishers/902"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -463,6 +464,8 @@ body:hover {
 <li id="fn-7"><p>I haven't tried this myself yet, but I'm very intrigued by the concept. The ultimate would be if all response bodies are complete HTML pages. I'm not sure how that would work. Iframes everywhere seems too heavy. It just feels weird to me to return HTML <em>fragments</em> from a back-end.<a class="footnote" href="index.html#fnref-7">↩</a></p></li>
 </ol>
 </section>
+
+
 
 
 

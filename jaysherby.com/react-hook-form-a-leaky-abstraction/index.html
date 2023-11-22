@@ -351,16 +351,17 @@ body:hover {
     </i>
 </p>
 
-<p>I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.</p>
+
+    <p>I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.</p>
 <p>However, this past week I ran into a weird edge case. To set the stage, a friend and colleague<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a <code>&lt;select&gt;</code> style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.</p>
 <p>Here's a tiny example:</p>
-<div class="highlight"><pre class="typescript"><span></span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">groups</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useUser</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">groups</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useUser</span><span class="p">();</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">userHasMultipleGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">groups</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">defaultValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">group</span><span class="o">:</span><span class="w"> </span><span class="kt">userHasMultipleGroups</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">groups</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">value</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">group</span><span class="o">:</span><span class="w"> </span><span class="kt">userHasMultipleGroups</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">groups</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">value</span><span class="p">,</span>
 <span class="p">};</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">control</span><span class="p">,</span><span class="w"> </span><span class="nx">handleSubmit</span><span class="p">,</span><span class="w"> </span><span class="nx">formState</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">errors</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useForm</span><span class="p">({</span>
@@ -373,14 +374,14 @@ body:hover {
 <span class="o">&lt;</span><span class="nx">Controller</span>
 <span class="w">  </span><span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">TextInput</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">}</span>
 <span class="w">  </span><span class="nx">control</span><span class="o">=</span><span class="p">{</span><span class="nx">control</span><span class="p">}</span>
-<span class="w">  </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">=</span><span class="s2">"name"</span>
 <span class="err">/&gt;</span>
 
 <span class="p">{</span><span class="nx">userHasMultipleGroups</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="o">&lt;</span><span class="nx">Controller</span>
 <span class="w">    </span><span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">SelectInput</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">}</span>
 <span class="w">    </span><span class="nx">control</span><span class="o">=</span><span class="p">{</span><span class="nx">control</span><span class="p">}</span>
-<span class="w">    </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">=</span><span class="s2">"group"</span>
 <span class="w">    </span><span class="nx">options</span><span class="o">=</span><span class="p">{</span><span class="nx">groups</span><span class="p">}</span>
 <span class="w">  </span><span class="o">/&gt;</span>
 <span class="p">)}</span>
@@ -390,7 +391,7 @@ body:hover {
 <p>This component checks a user's groups, which is provided by a custom hook called <code>useUser</code>.</p>
 <p>The form's default value for <code>group</code> is a blank string if the given user has multiple groups available to them. If the user has just one group, which is the most common case, their group's value is automatically the default value for that form input.</p>
 <p>Later, we choose to only render the <code>group</code> field if there are multiple choices to choose from.</p>
-<p>In practice, <em>this won't work</em>. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the <code>&quot;group&quot;</code> field.</p>
+<p>In practice, <em>this won't work</em>. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the <code>"group"</code> field.</p>
 <p>What gives? We set the default value for that field! Making things even more confusing, if we add a logging statement like <code>console.log(getValues())</code>, it will log an empty object until we start interacting with the form. It's like the default values aren't being used at all.</p>
 <p>After futzing around for a couple of hours and getting nowhere, here's the result.</p>
 <ol>
@@ -403,7 +404,7 @@ body:hover {
 <ul>
 <li><p>Its not default state for the form, to include additional form values:</p>
 <ol>
-<li><p>Register hidden input: <code>&lt;input type=&quot;hidden&quot; ref={register} name=&quot;test&quot; /&gt;</code></p>
+<li><p>Register hidden input: <code>&lt;input type="hidden" ref={register} name="test" /&gt;</code></p>
 </li>
 <li><p>Combine values at onSubmit callback.</p>
 </li>
@@ -437,6 +438,8 @@ body:hover {
 <li id="fn-4"><p>It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.<a class="footnote" href="index.html#fnref-4">↩</a></p></li>
 </ol>
 </section>
+
+
 
 
 

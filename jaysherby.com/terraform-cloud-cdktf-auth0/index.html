@@ -356,7 +356,8 @@ body:hover {
     </i>
 </p>
 
-<p>If you want my advice on how to manage Auth0 using CDKTF and Terraform Cloud, here it is: don't.</p>
+
+    <p>If you want my advice on how to manage Auth0 using CDKTF and Terraform Cloud, here it is: don't.</p>
 <p>But since you're still reading, I assume you find yourself in the regrettable situation of needing to support just such a setup.  Here are some little nuggets I've learned the hard way that don't seem to be documented elsewhere.</p>
 <h2 id="rules-hooks-and-string-interpolation">Rules, Hooks, and String Interpolation</h2>
 <p>Rules and hooks are nifty features of Auth0 that allow you to run custom Javascript code on Auth0's servers in response to various events, like when a user signs up, logs in, etc.  From what I can tell, they both serve roughly the same purpose, although it seems like hooks are newer, and Auth0 would probably like to deprecate the rules feature very much.  They're both unpleasant to test, just like most kinds of code that run in other people's playgrounds.</p>
@@ -367,7 +368,7 @@ body:hover {
 </blockquote>
 <p>It'll highlight some seemingly random little bit of the long and mangled string that was once your Javascript source file.</p>
 <p>Every time I've ever seen this happen, the culprit is string interpolation in the Javascript file.</p>
-<div class="highlight"><pre class="javascript"><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`app.</span><span class="si">${</span><span class="nx">environment</span><span class="si">}</span><span class="sb">.my-really-cool-app.com`</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`app.</span><span class="si">${</span><span class="nx">environment</span><span class="si">}</span><span class="sb">.my-really-cool-app.com`</span><span class="p">;</span>
 </pre></div>
 
 <p>Terraform's parser sees <code>${</code> in your string, which happens to be <em>its</em> string interpolation syntax as well, and falls flat on its face trying to figure out what you're trying to accomplish.</p>
@@ -376,7 +377,7 @@ body:hover {
 <p>IMHO, doing this is asking for trouble.  Plus it feels gross.</p>
 <p>Worse yet, what if the name of the variable inside your interpolated string (<code>environment</code> in the example above) <em>does</em> mean something to Terraform and it replaces it with a value? The code would probably throw an error if the replaced value wasn't a variable in your script.  What if it was!?  In any case, the code deployed won't match the code in your repository.  Good luck chasing down that bug!</p>
 <p>The workaround I chose was to avoid template string interpolation all together and revert back to string concatenation like we did in the days before template literals were introduced.</p>
-<div class="highlight"><pre class="javascript"><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;app.&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;.my-really-cool-app.com&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'app.'</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">'.my-really-cool-app.com'</span><span class="p">;</span>
 </pre></div>
 
 <h2 id="terraform-variables-vs-environment-variables">Terraform Variables vs Environment Variables</h2>
@@ -405,6 +406,8 @@ body:hover {
 <li id="fn-3"><p>In case you were wondering, you still need to add the <code>TF_VAR_</code> prefix yourself in Terraform Cloud. That wasn't immediately clear to me.  I'm guessing it's to support environment variables that don't start with <code>TF_VAR_</code> since providers (like Auth0 with <code>AUTH0_DOMAIN</code>, etc.) aren't required to conform to that pattern.  <img alt="Don't forget TF_VAR_" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678334687-0.png"/><a class="footnote" href="index.html#fnref-3">↩</a></p></li>
 </ol>
 </section>
+
+
 
 
 

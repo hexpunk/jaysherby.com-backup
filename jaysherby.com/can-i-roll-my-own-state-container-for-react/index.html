@@ -356,54 +356,55 @@ body:hover {
     </i>
 </p>
 
-<p>I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.</p>
+
+    <p>I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.</p>
 <p>I was surprised when others brought up some libraries I hadn't heard of called <a href="https://recoiljs.org/">Recoil</a> and <a href="https://github.com/pmndrs/zustand">Zustand</a>. I've reviewed them briefly, and it looks like they each bring interesting benefits and improvements over bog-standard Redux. Without having actually used either of them, that's really the most I can say about them.</p>
 <p>The last time I worked on a React app that benefited from the type of state container that Redux provides was around five years ago. I used Redux at that time. I've still used React since then, but the apps I've worked on have synchronized their Big State™️ via their back-ends. I've found React's built-in hooks to be adequate for the rest. I'll reach for third-party libraries for form management, but otherwise the built-in hooks and custom hooks composed from them tend to do the job.</p>
 <p>At some point since the <code>useReducer</code> hook landed, the notion that Redux isn't really necessary anymore stuck in my brain. You should be able to roll your own version using React's core features now, right?</p>
 <p>When I think of Redux, I think of three main features: The Reducer™️, the ability to access the state container from arbitrary components without having to pass stuff up and down the tree, and selectors. In the version I'm going to throw together here, the reducer and state container are provided by <code>useReducer</code>, and the arbitrary component state container access will be provided by a React context. Selectors should be an implementation detail. 👀</p>
 <p>Let's start with the bit that should be the same across any application.</p>
-<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span><span class="o">,</span> <span class="p">{</span>
-  <span class="n">Context</span><span class="p">,</span>
-  <span class="n">Dispatch</span><span class="p">,</span>
-  <span class="n">ReactNode</span><span class="p">,</span>
-  <span class="n">Reducer</span><span class="p">,</span>
-  <span class="n">createContext</span><span class="p">,</span>
-  <span class="n">useContext</span><span class="p">,</span>
-  <span class="n">useReducer</span>
-<span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span>import React, {
+  Context,
+  Dispatch,
+  ReactNode,
+  Reducer,
+  createContext,
+  useContext,
+  useReducer
+} from "react";
 
-<span class="nb">type</span> <span class="n">StoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">Context</span><span class="o">&lt;</span><span class="p">{</span> <span class="n">state</span><span class="p">:</span> <span class="n">S</span><span class="p">;</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n">Dispatch</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
+type StoreContext&lt;S, A&gt; = Context&lt;{ state: S; dispatch: Dispatch&lt;A&gt; }&gt;;
 
-<span class="n">interface</span> <span class="n">Props</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="n">context</span><span class="p">:</span> <span class="n">StoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">;</span>
-  <span class="n">reducer</span><span class="p">:</span> <span class="n">Reducer</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">;</span>
-  <span class="n">children</span><span class="p">:</span> <span class="n">ReactNode</span><span class="p">;</span>
-<span class="p">}</span>
+interface Props&lt;S, A&gt; {
+  context: StoreContext&lt;S, A&gt;;
+  reducer: Reducer&lt;S, A&gt;;
+  children: ReactNode;
+}
 
-<span class="n">export</span> <span class="n">function</span> <span class="n">createStoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">(</span><span class="n">initialState</span><span class="p">:</span> <span class="n">S</span><span class="p">):</span> <span class="n">StoreContext</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">createContext</span><span class="p">({</span>
-    <span class="n">state</span><span class="p">:</span> <span class="n">initialState</span><span class="p">,</span>
-    <span class="n">dispatch</span><span class="p">:</span> <span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">Dispatch</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span>
-  <span class="p">});</span>
-<span class="p">}</span>
+export function createStoreContext&lt;S, A&gt;(initialState: S): StoreContext&lt;S, A&gt; {
+  return createContext({
+    state: initialState,
+    dispatch: (() =&gt; {}) as Dispatch&lt;A&gt;
+  });
+}
 
-<span class="n">export</span> <span class="n">function</span> <span class="n">Store</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">({</span>
-  <span class="n">children</span><span class="p">,</span>
-  <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span>
-  <span class="n">reducer</span>
-<span class="p">}:</span> <span class="n">Props</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">const</span> <span class="p">{</span> <span class="n">state</span><span class="p">:</span> <span class="n">initialState</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useContext</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
-  <span class="n">const</span> <span class="p">[</span><span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">=</span> <span class="n">useReducer</span><span class="p">(</span><span class="n">reducer</span><span class="p">,</span> <span class="n">initialState</span><span class="p">);</span>
-  <span class="k">return</span> <span class="p">(</span>
-    <span class="o">&lt;</span><span class="n">Context</span><span class="o">.</span><span class="n">Provider</span> <span class="n">value</span><span class="o">=</span><span class="p">{{</span> <span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span> <span class="p">}}</span><span class="o">&gt;</span><span class="p">{</span><span class="n">children</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">Context</span><span class="o">.</span><span class="n">Provider</span><span class="o">&gt;</span>
-  <span class="p">);</span>
-<span class="p">}</span>
+export function Store&lt;S, A&gt;({
+  children,
+  context: Context,
+  reducer
+}: Props&lt;S, A&gt;) {
+  const { state: initialState } = useContext(Context);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    &lt;Context.Provider value={{ state, dispatch }}&gt;{children}&lt;/Context.Provider&gt;
+  );
+}
 </pre></div>
 
 <p>I've created a convenience function called <code>createStoreContext</code> that takes an initial state and returns a context that will hold your app's state. The only thing that might be considered tricky here is that I'm using a no-op function as the placeholder for the dispatch function until the context is provided to the <code>Store</code> component.</p>
 <p>The <code>Store</code> component is what I'd call a surrogate context provider component. I made up that word salad just now to describe it, but it's a common pattern. It acts like a context provider, but it adds the logic for how the context is going to be used. In this case, that logic is just the <code>useReducer</code> function.</p>
 <p>Next, I'll set up the app-specific types and logic for a contrived example app. This app has two pieces of state: a string and a number.</p>
-<div class="highlight"><pre class="typescript"><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createStoreContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./Store&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createStoreContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"./Store"</span><span class="p">;</span>
 
 <span class="kd">interface</span><span class="w"> </span><span class="nx">State</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kt">number</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
@@ -411,17 +412,17 @@ body:hover {
 <span class="p">}</span>
 
 <span class="kr">type</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="o">=</span>
-<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;INCREMENT_NUMBER&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;DECREMENT_NUMBER&quot;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CHANGE_TEXT&quot;</span><span class="p">;</span><span class="w"> </span><span class="nx">updatedText</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">};</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"INCREMENT_NUMBER"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"DECREMENT_NUMBER"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"CHANGE_TEXT"</span><span class="p">;</span><span class="w"> </span><span class="nx">updatedText</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">};</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">initialState</span><span class="o">:</span><span class="w"> </span><span class="kt">State</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kt">number</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;initial text&quot;</span>
+<span class="w">  </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s2">"initial text"</span>
 <span class="p">};</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">reduceText</span><span class="p">(</span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">Action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="kr">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;CHANGE_TEXT&quot;</span><span class="o">:</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">"CHANGE_TEXT"</span><span class="o">:</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">action</span><span class="p">.</span><span class="nx">updatedText</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nx">default</span><span class="o">:</span>
@@ -431,10 +432,10 @@ body:hover {
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">reduceNumber</span><span class="p">(</span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">Action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="kr">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;INCREMENT_NUMBER&quot;</span><span class="o">:</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">"INCREMENT_NUMBER"</span><span class="o">:</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">state</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;DECREMENT_NUMBER&quot;</span><span class="o">:</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">"DECREMENT_NUMBER"</span><span class="o">:</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">state</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nx">default</span><span class="o">:</span>
@@ -455,69 +456,69 @@ body:hover {
 <p>I hope you were able to stay awake through all that. I made some opinionated choices about composing reducers, but any valid reducer function will work.</p>
 <p>I decided to create the context instance in this file rather than in the root <code>App</code> component to make the dependency tree a little cleaner since every component that connects to our state container will depend on that context instance.</p>
 <p>Speaking of the root <code>App</code> component, I'll make that now.</p>
-<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">Store</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./Store&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">AppState</span><span class="p">,</span> <span class="n">reducer</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./state&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">TextView</span> <span class="kn">from</span> <span class="s2">&quot;./TextView&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">NumberView</span> <span class="kn">from</span> <span class="s2">&quot;./NumberView&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="s2">&quot;./styles.css&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span>import React from "react";
+import { Store } from "./Store";
+import { AppState, reducer } from "./state";
+import TextView from "./TextView";
+import NumberView from "./NumberView";
+import "./styles.css";
 
-<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">App</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="p">(</span>
-    <span class="o">&lt;</span><span class="n">Store</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="n">AppState</span><span class="p">}</span> <span class="n">reducer</span><span class="o">=</span><span class="p">{</span><span class="n">reducer</span><span class="p">}</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="n">div</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;App&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Here</span><span class="s1">&#39;s a sample app!&lt;/h1&gt;</span>
-        <span class="o">&lt;</span><span class="n">TextView</span> <span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">NumberView</span> <span class="o">/&gt;</span>
-      <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-    <span class="o">&lt;/</span><span class="n">Store</span><span class="o">&gt;</span>
-  <span class="p">);</span>
-<span class="p">}</span>
+export default function App() {
+  return (
+    &lt;Store context={AppState} reducer={reducer}&gt;
+      &lt;div className="App"&gt;
+        &lt;h1&gt;Here's a sample app!&lt;/h1&gt;
+        &lt;TextView /&gt;
+        &lt;NumberView /&gt;
+      &lt;/div&gt;
+    &lt;/Store&gt;
+  );
+}
 </pre></div>
 
 <p>I'm passing the <code>AppState</code> context into the <code>Store</code> component as well as the app's reducer. I'm going to write two components that directly utilize the app state: TextView and NumberView.</p>
-<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span><span class="o">,</span> <span class="p">{</span> <span class="n">ChangeEventHandler</span><span class="p">,</span> <span class="n">useCallback</span><span class="p">,</span> <span class="n">useContext</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">AppState</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./state&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span>import React, { ChangeEventHandler, useCallback, useContext } from "react";
+import { AppState } from "./state";
 
-<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">TextView</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">const</span> <span class="p">{</span> <span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useContext</span><span class="p">(</span><span class="n">AppState</span><span class="p">);</span>
-  <span class="n">const</span> <span class="n">handleChange</span> <span class="o">=</span> <span class="n">useCallback</span><span class="o">&lt;</span><span class="n">ChangeEventHandler</span><span class="o">&lt;</span><span class="n">HTMLInputElement</span><span class="o">&gt;&gt;</span><span class="p">(</span>
-    <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="o">=&gt;</span>
-      <span class="n">dispatch</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;CHANGE_TEXT&quot;</span><span class="p">,</span> <span class="n">updatedText</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">value</span> <span class="p">}),</span>
-    <span class="p">[</span><span class="n">dispatch</span><span class="p">]</span>
-  <span class="p">);</span>
+export default function TextView() {
+  const { state, dispatch } = useContext(AppState);
+  const handleChange = useCallback&lt;ChangeEventHandler&lt;HTMLInputElement&gt;&gt;(
+    (event) =&gt;
+      dispatch({ type: "CHANGE_TEXT", updatedText: event.target.value }),
+    [dispatch]
+  );
 
-  <span class="k">return</span> <span class="p">(</span>
-    <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="n">Change</span> <span class="n">my</span> <span class="n">text</span><span class="err">!</span><span class="o">&lt;/</span><span class="n">h2</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="nb">input</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span> <span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="p">}</span> <span class="n">onChange</span><span class="o">=</span><span class="p">{</span><span class="n">handleChange</span><span class="p">}</span> <span class="o">/&gt;</span>
-    <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-  <span class="p">);</span>
-<span class="p">}</span>
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Change my text!&lt;/h2&gt;
+      &lt;input type="text" value={state.text} onChange={handleChange} /&gt;
+    &lt;/div&gt;
+  );
+}
 </pre></div>
 
-<div class="highlight"><pre class="tsx python py sage python3 py3"><span></span><span class="kn">import</span> <span class="nn">React</span><span class="o">,</span> <span class="p">{</span> <span class="n">ReactEventHandler</span><span class="p">,</span> <span class="n">useCallback</span><span class="p">,</span> <span class="n">useContext</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">AppState</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;./state&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span>import React, { ReactEventHandler, useCallback, useContext } from "react";
+import { AppState } from "./state";
 
-<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">NumberView</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">const</span> <span class="p">{</span> <span class="n">state</span><span class="p">,</span> <span class="n">dispatch</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useContext</span><span class="p">(</span><span class="n">AppState</span><span class="p">);</span>
-  <span class="n">const</span> <span class="n">handleIncrement</span> <span class="o">=</span> <span class="n">useCallback</span><span class="o">&lt;</span><span class="n">ReactEventHandler</span><span class="o">&gt;</span><span class="p">(</span>
-    <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">dispatch</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;INCREMENT_NUMBER&quot;</span> <span class="p">}),</span>
-    <span class="p">[</span><span class="n">dispatch</span><span class="p">]</span>
-  <span class="p">);</span>
-  <span class="n">const</span> <span class="n">handleDecrement</span> <span class="o">=</span> <span class="n">useCallback</span><span class="o">&lt;</span><span class="n">ReactEventHandler</span><span class="o">&gt;</span><span class="p">(</span>
-    <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">dispatch</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;DECREMENT_NUMBER&quot;</span> <span class="p">}),</span>
-    <span class="p">[</span><span class="n">dispatch</span><span class="p">]</span>
-  <span class="p">);</span>
+export default function NumberView() {
+  const { state, dispatch } = useContext(AppState);
+  const handleIncrement = useCallback&lt;ReactEventHandler&gt;(
+    (event) =&gt; dispatch({ type: "INCREMENT_NUMBER" }),
+    [dispatch]
+  );
+  const handleDecrement = useCallback&lt;ReactEventHandler&gt;(
+    (event) =&gt; dispatch({ type: "DECREMENT_NUMBER" }),
+    [dispatch]
+  );
 
-  <span class="k">return</span> <span class="p">(</span>
-    <span class="o">&lt;</span><span class="n">div</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="n">Current</span> <span class="n">number</span><span class="p">:</span> <span class="p">{</span><span class="n">state</span><span class="o">.</span><span class="n">number</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">h2</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="n">button</span> <span class="n">onClick</span><span class="o">=</span><span class="p">{</span><span class="n">handleIncrement</span><span class="p">}</span><span class="o">&gt;+&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="n">button</span> <span class="n">onClick</span><span class="o">=</span><span class="p">{</span><span class="n">handleDecrement</span><span class="p">}</span><span class="o">&gt;-&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
-    <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-  <span class="p">);</span>
-<span class="p">}</span>
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Current number: {state.number}&lt;/h2&gt;
+      &lt;button onClick={handleIncrement}&gt;+&lt;/button&gt;
+      &lt;button onClick={handleDecrement}&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
 </pre></div>
 
 <p>At this point, the app works. I'm using React's <code>useContext</code> hook directly to access the state and the dispatch function.</p>
@@ -534,6 +535,8 @@ body:hover {
 <li id="fn-1"><p>Shout out to <a href="https://medium.com/@wtgjxj">James</a> this time.<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
 </ol>
 </section>
+
+
 
 
 

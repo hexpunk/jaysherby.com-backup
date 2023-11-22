@@ -355,12 +355,13 @@ body:hover {
     </i>
 </p>
 
-<p><img alt="Original art, one of the Blockheads from Gumby" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png"/></p>
+
+    <p><img alt="Original art, one of the Blockheads from Gumby" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png"/></p>
 <p>As <a href="../terraform-cloud-cdktf-auth0/index.html">previously established</a>, I use Auth0 at work. Whenever a client decides not to renew their contract, which I'm thankful is an uncommon event<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, I have to collect each user's email address from our application, search for their account in the Auth0 web app, and block each user.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> It's a tedious process.</p>
 <p>I've only had to do this process once so far. But being a developer, I immediately wanted to automate this process with a shell script. With Auth0's web app, it takes a copy/paste and 4 clicks <em>per user</em> I'm blocking. That's unacceptable. After the first half-dozen users, my eyes lose focus and my mind starts to wander. And that's when the odds I'll make a mistake spike.</p>
 <p>This was the push I needed to finally install Auth0's command line tool, <a href="https://github.com/auth0/auth0-cli">auth0-cli</a>.</p>
 <p>After authenticating with <code>auth0 login</code>, the first step will be finding the user's ID based on their email address.</p>
-<div class="highlight"><pre class="bash"><span></span>auth0<span class="w"> </span>users<span class="w"> </span>search<span class="w"> </span>-q<span class="w"> </span>email:<span class="s2">&quot;user1@example.com&quot;</span>
+<div class="highlight"><pre><span></span>auth0<span class="w"> </span>users<span class="w"> </span>search<span class="w"> </span>-q<span class="w"> </span>email:<span class="s2">"user1@example.com"</span>
 </pre></div>
 
 <p>Most commands in auth0-cli have a <code>--json</code> option to print their output in JSON format, which will make it easy to grab what I need by piping the output to <a href="https://stedolan.github.io/jq/">jq</a>.</p>
@@ -373,7 +374,7 @@ body:hover {
 <p>If I felt like building a Rube Goldberg machine, maybe I could script the creation of a temporary "application" using auth0-cli and delete it when the script is done....</p>
 <p>Ugh. Feels Bad, Man™. I ended up just doing the task manually. It was going to take more time to automate this than to do it by hand.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup></p>
 <p>Afterwards, I made <a href="https://github.com/auth0/auth0-cli/issues/683">a feature request</a> for the ability to block users using the command line tool. <a href="https://github.com/ewanharris">Ewan Harris</a>, a developer at Auth0, left <a href="https://github.com/auth0/auth0-cli/issues/683#issuecomment-1491734214">a very helpful reply</a> that pointed out a feature of the command line tool that I completely overlooked: <code>auth0 api</code>.</p>
-<p>The <code>auth0 api</code> command is essentially a passthrough that lets you call the management REST API directly using the credentials auth0-cli already has, contrasting the limited porcelain the tool provides. In other words, it's exactly what I was looking for! According to Ewan Harris, this would do the trick: <code>auth0 api patch &quot;users/&lt;user_id&gt;&quot; --data &quot;{\&quot;blocked\&quot;:true}&quot;</code>.</p>
+<p>The <code>auth0 api</code> command is essentially a passthrough that lets you call the management REST API directly using the credentials auth0-cli already has, contrasting the limited porcelain the tool provides. In other words, it's exactly what I was looking for! According to Ewan Harris, this would do the trick: <code>auth0 api patch "users/&lt;user_id&gt;" --data "{\"blocked\":true}"</code>.</p>
 <p>This is usually where I'd share a neat little shell script you can use to do this task. However, I haven't had occasion to need it. If that day comes, I'll write a shell script that takes a list of email addresses and blocks their user accounts. I'll try to share it here. In the meantime, you should have all the tools you need to do it yourself using auth0-cli and jq.</p>
 <hr/>
 <section class="footnotes">
@@ -384,6 +385,8 @@ body:hover {
 <li id="fn-4"><p><a href="https://xkcd.com/1205/">https://xkcd.com/1205/</a><a class="footnote" href="index.html#fnref-4">↩</a></p></li>
 </ol>
 </section>
+
+
 
 
 
