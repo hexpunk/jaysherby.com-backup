@@ -351,7 +351,8 @@ body:hover {
     </i>
 </p>
 
-<p>My life is harder for knowing and caring about my own privacy and security.  For example, if you've ever connected to the wifi at a Starbucks using a laptop, you'll have noticed the "captive portal" system they use.  That's the page that pops up before you can actually use the internet.  It asks you for your name, email address, and zip code.</p>
+
+    <p>My life is harder for knowing and caring about my own privacy and security.  For example, if you've ever connected to the wifi at a Starbucks using a laptop, you'll have noticed the "captive portal" system they use.  That's the page that pops up before you can actually use the internet.  It asks you for your name, email address, and zip code.</p>
 <p>You may also notice that once you fill out that form, you never have to do it again.  Every time you connect to the Starbucks wifi afterwards, it'll usually still give you a captive portal page, but you'll never have to "log in" again.  This usually holds true <em>even if you visit a different Starbucks with the same computer.</em></p>
 <p>Guess what? Starbucks is tracking you.<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup> I don't like that, so I lie every time I fill out that form.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> <em>Or do I?</em> 😉</p>
 <p>The way Starbucks remembers your computer is by recording the MAC address of your wifi adapter.</p>
@@ -359,30 +360,30 @@ body:hover {
 <p>Even so, I have particular preferences for how I prefer this feature to work that my system's default settings don't meet.</p>
 <p>I'm using Pop!_OS, which uses NetworkManager.  I'll show you its default setup, how I changed it, and why.</p>
 <p>Here's the default config, located at <code>/etc/NetworkManager/NetworkManager.conf</code>, that shipped with my machine:</p>
-<div class="highlight"><pre class="ini cfg dosini"><span></span><span class="k">[main]</span>
-<span class="na">plugins</span><span class="o">=</span><span class="s">ifupdown,keyfile</span>
+<div class="highlight"><pre><span></span>[main]
+plugins=ifupdown,keyfile
 
-<span class="k">[ifupdown]</span>
-<span class="na">managed</span><span class="o">=</span><span class="s">false</span>
+[ifupdown]
+managed=false
 
-<span class="k">[device]</span>
-<span class="na">wifi.scan-rand-mac-address</span><span class="o">=</span><span class="s">no</span>
+[device]
+wifi.scan-rand-mac-address=no
 </pre></div>
 
 <p>Shame on you, Pop!_OS!  See <code>wifi.scan-rand-mac-address=no</code>?  That turns off MAC randomization during access point scanning! That means you're leaking your MAC address before you even connect to wifi. Passive listeners can track you. This isn't even the default behavior <a href="https://blogs.gnome.org/thaller/2016/08/26/mac-address-spoofing-in-networkmanager-1-4-0/">as of NetworkManager 1.4.0</a>. This is pretty embarrassing. Even Android randomizes your MAC address when scanning nowadays.</p>
 <p>Here are my changes:</p>
-<div class="highlight"><pre class="ini cfg dosini"><span></span><span class="k">[main]</span>
-<span class="na">plugins</span><span class="o">=</span><span class="s">ifupdown,keyfile</span>
+<div class="highlight"><pre><span></span>[main]
+plugins=ifupdown,keyfile
 
-<span class="k">[ifupdown]</span>
-<span class="na">managed</span><span class="o">=</span><span class="s">false</span>
+[ifupdown]
+managed=false
 
-<span class="k">[device]</span>
-<span class="na">wifi.scan-rand-mac-address</span><span class="o">=</span><span class="s">yes</span>
+[device]
+wifi.scan-rand-mac-address=yes
 
-<span class="k">[connection]</span>
-<span class="na">ethernet.cloned-mac-address</span><span class="o">=</span><span class="s">random</span>
-<span class="na">wifi.cloned-mac-address</span><span class="o">=</span><span class="s">random</span>
+[connection]
+ethernet.cloned-mac-address=random
+wifi.cloned-mac-address=random
 </pre></div>
 
 <p>I changed <code>wifi.scan-rand-mac-address</code> to <code>yes</code>, even though it's the default behavior. Just to be extra sure.</p>
@@ -401,13 +402,15 @@ body:hover {
 <hr/>
 <section class="footnotes">
 <ol>
-<li id="fn-1"><p>I have no idea if Starbucks is actively using the data they're collecting, but they <em>are</em> collecting it. Even if it's just within log files. I mean, they wouldn't ask you a bunch of personal information if they weren't going to use it for <em>something</em>, right? I'm sure they tell you what they're doing with it in their T&C. But who reads those?<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
+<li id="fn-1"><p>I have no idea if Starbucks is actively using the data they're collecting, but they <em>are</em> collecting it. Even if it's just within log files. I mean, they wouldn't ask you a bunch of personal information if they weren't going to use it for <em>something</em>, right? I'm sure they tell you what they're doing with it in their T&amp;C. But who reads those?<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
 <li id="fn-2"><p>I've noticed that they'll deny you access if you make up random email domains. Gmail addresses seem to always work, though.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
 <li id="fn-3"><p>My laptop doesn't have a built-in ethernet port, so this is probably unnecessary. But it's not hurting anything, and it'll protect me in the one-in-a-million chance I ever plug in a USB-to-ethernet dongle.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
 <li id="fn-4"><p>And almost every Starbucks access point does present identically. This is why your phone or laptop will automatically connect to Starbucks wifi even if you've never been to that particular location before.<a class="footnote" href="index.html#fnref-4">↩</a></p></li>
 <li id="fn-5"><p>Yep.  I'm apparently willing to pay that price because I care that much about my privacy.  Do you think I like living this way?  I guess my Walter Mitty daydreams include living in the world of <em>Hackers (1995)</em>, and running Silk Road from coffee shops but <em>not</em> getting caught like Ulbricht did.<a class="footnote" href="index.html#fnref-5">↩</a></p></li>
 </ol>
 </section>
+
+
 
 
 

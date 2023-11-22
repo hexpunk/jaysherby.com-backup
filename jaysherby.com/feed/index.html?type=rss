@@ -162,7 +162,7 @@ Hiring? Check my résumé to see if we're a match....</description>
 &lt;p&gt;At some point since the &lt;code&gt;useReducer&lt;/code&gt; hook landed, the notion that Redux isn't really necessary anymore stuck in my brain. You should be able to roll your own version using React's core features now, right?&lt;/p&gt;
 &lt;p&gt;When I think of Redux, I think of three main features: The Reducer™️, the ability to access the state container from arbitrary components without having to pass stuff up and down the tree, and selectors. In the version I'm going to throw together here, the reducer and state container are provided by &lt;code&gt;useReducer&lt;/code&gt;, and the arbitrary component state container access will be provided by a React context. Selectors should be an implementation detail. 👀&lt;/p&gt;
 &lt;p&gt;Let's start with the bit that should be the same across any application.&lt;/p&gt;
-&lt;pre class="tsx"&gt;import React, {
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, {
   Context,
   Dispatch,
   ReactNode,
@@ -198,62 +198,64 @@ export function Store&amp;lt;S, A&amp;gt;({
     &amp;lt;Context.Provider value={{ state, dispatch }}&amp;gt;{children}&amp;lt;/Context.Provider&amp;gt;
   );
 }
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
 &lt;p&gt;I've created a convenience function called &lt;code&gt;createStoreContext&lt;/code&gt; that takes an initial state and returns a context that will hold your app's state. The only thing that might be considered tricky here is that I'm using a no-op function as the placeholder for the dispatch function until the context is provided to the &lt;code&gt;Store&lt;/code&gt; component.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;Store&lt;/code&gt; component is what I'd call a surrogate context provider component. I made up that word salad just now to describe it, but it's a common pattern. It acts like a context provider, but it adds the logic for how the context is going to be used. In this case, that logic is just the &lt;code&gt;useReducer&lt;/code&gt; function.&lt;/p&gt;
 &lt;p&gt;Next, I'll set up the app-specific types and logic for a contrived example app. This app has two pieces of state: a string and a number.&lt;/p&gt;
-&lt;pre class="typescript"&gt;import { createStoreContext } from "./Store";
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;createStoreContext&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"./Store"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-interface State {
-  number: number;
-  text: string;
-}
+&lt;span class="kd"&gt;interface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 
-type Action =
-  | { type: "INCREMENT_NUMBER" | "DECREMENT_NUMBER" }
-  | { type: "CHANGE_TEXT"; updatedText: string };
+&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Action&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"INCREMENT_NUMBER"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"DECREMENT_NUMBER"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"CHANGE_TEXT"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;updatedText&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
 
-const initialState: State = {
-  number: 50,
-  text: "initial text"
-};
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;initialState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;50&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"initial text"&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
 
-function reduceText(state: string, action: Action) {
-  switch (action.type) {
-    case "CHANGE_TEXT":
-      return action.updatedText;
+&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceText&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"CHANGE_TEXT"&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;updatedText&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    default:
-      return state;
-  }
-}
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="kt"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 
-function reduceNumber(state: number, action: Action) {
-  switch (action.type) {
-    case "INCREMENT_NUMBER":
-      return state + 1;
+&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceNumber&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"INCREMENT_NUMBER"&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    case "DECREMENT_NUMBER":
-      return state - 1;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"DECREMENT_NUMBER"&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    default:
-      return state;
-  }
-}
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="kt"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 
-export function reducer(state: State, action: Action): State {
-  return {
-    number: reduceNumber(state.number, action),
-    text: reduceText(state.text, action)
-  };
-}
+&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reducer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;State&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceNumber&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;reduceText&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 
-export const AppState = createStoreContext&amp;lt;State, Action&amp;gt;(initialState);
-&lt;/pre&gt;
+&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;AppState&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;createStoreContext&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Action&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;initialState&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
 &lt;p&gt;I hope you were able to stay awake through all that. I made some opinionated choices about composing reducers, but any valid reducer function will work.&lt;/p&gt;
 &lt;p&gt;I decided to create the context instance in this file rather than in the root &lt;code&gt;App&lt;/code&gt; component to make the dependency tree a little cleaner since every component that connects to our state container will depend on that context instance.&lt;/p&gt;
 &lt;p&gt;Speaking of the root &lt;code&gt;App&lt;/code&gt; component, I'll make that now.&lt;/p&gt;
-&lt;pre class="tsx"&gt;import React from "react";
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React from "react";
 import { Store } from "./Store";
 import { AppState, reducer } from "./state";
 import TextView from "./TextView";
@@ -271,9 +273,10 @@ export default function App() {
     &amp;lt;/Store&amp;gt;
   );
 }
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
 &lt;p&gt;I'm passing the &lt;code&gt;AppState&lt;/code&gt; context into the &lt;code&gt;Store&lt;/code&gt; component as well as the app's reducer. I'm going to write two components that directly utilize the app state: TextView and NumberView.&lt;/p&gt;
-&lt;pre class="tsx"&gt;import React, { ChangeEventHandler, useCallback, useContext } from "react";
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ChangeEventHandler, useCallback, useContext } from "react";
 import { AppState } from "./state";
 
 export default function TextView() {
@@ -291,8 +294,9 @@ export default function TextView() {
     &amp;lt;/div&amp;gt;
   );
 }
-&lt;/pre&gt;
-&lt;pre class="tsx"&gt;import React, { ReactEventHandler, useCallback, useContext } from "react";
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ReactEventHandler, useCallback, useContext } from "react";
 import { AppState } from "./state";
 
 export default function NumberView() {
@@ -314,7 +318,8 @@ export default function NumberView() {
     &amp;lt;/div&amp;gt;
   );
 }
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
 &lt;p&gt;At this point, the app works. I'm using React's &lt;code&gt;useContext&lt;/code&gt; hook directly to access the state and the dispatch function.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="My beautiful app" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1688085276-0.png"/&gt;&lt;/p&gt;
 &lt;p&gt;But there's a pretty big problem. Because each component depends on the entire application state, every component re-renders on every state change regardless of whether the change was actually relevant to the component in question. In other words, I need selectors.&lt;/p&gt;
@@ -350,44 +355,45 @@ export default function NumberView() {
       <title>React Hook Form: A Leaky Abstraction</title>
       <link>https://jaysherby.com/react-hook-form-a-leaky-abstraction/</link>
       <description>&lt;p&gt;I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.&lt;/p&gt;
-&lt;p&gt;However, this past week I ran into a weird edge case. To set the stage, a friend and colleague&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a &lt;code&gt;&amp;amp;lt;select&amp;amp;gt;&lt;/code&gt; style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.&lt;/p&gt;
+&lt;p&gt;However, this past week I ran into a weird edge case. To set the stage, a friend and colleague&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a &lt;code&gt;&amp;lt;select&amp;gt;&lt;/code&gt; style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.&lt;/p&gt;
 &lt;p&gt;Here's a tiny example:&lt;/p&gt;
-&lt;pre class="typescript"&gt;const { groups } = useUser();
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useUser&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
-const userHasMultipleGroups = groups.length &amp;gt; 1;
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-const defaultValues = {
-  name: '',
-  group: userHasMultipleGroups ? '' : groups[0].value,
-};
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;''&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;group&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;''&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
 
-const { control, handleSubmit, formState: { errors } } = useForm({
-  defaultValues,
-  resolver: yupResolver(schema),
-});
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;handleSubmit&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;formState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;errors&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useForm&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;resolver&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;yupResolver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
 
-// ...snip...
+&lt;span class="c1"&gt;// ...snip...&lt;/span&gt;
 
-&amp;lt;Controller
-  as={&amp;lt;TextInput /&amp;gt;}
-  control={control}
-  name="name"
-/&amp;gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;TextInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"name"&lt;/span&gt;
+&lt;span class="err"&gt;/&amp;gt;&lt;/span&gt;
 
-{userHasMultipleGroups &amp;amp;&amp;amp; (
-  &amp;lt;Controller
-    as={&amp;lt;SelectInput /&amp;gt;}
-    control={control}
-    name="group"
-    options={groups}
-  /&amp;gt;
-)}
-&lt;/pre&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;SelectInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"group"&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
 &lt;p&gt;Let me break this down in words briefly to make sure we're on the same page.&lt;/p&gt;
 &lt;p&gt;This component checks a user's groups, which is provided by a custom hook called &lt;code&gt;useUser&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The form's default value for &lt;code&gt;group&lt;/code&gt; is a blank string if the given user has multiple groups available to them. If the user has just one group, which is the most common case, their group's value is automatically the default value for that form input.&lt;/p&gt;
 &lt;p&gt;Later, we choose to only render the &lt;code&gt;group&lt;/code&gt; field if there are multiple choices to choose from.&lt;/p&gt;
-&lt;p&gt;In practice, &lt;em&gt;this won't work&lt;/em&gt;. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the &lt;code&gt;&amp;amp;quot;group&amp;amp;quot;&lt;/code&gt; field.&lt;/p&gt;
+&lt;p&gt;In practice, &lt;em&gt;this won't work&lt;/em&gt;. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the &lt;code&gt;"group"&lt;/code&gt; field.&lt;/p&gt;
 &lt;p&gt;What gives? We set the default value for that field! Making things even more confusing, if we add a logging statement like &lt;code&gt;console.log(getValues())&lt;/code&gt;, it will log an empty object until we start interacting with the form. It's like the default values aren't being used at all.&lt;/p&gt;
 &lt;p&gt;After futzing around for a couple of hours and getting nowhere, here's the result.&lt;/p&gt;
 &lt;ol&gt;
@@ -400,7 +406,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Its not default state for the form, to include additional form values:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Register hidden input: &lt;code&gt;&amp;amp;lt;input type=&amp;amp;quot;hidden&amp;amp;quot; ref={register} name=&amp;amp;quot;test&amp;amp;quot; /&amp;amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;Register hidden input: &lt;code&gt;&amp;lt;input type="hidden" ref={register} name="test" /&amp;gt;&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Combine values at onSubmit callback.&lt;/p&gt;
 &lt;/li&gt;
@@ -491,36 +497,38 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 &lt;h2 id="only-love-can-conquer-hateoas"&gt;Only love can conquer HATEOAS&lt;/h2&gt;
 &lt;p&gt;Hypermedia as the engine of application state, or HATEOAS. The name that just rolls off the tongue.&lt;/p&gt;
 &lt;p&gt;I'm not going to explain it in extreme detail here, but the idea, roughly, is that your API returns JSON objects that look like this:&lt;/p&gt;
-&lt;pre class="json"&gt;{
-  "author": {
-    "id": 123,
-    "firstName": "Stephen",
-    "lastName": "King",
-    "birthday": "1947-09-21T05:00:00.000Z",
-    "links": {
-      "books": "/authors/123/books"
-    } 
-  }
-}
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;"author"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"id"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;123&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"firstName"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"Stephen"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"lastName"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"King"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"birthday"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"1947-09-21T05:00:00.000Z"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"links"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;"books"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/authors/123/books"&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
 &lt;p&gt;A given model contains all the information you'd expect, plus a &lt;code&gt;links&lt;/code&gt; (or &lt;code&gt;_links&lt;/code&gt; in some implementations) object containing the URIs of various related models.&lt;/p&gt;
 &lt;p&gt;Honestly, at first blush, this seems like a really reasonable way to do things. It could benefit from some kind of library or something to automatically parse these things, but it's simple enough that almost any developer could probably roll their own.&lt;/p&gt;
 &lt;p&gt;However, there's at least one glaring flaw to me where the rubber meets the road, and it's when you need to traverse more than one relationship in the graph.&lt;/p&gt;
 &lt;p&gt;Suppose, for example, my front-end is consuming an API like the one that would generate that Stephen King model above. I want to get a list of publishers who have published Stephen King's books. Imagine the &lt;code&gt;book&lt;/code&gt; model looks like this:&lt;/p&gt;
-&lt;pre class="json"&gt;{
-  "book": {
-    "id": 720,
-    "title": "The Dead Zone",
-    "pages": 428,
-    "publicationDate": "1979-08-30T05:00:00.000Z",
-    "isbn": "978-0-670-26077-5",
-    "links": {
-      "author": "/authors/123",
-      "publisher": "/publishers/902"
-    }
-  }
-}
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;"book"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"id"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;720&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"title"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"The Dead Zone"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"pages"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;428&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"publicationDate"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"1979-08-30T05:00:00.000Z"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"isbn"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"978-0-670-26077-5"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"links"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;"author"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/authors/123"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;"publisher"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/publishers/902"&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
 &lt;p&gt;What I can do is request all of King's books with &lt;code&gt;GET /authors/123/books&lt;/code&gt; and then call a &lt;code&gt;GET&lt;/code&gt; on the &lt;code&gt;publisher&lt;/code&gt; link for each &lt;code&gt;book&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;However, subjectively speaking, this sucks. I don't know if you've ever had to work with an app that works this way, but it's a bad time for users. Best case scenario, this is going to take a lot of time and a lot of bandwidth due to the overhead of making one API per book. Even with HTTP/3 or whatever, where HTTP is no longer one transaction per connection. And the browser is going to choke if you fire off dozens of AJAX&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; requests at once.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 &lt;p&gt;Okay, okay. I know that what I described is a ridiculous approach that I definitely have never seen in the wild, much less worked on an app that does it. What we'd actually do is add a new link to the &lt;code&gt;author&lt;/code&gt; model that does the relational hop for us on the back-end and return the results we want. Something like &lt;code&gt;/author/123/publishers&lt;/code&gt;.&lt;/p&gt;

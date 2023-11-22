@@ -355,7 +355,8 @@ body:hover {
     </i>
 </p>
 
-<p><img alt="Original art, with apologies to Donald Sutherland" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png"/></p>
+
+    <p><img alt="Original art, with apologies to Donald Sutherland" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png"/></p>
 <p>I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn't a completely hassle-free, drop-in replacement for Docker.  It's damn close!  Close enough that I'm willing to use it at home, but it's still finicky and different enough that I'd spend too much time futzing at work trying to use it while keeping everything Docker-compatible for my colleagues.</p>
 <p>Here are some tips if, like me, you're coming from Docker and you just want to get productive.</p>
 <h2 id="i-need-docker-compose">I need Docker Compose</h2>
@@ -364,42 +365,42 @@ body:hover {
 <p>If you're feeling adventurous, <a href="https://github.com/containers/podman-compose">Podman Compose</a> is a thing. But it's not available via my OS's default repositories and Docker Compose is.</p>
 <h3 id="permissionerror-errno-13-permission-denied">PermissionError: [Errno 13] Permission denied</h3>
 <p>I recently received this error when I tried running Docker Compose. I had already installed <code>podman-docker</code> like I mentioned. The solution was to add this to my <code>.bash_profile</code>:</p>
-<div class="highlight"><pre class="bash"><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">DOCKER_HOST</span><span class="o">=</span>unix:///run/user/<span class="nv">$UID</span>/podman/podman.sock
+<div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">DOCKER_HOST</span><span class="o">=</span>unix:///run/user/<span class="nv">$UID</span>/podman/podman.sock
 </pre></div>
 
 <h2 id="i-need-docker-hub">I need Docker Hub</h2>
 <p>I also wouldn't use Podman if it meant I lost Docker Hub.</p>
 <p>The easiest way to get access to Docker Hub with Podman is to write the following file to <code>$HOME/.config/containers/registries.conf</code>:<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup></p>
-<div class="highlight"><pre class="ini cfg dosini"><span></span><span class="k">[registries.search]</span>
-<span class="na">registries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;docker.io&#39;]</span>
+<div class="highlight"><pre><span></span>[registries.search]
+registries = ['docker.io']
 </pre></div>
 
 <h2 id="potentially-insufficient-uids-or-gids-available-in-user-namespace">Potentially insufficient UIDs or GIDs available in user namespace</h2>
 <p>I had just installed Podman and I wanted use the NodeJS image from Docker Hub.</p>
-<div class="highlight"><pre class="bash sh ksh zsh shell"><span></span>$<span class="w"> </span>podman<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>node
-Resolving<span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="w"> </span>using<span class="w"> </span>unqualified-search<span class="w"> </span>registries<span class="w"> </span><span class="o">(</span>/home/jsherby/.config/containers/registries.conf<span class="o">)</span>
-Trying<span class="w"> </span>to<span class="w"> </span>pull<span class="w"> </span>docker.io/library/node:latest...
-Getting<span class="w"> </span>image<span class="w"> </span><span class="nb">source</span><span class="w"> </span>signatures
-Copying<span class="w"> </span>blob<span class="w"> </span>ca3bce705f6c<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>167c7feebee8<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>e9cdcd4942eb<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>32fb02163b6b<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>d6dfff1f6f3d<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>4f4cf292bc62<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>8347f8b4b86b<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>c5f20f1b0856<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Copying<span class="w"> </span>blob<span class="w"> </span>d220dfa3e187<span class="w"> </span><span class="k">done</span><span class="w">  </span>
-Error:<span class="w"> </span>writing<span class="w"> </span>blob:<span class="w"> </span>adding<span class="w"> </span>layer<span class="w"> </span>with<span class="w"> </span>blob<span class="w"> </span><span class="s2">&quot;sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0&quot;</span>:<span class="w"> </span>Error<span class="w"> </span>processing<span class="w"> </span>tar<span class="w"> </span>file<span class="o">(</span><span class="nb">exit</span><span class="w"> </span>status<span class="w"> </span><span class="m">1</span><span class="o">)</span>:<span class="w"> </span>potentially<span class="w"> </span>insufficient<span class="w"> </span>UIDs<span class="w"> </span>or<span class="w"> </span>GIDs<span class="w"> </span>available<span class="w"> </span><span class="k">in</span><span class="w"> </span>user<span class="w"> </span>namespace<span class="w"> </span><span class="o">(</span>requested<span class="w"> </span><span class="m">0</span>:42<span class="w"> </span><span class="k">for</span><span class="w"> </span>/etc/gshadow<span class="o">)</span>:<span class="w"> </span>Check<span class="w"> </span>/etc/subuid<span class="w"> </span>and<span class="w"> </span>/etc/subgid:<span class="w"> </span>lchown<span class="w"> </span>/etc/gshadow:<span class="w"> </span>invalid<span class="w"> </span>argument
+<div class="highlight"><pre><span></span>$ podman run -it --rm node
+Resolving "node" using unqualified-search registries (/home/jsherby/.config/containers/registries.conf)
+Trying to pull docker.io/library/node:latest...
+Getting image source signatures
+Copying blob ca3bce705f6c done  
+Copying blob 167c7feebee8 done  
+Copying blob e9cdcd4942eb done  
+Copying blob 32fb02163b6b done  
+Copying blob d6dfff1f6f3d done  
+Copying blob 4f4cf292bc62 done  
+Copying blob 8347f8b4b86b done  
+Copying blob c5f20f1b0856 done  
+Copying blob d220dfa3e187 done  
+Error: writing blob: adding layer with blob "sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0": Error processing tar file(exit status 1): potentially insufficient UIDs or GIDs available in user namespace (requested 0:42 for /etc/gshadow): Check /etc/subuid and /etc/subgid: lchown /etc/gshadow: invalid argument
 </pre></div>
 
 <p>This seems to be a common issue.</p>
 <p>First, make sure the <code>fuse-overlayfs</code> package is installed.</p>
 <p>If you look around the internet, you're going to find advice telling you to add the following file at <code>$HOME/.config/containers/storage.conf</code>:<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
-<div class="highlight"><pre class="ini cfg dosini"><span></span><span class="k">[storage]</span>
-<span class="na">driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;overlay&quot;</span>
+<div class="highlight"><pre><span></span>[storage]
+driver = "overlay"
 
-<span class="k">[storage.options.overlay]</span>
-<span class="na">ignore_chown_errors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+[storage.options.overlay]
+ignore_chown_errors = "true"
 </pre></div>
 
 <p><strong>BUT BE WARNED!</strong> This change is meaningful and makes Podman behave differently than you probably expect. I'll quote the manual directly.</p>
@@ -408,7 +409,7 @@ Error:<span class="w"> </span>writing<span class="w"> </span>blob:<span class="w
 </blockquote>
 <p>Although this setup will make Podman stop complaining, there's a good chance this will bite you in the ass later on, especially if you're trying to stay compatible with Docker.</p>
 <p>Instead, I added my user to <code>/etc/subuid</code> and <code>/etc/subgid</code>.  Here's what both files look like on my machine:<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup></p>
-<div class="highlight"><pre class="actionscript3 as3"><span></span><span class="n">jsherby</span><span class="o">:</span><span class="mi">100000</span><span class="o">:</span><span class="mi">65536</span>
+<div class="highlight"><pre><span></span>jsherby:100000:65536
 </pre></div>
 
 <p>Then I ran <code>podman system migrate</code> and I was good to go.</p>
@@ -420,6 +421,8 @@ Error:<span class="w"> </span>writing<span class="w"> </span>blob:<span class="w
 <li id="fn-3"><p>When supporting namespaces for multiple users, the middle value needs to be offset so the namespaces don't overlap. Check the man pages that come with your local <code>shadow</code> package for details.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
 </ol>
 </section>
+
+
 
 
 
