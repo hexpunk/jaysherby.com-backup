@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Sequelize And The Disappearing ID Column | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="Sequelize And The Disappearing ID Column">
+<meta name="description" content="I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let&#x27;s see if you can figure out what happened.
+Here&#x27;s some example models t...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Sequelize And The Disappearing ID Column">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/sequelize-and-the-disappearing-id-column/">
+<meta property="og:description" content="I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let&#x27;s see if you can figure out what happened.
+Here&#x27;s some example models t...">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/sequelize-and-the-disappearing-id-column/">
+<meta property="twitter:title" content="Sequelize And The Disappearing ID Column">
+<meta property="twitter:description" content="I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let&#x27;s see if you can figure out what happened.
+Here&#x27;s some example models t...">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Sequelize And The Disappearing ID Column",
+    "url": "https://jaysherby.com/sequelize-and-the-disappearing-id-column/",
+    "description": "I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let&#x27;s see if you can figure out what happened.
+Here&#x27;s some example models t...",
+    "about": {
+      "@type": "Sequelize And The Disappearing ID Column",
+      "description": "I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let&#x27;s see if you can figure out what happened.
+Here&#x27;s some example models t..."
+    }
+  }
+</script>
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+
+  
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+
+  <style>
+      
+      
+:root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+/* Blockquote styles for conversations with AI */
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+/* Make embedded images centered and interrupt content */
+main img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give hint that <details> are clickable to reveal more */
+details > summary {
+  cursor: pointer;
+}
+
+/* Make "Made with Bear" footer always at the bottom of the page */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+
+/* Hide upvote UI on pages */
+body.page #upvote-form {
+  display: none !important;
+}
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+body:hover {
+    border-image: url("https://jaysherby.com/hit/zMqAcXCWCjxfhpqPsjkd/");
+    border-width: 0;
+}
+
+
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    Sequelize And The Disappearing ID Column
+</h1>
+
+<p>
+    <i>
+        <time datetime="2023-12-23">
+            23 Dec, 2023
+        </time>
+    </i>
+</p>
+
+
+    <p>I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let's see if you can figure out what happened.</p>
+<p>Here's some example models that are sufficient to illustrate the situation I faced. I'll use a typical example domain. There is a table for books, a table for authors, and a join table to associate them since books can have multiple authors at once.</p>
+<div class="highlight"><pre><span></span><span class="c1">// Book.model.ts</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">Book</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Model</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="nx">BookAuthors</span><span class="o">:</span><span class="w"> </span><span class="kt">HasMany</span><span class="o">&lt;</span><span class="nx">Book</span><span class="p">,</span><span class="w"> </span><span class="nx">Author</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Book</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">DataTypes.TEXT</span><span class="p">,</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">sequelize</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">'Book'</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">Book</span><span class="p">.</span><span class="nx">BookAuthors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Book</span><span class="p">.</span><span class="nx">hasMany</span><span class="p">(</span><span class="nx">BookAuthor</span><span class="p">);</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="c1">// Author.model.ts</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">Author</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Model</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="nx">Author</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">DataTypes.TEXT</span><span class="p">,</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">sequelize</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">'Author'</span><span class="p">,</span>
+<span class="p">});</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="c1">// BookAuthor.model.ts</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">BookAuthor</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Model</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="nx">Book</span><span class="o">:</span><span class="w"> </span><span class="kt">BelongsTo</span><span class="o">&lt;</span><span class="nx">BookAuthor</span><span class="p">,</span><span class="w"> </span><span class="nx">Book</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="nx">Author</span><span class="o">:</span><span class="w"> </span><span class="kt">BelongsTo</span><span class="o">&lt;</span><span class="nx">BookAuthor</span><span class="p">,</span><span class="w"> </span><span class="nx">Author</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">init</span><span class="p">({},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">sequelize</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">'BookAuthor'</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">Book</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">belongsTo</span><span class="p">(</span><span class="nx">Book</span><span class="p">);</span>
+<span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">Author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">belongsTo</span><span class="p">(</span><span class="nx">Author</span><span class="p">);</span>
+</pre></div>
+
+<p>You may have already noticed something a little non-idiomatic. The Book model is using <code>hasMany</code> instead of <code>belongsToMany</code>. That's how this was set up in the actual code I was working in.</p>
+<p>Let's do a simple query to see what the data structure looks like.</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+<span class="w">  </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">Book</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">BookAuthor</span><span class="p">,</span><span class="w"> </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">Author</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">(),</span>
+<span class="w">    </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">2</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Hobbit"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"BookAuthors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"BookId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"AuthorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"Author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"J. R. R. Tolkien"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Fantastic.  No surprises there.</p>
+<p>Fast forward a couple of months and a bug was reported. An error was occurring because of a missing ID field in the results of that same query.</p>
+<p>Let's run the query again and see what we get.</p>
+<div class="highlight"><pre><span></span><span class="gd">--- before.json 2023-12-23 20:50:56.638119488 +0000</span>
+<span class="gi">+++ after.json  2023-12-23 20:50:59.674119628 +0000</span>
+<span class="gu">@@ -1,15 +1,14 @@</span>
+<span class="w"> </span>{
+<span class="w"> </span>  "id": 1,
+<span class="w"> </span>  "name": "The Hobbit",
+<span class="w"> </span>  "BookAuthors": [
+<span class="w"> </span>    {
+<span class="gd">-      "id": 1,</span>
+<span class="w"> </span>      "BookId": 1,
+<span class="w"> </span>      "AuthorId": 1,
+<span class="w"> </span>      "Author": {
+<span class="w"> </span>        "id": 1,
+<span class="w"> </span>        "name": "J. R. R. Tolkien"
+<span class="w"> </span>      }
+<span class="w"> </span>    }
+<span class="w"> </span>  ]
+<span class="w"> </span>}
+</pre></div>
+
+<p>Sure enough, the <code>id</code> of the join table is missing. The <code>id</code> column of the table still existed. This was an active project, so many files had been changed between the previous release, which I could confirm still returned the <code>id</code> of the join table, and the current version of the code. But the <code>BookAuthor.model.ts</code> file <em>had not changed</em>.</p>
+<p>I could work around the issue by adding <code>attributes: { include: ["id"] }</code> like so:</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+<span class="w">  </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">Book</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">BookAuthor</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">attributes</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">            </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">Author</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">(),</span>
+<span class="w">    </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">2</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+
+<p>But that didn't explain <em>why</em> the <code>id</code> was suddenly missing. It took a <a href="https://git-scm.com/docs/git-bisect">git bisect</a> script for me to figure it out. Git's bisect command is a very powerful tool and I recommend you add it to your tool belt if you haven't already.</p>
+<p>If you want to try to figure it out for yourself, stop here.</p>
+<hr/>
+<p>After running git bisect, the culprit was a seemingly innocent change to the <code>Author.model.ts</code> file. A developer had added <code>belongsToMany</code> to the Author model to make it easier to traverse the relationship between Author and Book.</p>
+<div class="highlight"><pre><span></span><span class="c1">// Author.model.ts</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">Author</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Model</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="nx">Books</span><span class="o">:</span><span class="w"> </span><span class="kt">BelongsToMany</span><span class="o">&lt;</span><span class="nx">Author</span><span class="p">,</span><span class="w"> </span><span class="nx">Book</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Author</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">DataTypes.TEXT</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">sequelize</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s2">"Author"</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">);</span>
+
+<span class="nx">Author</span><span class="p">.</span><span class="nx">Books</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Author</span><span class="p">.</span><span class="nx">belongsToMany</span><span class="p">(</span><span class="nx">Book</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">through</span><span class="o">:</span><span class="w"> </span><span class="kt">BookAuthor</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+
+<p>Using the <code>belongsToMany</code> function to mark the BookAuthor model definitively as a join table in the eyes of Sequelize causes Sequelize to hide the <code>id</code> column. Sequelize uses the foreign keys of join tables as a complex unique primary key.</p>
+<p>When you look at it from the point of view of Sequelize's happy path, this makes complete sense. This is how Sequelize thinks join tables should be defined. When you look at it through a historical lens, it's surprising behavior that a change to some other model should cause a column to disappear from the results of a query.</p>
+
+
+
+
+
+    
+    <p class="tags">
+        
+        <a href="../blog/index.html%3Fq=sequelize.html">#sequelize</a>
+        
+    </p>
+    
+
+    
+    <form id="upvote-form" action="https://jaysherby.com/upvote/zMqAcXCWCjxfhpqPsjkd/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="zMqAcXCWCjxfhpqPsjkd" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Made with <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+  </footer>
+</body>
+</html>
