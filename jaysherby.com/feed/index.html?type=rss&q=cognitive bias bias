@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Jay's blog</title>
+    <link>https://jaysherby.com/</link>
+    <description>Hi! I'm Jay Sherby!
+
+I'm an experienced software developer in Chicago.
+Hiring? Check my résumé to see if we're a match....</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <item>
+      <title>Counting My Chickens Before They Hatch</title>
+      <link>https://jaysherby.com/counting-my-chickens-before-they-hatch/</link>
+      <description>&lt;p&gt;&lt;img alt="Original art: Cucco from The Legend of Zelda: Breath of the Wild" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682818406-0.png"/&gt;&lt;/p&gt;
+&lt;p&gt;I made &lt;a href="https://jaysherby.com/three-hens-three-eggs-three-days/"&gt;a post&lt;/a&gt; yesterday about a particular word problem.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"3 hens lay 3 eggs in 3 days. How many eggs do 12 hens give in 12 days?"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I eventually looked at the problem from the point of view of a pattern recognition problem to see if the incorrect answer of 12 would ever make sense.&lt;/p&gt;
+&lt;p&gt;As I was falling asleep last night, that pattern was stuck in my head.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;3, 3, 3, 12, 12, 48&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;I described it in my blog post as two sequences happening simultaneously.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;One sequence is [...] taking the previous value and multiplying it by 4. But also, the number of times that value is repeated in the sequence is reduced by 1 each time.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This explanation didn't satisfy me. There's something else going on here.&lt;/p&gt;
+&lt;p&gt;I got out of bed and went to my whiteboard. The first thing I did was assign each place in the sequence a value.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;a, b, c, x, y, z&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;a&lt;/em&gt; and &lt;em&gt;x&lt;/em&gt; are the number of hens&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;b&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt; are the number of days&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;c&lt;/em&gt; is the number of eggs we already know relative to the values of &lt;em&gt;a&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;z&lt;/em&gt; is the number of eggs we want to figure out relative to the values of &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There's a relationship here. If you plug in the example problem of &lt;em&gt;3, 3, 3, 12, 12, 48&lt;/em&gt;, the relationship soon emerges.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;x&lt;/em&gt; / &lt;em&gt;a&lt;/em&gt; = 4.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;y&lt;/em&gt; / &lt;em&gt;b&lt;/em&gt; = 4.&lt;/p&gt;
+&lt;p&gt;4 * 4 = 16.&lt;/p&gt;
+&lt;p&gt;16 * &lt;em&gt;c&lt;/em&gt; = 48.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;z&lt;/em&gt; / &lt;em&gt;c&lt;/em&gt; = 16.&lt;/p&gt;
+&lt;p&gt;I tried different combinations of numbers, especially including values where &lt;em&gt;x&lt;/em&gt; / &lt;em&gt;a&lt;/em&gt; ≠ &lt;em&gt;y&lt;/em&gt; / &lt;em&gt;b&lt;/em&gt;. The relationship held.&lt;/p&gt;
+&lt;p&gt;Next, I generalized the relationship into an algebraic equation.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;z&lt;/em&gt; = ( &lt;em&gt;x&lt;/em&gt; / &lt;em&gt;a&lt;/em&gt; ) * ( &lt;em&gt;y&lt;/em&gt; / &lt;em&gt;b&lt;/em&gt; ) * &lt;em&gt;c&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Because multiplication is commutative, the assigned values of &lt;em&gt;a&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt; can be swapped so long as &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt; are also swapped. But &lt;em&gt;c&lt;/em&gt; and &lt;em&gt;z&lt;/em&gt; must be the produced quantities.&lt;/p&gt;
+&lt;h2 id="enter-leibniz"&gt;Enter Leibniz&lt;/h2&gt;
+&lt;p&gt;What the hell did I just discover? After a little research this morning, this appears to be an application of the &lt;a href="https://en.wikipedia.org/wiki/Product_rule"&gt;product rule&lt;/a&gt;, originally discovered by Gottfried Leibniz in the late 1600s.&lt;/p&gt;
+&lt;h2 id="about-those-sat-questions"&gt;About those SAT questions&lt;/h2&gt;
+&lt;p&gt;In my blog post from yesterday, I mentioned how much I hate those SAT pattern recognition questions because the human mind is capable of finding a pattern to fit almost any sequence. Does this formula constitute a pattern?&lt;/p&gt;
+&lt;p&gt;The variables in my equation have very specific meanings. Plugging in random numbers will always result in an answer, but it will be devoid of meaning.&lt;/p&gt;
+&lt;p&gt;We &lt;em&gt;can&lt;/em&gt; turn this into a sequence, though. Every sixth number in the sequence is the result of plugging the previous five numbers into my formula. We can keep going on like that forever.&lt;/p&gt;
+&lt;p&gt;There's a precedent for this type of relationship: the Fibonacci sequence. It's a sequence. It's right there in the name. It's a much simpler sequence from mine since each number is calculated using only the previous &lt;em&gt;two&lt;/em&gt; elements of the sequence.&lt;/p&gt;
+&lt;p&gt;Nonetheless, I have successfully defined a sequence. The problem with this is, if I'm allowed to introduce constants into my equation, given enough time I can deduce an equation that will fit any of the possible answers given to me in a multiple choice SAT question. All answers are equally valid. That means every question like this should be answered with the "not enough information" choice.&lt;/p&gt;
+&lt;p&gt;As much as I'd like to blow up this entire class of question, there is one major exception. My explanation only holds &lt;em&gt;if the element you're being asked to identify is the next element in the sequence&lt;/em&gt;. If you are given elements of the sequence after the one you're being asked to identify, the number of equations that can describe the sequence is finite.&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;In case you were interested, here are the first 20 elements of the pattern. It's not too interesting since it almost immediately flies off towards infinity.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;3&lt;/li&gt;
+&lt;li&gt;3&lt;/li&gt;
+&lt;li&gt;3&lt;/li&gt;
+&lt;li&gt;12&lt;/li&gt;
+&lt;li&gt;12&lt;/li&gt;
+&lt;li&gt;48&lt;/li&gt;
+&lt;li&gt;768&lt;/li&gt;
+&lt;li&gt;12288&lt;/li&gt;
+&lt;li&gt;3145728&lt;/li&gt;
+&lt;li&gt;51539607552&lt;/li&gt;
+&lt;li&gt;54043195528445952&lt;/li&gt;
+&lt;li&gt;928455029464035206174343168&lt;/li&gt;
+&lt;li&gt;66902235595591869424607154817945084517941248&lt;/li&gt;
+&lt;li&gt;20705239040371691362304267586831076357353326916511159665487572671397888&lt;/li&gt;
+&lt;li&gt;461742260113997803268895001173557974278278194575766953140019063331004552009732936852510932674432605165702671761408&lt;/li&gt;
+&lt;li&gt;12747311827602410368550116957259247055910234825448766156786659316809685436660453825739900054365502856053343907669916024368317904103664973745828479490398096446651950500049437256761475072&lt;/li&gt;
+&lt;li&gt;1961990857885010963650680631823733783986947287058472181598664041205476778182866435229245078397880599598867198945714990524634665440110438312253035444585920679431378376737835263443800281688666590920035555814156459042403919909802020427093300283095165328595800136295143219176104095151237375519507873792&lt;/li&gt;
+&lt;li&gt;8336703089455133366253152637284505809216106471025844872390916830078815575581716044809646733032619265778616285213946759452207573085365746121822190631552401897417984702241327995637007318439703819819237017739078217612263549262265907559878444210418396373430070436733784433880601967804216389727083671042268193066961537250359120881286712926652917288624603217799822741930541296725501513875590257340980893439367556323057845622863001578088832839595986733772796229913557054493030117443371008&lt;/li&gt;
+&lt;li&gt;21808713661883597881563482374816415506066458402606988584590146896407494641065003461831469007829236921156939848394548172685483468715249357409552864052535890566787091743536561319816497267475461380795954996794821697173460608140121128860067371567611284145986832882650074993192221238569222473848150948841889432872711728052735326108039592413636631969494641800703444401927343994874942236492255358796779598962031186861060517805812614909395833001503943326406130958029852004294995639392298626246110742915597698101176592399241095915330685964471084067208889434900400998183916750423928183756736534872617595679477941742688478064711541163297658079970897067805016422557754150686381214242124153995378971740082925111939907759963687990210368621967550245292511732835681608681678929932964441461096448&lt;/li&gt;
+&lt;li&gt;60604256854022455093416113615681329650788523232643268568446634166405803425760396292576876300156809099996745624104215236437174153009846337725481235827858011322629332419404707777286667575322924328823740197618709269757729497276279418795160516272276681232893064946547876708458499090359385417773135547670386025358232488397503658100102738605685493774721048809628900878842525522041634515650698010767584128105038647212056710796143039680022833147354811277939756240661313557159264926210709840939253717480829082139147488902509754199282883647950287165352778879846479794425781195146308500281075929994839691232702249051198079689462500764679392797712366748255171373161585181058901273664905793866974434550689497775178372280249086096851329412585713177961696929890483108780291025804376980672734520729475599923391166557111156608828732488219244373540917445750173201442703216860370344268672583211344894439092265361992781877161021646396073051125966332668484609638585655435717364152897091976636524200621392911128114208469486815282540111983881432019772211891335584199847624097880333496939806842751687644513206237638629944268587441328304542108028079325327137992235014007415763478728662561674659220731113476318565711033678672613928453409029313113871212397039223962680514829246978326528&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/counting-my-chickens-before-they-hatch/</guid>
+      <pubDate>Sat, 29 Apr 2023 17:45:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>Three Hens, Three Eggs, Three Days</title>
+      <link>https://jaysherby.com/three-hens-three-eggs-three-days/</link>
+      <description>&lt;p&gt;&lt;img alt="Original art: Exeggcute, an egg-like Pokémon" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682722199-0.png"/&gt;&lt;/p&gt;
+&lt;p&gt;I read a blog post about cognitive biases this week that included this word problem.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"3 hens lay 3 eggs in 3 days. How many eggs do 12 hens give in 12 days?"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It was presented to grade school children, and everyone, including the teacher but excluding the post's author, thought the answer was 12 eggs.&lt;/p&gt;
+&lt;h2 id="the-correct-answer"&gt;The correct answer&lt;/h2&gt;
+&lt;p&gt;The correct answer is 48 eggs. The correct way to find the answer is to deduce logically that when 3 hens, &lt;em&gt;total&lt;/em&gt;, lay 3 eggs, &lt;em&gt;total&lt;/em&gt;, in 3 days, that means each hen takes 3 days to lay a single egg.&lt;/p&gt;
+&lt;p&gt;12 days divided by 3 days is 4. A single hen will lay 4 eggs in 12 days. Multiply 4 eggs by 12 hens and there will be a total of 48 eggs.&lt;/p&gt;
+&lt;h2 id="the-counter-example"&gt;The counter-example&lt;/h2&gt;
+&lt;p&gt;This word problem reminds me of &lt;a href="https://en.wikipedia.org/wiki/Brooks%27s_law"&gt;Brooks's law&lt;/a&gt;, popularly shared as:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"nine women can't make a baby in one month"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Seems like a good counter-example to help those who find the answer to the hens problem to be 12.&lt;/p&gt;
+&lt;p&gt;9 women can make 9 babies in 9 months. How many babies can &lt;em&gt;x&lt;/em&gt; women make in &lt;em&gt;x&lt;/em&gt; months, where &lt;em&gt;x&lt;/em&gt; is less than 9?&lt;/p&gt;
+&lt;h2 id="right-answer-wrong-method"&gt;Right answer, wrong method&lt;/h2&gt;
+&lt;p&gt;The hens problem has some implied logic to it that can trip up the mind. If it was worded as "3 hens lay 1 egg each over the course of 3 days", I doubt there would be any difficulty to this problem at all. But the way it's worded is purposely ambiguous and implies prior knowledge of how hens lay eggs.&lt;/p&gt;
+&lt;p&gt;Let's strip all of the implicit knowledge from the problem. 3 widgets produce 3 gizmos in 3 days. How many gizmos do 12 widgets produce in 12 days?&lt;/p&gt;
+&lt;p&gt;We don't really know &lt;em&gt;how&lt;/em&gt; widgets produce gizmos. We only know that 3 widgets produce 3 gizmos in 3 days. For all we know, producing gizmos is a group effort and 3 widgets are able to collaborate such that they can create 1 gizmo every day.&lt;/p&gt;
+&lt;p&gt;If we assume that, 3 widgets can create 12 gizmos in 12 days. 12 widgets is 4 times as many as 3 widgets, so they should be able to create 4 times as many gizmos in the same amount of time. 12 gizmos times 4 is 48 gizmos.&lt;/p&gt;
+&lt;p&gt;That's still the right answer despite coming to the wrong logical conclusion about &lt;em&gt;how&lt;/em&gt; a &lt;del&gt;widget&lt;/del&gt; hen produces &lt;del&gt;a gizmo&lt;/del&gt; an egg. In fact, I suspect that the numbers 3 and 12 were specifically chosen for this word problem exactly so that division leaves no remainder, meaning that either approach results in the correct answer.&lt;/p&gt;
+&lt;p&gt;If the number of days and hens was 13, for example, they'd lay 52 eggs. A hen either lays an egg or doesn't. It doesn't lay a third of an egg per day.&lt;/p&gt;
+&lt;p&gt;In the case of widgets and gizmos, we'd have to decide whether a single widget would be able to produce a single gizmo in 3 days, or if a gizmo is unable to be produced &lt;em&gt;at all&lt;/em&gt; without 3 widgets participating.&lt;/p&gt;
+&lt;h2 id="pattern-recognition"&gt;Pattern recognition&lt;/h2&gt;
+&lt;p&gt;The typical reason as to why a person might jump to the conclusion that the answer is 12 eggs is that they see a pattern in the numbers.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;3, 3, 3, 12, 12, ?&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This is probably the correct answer to why people would answer "12 eggs". The brain is a connection-making machine, for better &lt;em&gt;and&lt;/em&gt; worse. But is 12 a valid answer to &lt;em&gt;this&lt;/em&gt; question, or are we being deceived?&lt;/p&gt;
+&lt;p&gt;This is a common format for SAT questions. You are given a sequence of numbers and asked to give the next number in the pattern. It's considered such a fundamental logic problem that there are versions for younger people that use shapes and colors.&lt;/p&gt;
+&lt;p&gt;These SAT questions are often multiple choice. The test-taker is given three or four possible answers and a choice of "not enough information", meaning there's either no discernible pattern, or there are multiple possible patterns and you haven't been given enough of the sequence to discern one and only one pattern.&lt;/p&gt;
+&lt;p&gt;I &lt;em&gt;hate&lt;/em&gt; these questions. As I said, the brain is a connection-making machine. We find patterns where there aren't any.&lt;/p&gt;
+&lt;p&gt;In this case, I would argue that the correct answer would actually be "not enough information".&lt;/p&gt;
+&lt;p&gt;The next number in the sequence could be 12. The pattern would start with a sequence of three numbers. To determine the next number in the pattern, find the number in the sequence whose index is 3 less than the number we're trying to determine and multiply that number by 4.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;3, 3, 3, 12, 12, 12, 48, 48, 48, 192, 192, 192...&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;However, let me offer an alternative pattern that also fits. The next number in the sequence could be 48. In this alternative pattern, we're looking at two sequences in one. One sequence is, like the previous one, taking the previous value and multiplying it by 4. But also, the number of times that value is repeated in the sequence is reduced by 1 each time. The next number in that sequence is the last number in the sequence since the number of repetition would be zero for the next iteration.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;3, 3, 3, 12, 12, 48.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The sequence can't go any further forward, but it could go on backwards towards infinity.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;...³⁄₁₆, ³⁄₁₆, ³⁄₁₆, ³⁄₁₆, ³⁄₁₆, ¾, ¾, ¾, ¾, 3, 3, 3, 12, 12, 48.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Therefore, the correct answer to the question of what the next number in the sequence &lt;em&gt;3, 3, 3, 12, 12, ?&lt;/em&gt; cannot be determined without more information about the sequence.&lt;/p&gt;
+&lt;h2 id="the-moral"&gt;The moral&lt;/h2&gt;
+&lt;p&gt;The moral to the story, if there is one at all, is not to trust your lizard brain when it comes to logic problems. Or trust, but also verify. Our brains are &lt;em&gt;so&lt;/em&gt; good at finding patterns and correlations, we tend to see them where they don't exist at all.&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;Wanna see more chicken-egg-day shenanigans? I wrote &lt;a href="https://jaysherby.com/counting-my-chickens-before-they-hatch/"&gt;even more&lt;/a&gt; about this the day after this post.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/three-hens-three-eggs-three-days/</guid>
+      <pubDate>Fri, 28 Apr 2023 21:52:17 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

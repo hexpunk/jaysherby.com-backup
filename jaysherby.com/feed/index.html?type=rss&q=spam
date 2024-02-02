@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Jay's blog</title>
+    <link>https://jaysherby.com/</link>
+    <description>Hi! I'm Jay Sherby!
+
+I'm an experienced software developer in Chicago.
+Hiring? Check my résumé to see if we're a match....</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <item>
+      <title>If I Died Today, Would I Go To Ace Hardware?</title>
+      <link>https://jaysherby.com/if-i-died-today-would-i-go-to-ace-hardware/</link>
+      <description>&lt;p&gt;I got some really exciting news this week on Wednesday. I'm not sure if I should be telling you, but I've got to tell somebody. Here's what I know so far.&lt;/p&gt;
+&lt;p&gt;On Wednesday, I received this email to my Gmail address.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Phone notification of an email from Ace Hardware with the subject line: &amp;quot;You've been chosen&amp;quot;" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680979814-0.png"/&gt;&lt;/p&gt;
+&lt;p&gt;I've been chosen! Ace Hardware has chosen me! For what, I'm not exactly sure. But it certainly sounds exciting.&lt;/p&gt;
+&lt;p&gt;I spent the next day and a half preparing myself for whatever excitement awaited for Ace's chosen one. But nothing happened. I started wondering if maybe I was getting ahead of myself.&lt;/p&gt;
+&lt;p&gt;Then, on Friday, I received this follow up.&lt;/p&gt;
+&lt;p&gt;&lt;img alt='Phone notification of an email from Ace Hardware with the subject line: "You have a gift"' src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680980003-0.png"/&gt;&lt;/p&gt;
+&lt;p&gt;Well, no wonder I was chosen! I have a gift! And Ace Hardware recognizes and appreciates my unique gift.&lt;/p&gt;
+&lt;p&gt;Surely this is The Sign I've been waiting for to give my life purpose and direction. This is my True Calling.&lt;/p&gt;
+&lt;p&gt;I'll be waiting patiently for my next message from Ace Almighty, spending my days making copies of keys, as is tradition.&lt;/p&gt;
+&lt;hr/&gt;
+&lt;h2 id="update-4-11-2023"&gt;Update: 4/11/2023&lt;/h2&gt;
+&lt;p&gt;In case you have doubts about my interpretation of the Ace Hardware email canon, I just received verification.&lt;/p&gt;
+&lt;p&gt;&lt;img alt='Phone notification of an email from Ace Hardware with the subject line: "Verification"' src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1681227793-0.png"/&gt;&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/if-i-died-today-would-i-go-to-ace-hardware/</guid>
+      <pubDate>Sat, 08 Apr 2023 18:43:01 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

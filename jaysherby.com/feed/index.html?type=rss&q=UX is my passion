@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Jay's blog</title>
+    <link>https://jaysherby.com/</link>
+    <description>Hi! I'm Jay Sherby!
+
+I'm an experienced software developer in Chicago.
+Hiring? Check my résumé to see if we're a match....</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <item>
+      <title>Target Optical Mailing List UI</title>
+      <link>https://jaysherby.com/target-optical-mailing-list-ui/</link>
+      <description>&lt;p&gt;I recently received a spam email from Target Optical.  Subject line: "Happy Valentine’s Day! 💕".  Thanks, Target.&lt;/p&gt;
+&lt;p&gt;Naturally, I clicked on the unsubscribe link on the bottom of the email and I was met with...&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Oh, no! I forgot to censor my email address!! Whatever. Worst anyone could do would be re-adding me to Target Optical's mailing list." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678328483-0.png"/&gt;&lt;/p&gt;
+&lt;p&gt;I was aghast. I'd already had a rough day with software. This was the little push required to send me over the edge.  I laughed.  I cried.  I called my wife over to mercilessly mock this abject failure of usability.&lt;/p&gt;
+&lt;p&gt;My best guess was to select the "yes" radio button and click the "submit" button.  I didn't have the patience to poke around. But what would "no" and "submit" mean?  Is that meaningfully different from "cancel"?&lt;/p&gt;
+&lt;p&gt;It's not as bad as &lt;a href="https://dinosaurenby.medium.com/a-deep-dive-into-the-ux-of-the-nostromos-self-destruct-procedure-9eda80793fe8"&gt;the self-destruct interface for the Nostromo&lt;/a&gt;. If an alien creature was hunting me while I was trying to unsubscribe from this mailing list, I might not be as charitable.&lt;/p&gt;
+&lt;p&gt;Luckily, my best guess was correct. And my piece of cheese for solving this UX puzzle?&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Unlike the previous image, this one has not been edited. Not one pixel." src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678329253-0.png"/&gt;&lt;/p&gt;
+&lt;p&gt;Perfect. Ten out of ten.  No notes.  🤦&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/target-optical-mailing-list-ui/</guid>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
