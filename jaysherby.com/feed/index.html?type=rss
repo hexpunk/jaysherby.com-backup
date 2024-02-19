@@ -10,6 +10,103 @@ Hiring? Check my résumé to see if we're a match....</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Use Promise.all With Caution</title>
+      <link>https://jaysherby.com/use-promiseall-with-caution/</link>
+      <description>&lt;p&gt;A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of &lt;a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"&gt;&lt;code&gt;Promise.all&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;First, let's briefly review how promises behave when &lt;code&gt;Promise.all&lt;/code&gt; is not used. For our scenario, let's imagine we need to make multiple network calls.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/1'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/2'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/3'&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Or using async/await...&lt;/span&gt;
+
+&lt;span class="k"&gt;async&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;example&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/1'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/2'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/3'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In this example, a network call is made to &lt;code&gt;http://example.com/1&lt;/code&gt;. The code waits until that call is complete. Then it makes a call to &lt;code&gt;http://example.com/2&lt;/code&gt; and waits for that call to complete. Finally, a call is made to &lt;code&gt;http://example.com/3&lt;/code&gt;. It's important to note that only one network call is made at a time.&lt;/p&gt;
+&lt;p&gt;Don't get too caught up on the fact that we're making network calls. I used this as an example because most JavaScript developers will be familiar with &lt;code&gt;fetch&lt;/code&gt; as a function that returns a promise. You can substitute any type of promise.&lt;/p&gt;
+&lt;p&gt;These promises, while asynchronous, are being run serially. &lt;code&gt;Promise.all&lt;/code&gt; can be a performance super power that &lt;em&gt;may&lt;/em&gt; allow multiple promises to run in parallel.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; It finally returns when either all of the promises passed to it resolve, or when any one promise is rejected.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;Promise&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/1'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/2'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'http://example.com/3'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In the typical case, this version should run faster than the serial example because all three promises can run simultaneously.&lt;/p&gt;
+&lt;p&gt;However, it's very important to think critically before applying &lt;code&gt;Promise.all&lt;/code&gt;. Here's a simplified version of the first bug I encountered.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;items&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Item&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;findAll&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;where&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;user_id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;checked&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;false&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nb"&gt;Promise&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;all&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;items&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;checked&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;true&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;At first glance, this seems like a reasonable thing to do. Updating all the items simultaneously will speed this up, right?  In actuality, this resulted in an error.&lt;/p&gt;
+&lt;p&gt;The first warning sign is that there is no limit on the number of items that belong to this particular user. Most of the time this will probably be fine. But what if a user has an idiosyncratic number of unchecked items? What if it's hundreds or thousands? Your server is going to attempt to run an unhealthy number of promises at once.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;In the real code, this was using the ORM &lt;a href="https://sequelize.org/"&gt;Sequelize&lt;/a&gt;. Sequelize keeps a pool of database connections. Whenever you make a call to the database, a connection from the pool is used. Most of the time, only one connection is used per request. If you're doing something fancy with &lt;code&gt;Promise.all&lt;/code&gt;, maybe more than one connection is used simultaneously per request. In this case, if the number of items exceeds the maximum number of connections allowed in the pool, you'll receive an error, which is exactly what happened.&lt;/p&gt;
+&lt;p&gt;To fix this, you could increase the maximum number of connections allowed in the pool. But how many is enough? Because items are created by users, there is no realistic maximum number. I chose to make the promises run serially instead.&lt;/p&gt;
+&lt;p&gt;I had run into similar issues regarding simultaneous database calls in the past and I had already added the &lt;a href="http://bluebirdjs.com"&gt;Bluebird&lt;/a&gt; library to this particular project. It includes a function called &lt;a href="http://bluebirdjs.com/docs/api/promise.mapseries.html"&gt;&lt;code&gt;mapSeries&lt;/code&gt;&lt;/a&gt; which does exactly what I need.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;P&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'bluebird'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="c1"&gt;// ...snip...&lt;/span&gt;
+
+&lt;span class="nx"&gt;P&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;mapSeries&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;items&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;checked&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;true&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If you don't like Bluebird, there are other libraries available to control the level of concurrency when &lt;code&gt;Promise.all&lt;/code&gt; is used. Some of them even include the ability to specify concurrency limits higher than 1. I encourage the reader to experiment and see if they can roll their own function that takes an array of promises and awaits them serially.&lt;/p&gt;
+&lt;p&gt;The other bug I encountered was in a different project, but was once again a misapplication of &lt;code&gt;Promise.all&lt;/code&gt;. In this case, it was in a database migration for use with the &lt;a href="https://knexjs.org/"&gt;Knex&lt;/a&gt; ORM.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;up&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;Promise&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'table_a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'column_a'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}),&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'table_b'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'column_a'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}),&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I didn't dive too deeply into the root cause of this migration failing because I'd already been primed to be suspicious of unnecessary use of &lt;code&gt;Promise.all&lt;/code&gt; by the previous bug from earlier in the week. My best guess is that because &lt;code&gt;table_b&lt;/code&gt; has a foreign key that points to &lt;code&gt;table_a&lt;/code&gt;, the database threw an error when this migration attempted to alter &lt;code&gt;table_b&lt;/code&gt; while &lt;code&gt;table_a&lt;/code&gt; was still in the process of being altered.&lt;/p&gt;
+&lt;p&gt;In any case, the solution was very straightforward. Use Knex's promise chaining as it was designed to be used.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;up&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'table_a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'column_a'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'table_b'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'column_a'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This version of the migration worked without issue.&lt;/p&gt;
+&lt;p&gt;These examples show the need to think critically whenever you reach for &lt;code&gt;Promise.all&lt;/code&gt; or any other promise utility that results in parallelism in your code.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Don't use &lt;code&gt;Promise.all&lt;/code&gt; if you don't know how many promises you may be passing in ahead of time.&lt;/li&gt;
+&lt;li&gt;Don't use &lt;code&gt;Promise.all&lt;/code&gt; if your promises all depend on a shared, limited resource.&lt;/li&gt;
+&lt;li&gt;Don't use &lt;code&gt;Promise.all&lt;/code&gt; if the order in which the promises resolve matters.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr/&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;I say "may" because it depends on what the promises are doing.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;My understanding is that most JavaScript runtimes have an upper limit to how many promises they'll execute in parallel when &lt;code&gt;Promise.all&lt;/code&gt; is used, but I don't think any particular number is specified in the ECMAScript specification.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/use-promiseall-with-caution/</guid>
+      <pubDate>Mon, 19 Feb 2024 22:25:30 +0000</pubDate>
+    </item>
+    <item>
       <title>Sequelize And The Disappearing ID Column</title>
       <link>https://jaysherby.com/sequelize-and-the-disappearing-id-column/</link>
       <description>&lt;p&gt;I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let's see if you can figure out what happened.&lt;/p&gt;
@@ -619,116 +716,6 @@ export default function NumberView() {
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/a-formal-letter-of-apology-to-batman/</guid>
       <pubDate>Thu, 18 May 2023 19:35:52 +0000</pubDate>
-    </item>
-    <item>
-      <title>HATEOAS: I want to believe</title>
-      <link>https://jaysherby.com/hateoas-i-want-to-believe/</link>
-      <description>&lt;p&gt;There's a growing voice in the web dev community. I'm going to call them "web fundamentalists". They hold certain beliefs about web development.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Single-page apps (SPAs) make for a poor user experience.&lt;/li&gt;
-&lt;li&gt;SPAs are bad for accessibility.&lt;/li&gt;
-&lt;li&gt;Good APIs make semantically correct use of more of the HTTP verbs than just GET and POST.&lt;/li&gt;
-&lt;li&gt;It's okay for an application server to return HTML.&lt;/li&gt;
-&lt;li&gt;The web should be generally usable with JavaScript disabled.&lt;/li&gt;
-&lt;li&gt;Cookie-based sessions are better than JSON Web Tokens.&lt;/li&gt;
-&lt;li&gt;JavaScript doesn't need a compiler.&lt;/li&gt;
-&lt;li&gt;A web API that accepts and returns JSON isn't necessarily REST.&lt;/li&gt;
-&lt;li&gt;Web applications should be offline-first.&lt;/li&gt;
-&lt;li&gt;Accessibility encompasses more than assistive technologies. An accessible application is tolerant of old hardware, old software, and poor connectivity.&lt;/li&gt;
-&lt;li&gt;Boring tech makes for reliable tech.&lt;/li&gt;
-&lt;li&gt;Progressive enhancement is better than graceful degradation, but both are better than nothing at all.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;I agree with most, if not all, of these beliefs, in principle. However, I find that many of these beliefs are often overly idealistic and can fall apart when theory meets practice.&lt;/p&gt;
-&lt;h2 id="uphill-both-ways"&gt;Uphill both ways&lt;/h2&gt;
-&lt;p&gt;Just like many forms of fundamentalism, this form is probably influenced by how quickly and drastically change has occurred. Web development looks completely different today than it did 10 years ago. In a rapidly changing environment, it's easy to fall prey to rose-tinted nostalgia.&lt;/p&gt;
-&lt;p&gt;I remember when a web application generated all of a page's HTML on the server side. Slowly but surely, more and more logic would find its way into the templates. This was bad because template logic was generally slower than non-template logic. I have worked on applications where more than half of a server request's time was spent rendering the HTML. It was a bad time. In the short term, people started pushing so-called "logic-less templates". &lt;a href="https://en.wikipedia.org/wiki/Mustache_%28template_system%29"&gt;Mustache templates&lt;/a&gt; became the new hotness.&lt;/p&gt;
-&lt;p&gt;Longer term, the prevailing wisdom was that we needed to stop treating web browsers like thin clients. Can you believe there was ever any doubt? Web browsers are the thickest of thick clients. The web browser is the new operating system. Look at Chromebooks! People gladly buy laptops that can only run a glorified web browser.&lt;/p&gt;
-&lt;p&gt;If more than half of your server's workload is building HTML, basically shuffling strings around, you're paying to do something your client's devices are capable of doing on your behalf. Plus, there's so much redundant data going over the wire. You're sending your web app's navigation code for every page request. Ideally, you should amortize the templating and rendering by making your users' devices handle it. Your server doesn't have to do it, so you don't have to pay for the computer time or the data transfer.&lt;/p&gt;
-&lt;p&gt;I was there at the time and this made perfect sense. Your server only has to deal in pure data and your front-end code only needs to worry about displaying that data and performing server requests. This is what led to REST APIs and SPAs.&lt;/p&gt;
-&lt;p&gt;But modern solutions call for modern problems and now we have to care about the efficiency with which data is represented and queried. None of that mattered previously because it all happened on the server. Your browser requested one whole page and the server returned one whole page. Since accessing the data and applying it to a template was essentially a single task accomplished by a single program running on a single machine, tightly coupling them wasn't a big deal.&lt;/p&gt;
-&lt;p&gt;With SPAs, you're encouraged to think of your server and your front-end as two different programs that happen to talk to one another. Wouldn't it be nice if your data representation wasn't tied to any particular display format? Your data is its own platonic ideal of entities and relationships, not all that different from a database. In fact, your application server isn't much more than a thin wrapper around your database. The only extra stuff it needs to do is authentication, authorization, data serialization (into JSON, the web's data serialization format of choice), and some data validation that's more application-specific than you can probably represent in a database alone.&lt;/p&gt;
-&lt;h2 id="r-e-s-t-find-out-what-it-means-to-me"&gt;R-E-S-T, find out what it means to me&lt;/h2&gt;
-&lt;p&gt;Representational state transfer, or REST, was the solution for what protocol the web was going to standardize on for this new world of front-ends and back-ends. Almost.&lt;/p&gt;
-&lt;p&gt;REST, at its heart, is basically a remote procedure call interface that plays to the strengths of the web's existing technology. Specifically, URIs, HTTP verbs, HTTP response codes, and browser caches.&lt;/p&gt;
-&lt;p&gt;There's a problem, though, at least if you ask a REST purist. Nobody uses it "correctly".&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; You're technically not REST unless you're using HATEOAS.&lt;/p&gt;
-&lt;h2 id="only-love-can-conquer-hateoas"&gt;Only love can conquer HATEOAS&lt;/h2&gt;
-&lt;p&gt;Hypermedia as the engine of application state, or HATEOAS. The name that just rolls off the tongue.&lt;/p&gt;
-&lt;p&gt;I'm not going to explain it in extreme detail here, but the idea, roughly, is that your API returns JSON objects that look like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;"author"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"id"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;123&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"firstName"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"Stephen"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"lastName"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"King"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"birthday"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"1947-09-21T05:00:00.000Z"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"links"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;"books"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/authors/123/books"&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;A given model contains all the information you'd expect, plus a &lt;code&gt;links&lt;/code&gt; (or &lt;code&gt;_links&lt;/code&gt; in some implementations) object containing the URIs of various related models.&lt;/p&gt;
-&lt;p&gt;Honestly, at first blush, this seems like a really reasonable way to do things. It could benefit from some kind of library or something to automatically parse these things, but it's simple enough that almost any developer could probably roll their own.&lt;/p&gt;
-&lt;p&gt;However, there's at least one glaring flaw to me where the rubber meets the road, and it's when you need to traverse more than one relationship in the graph.&lt;/p&gt;
-&lt;p&gt;Suppose, for example, my front-end is consuming an API like the one that would generate that Stephen King model above. I want to get a list of publishers who have published Stephen King's books. Imagine the &lt;code&gt;book&lt;/code&gt; model looks like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;"book"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"id"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;720&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"title"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"The Dead Zone"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"pages"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;428&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"publicationDate"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"1979-08-30T05:00:00.000Z"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"isbn"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"978-0-670-26077-5"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;"links"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;"author"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/authors/123"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;"publisher"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/publishers/902"&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;What I can do is request all of King's books with &lt;code&gt;GET /authors/123/books&lt;/code&gt; and then call a &lt;code&gt;GET&lt;/code&gt; on the &lt;code&gt;publisher&lt;/code&gt; link for each &lt;code&gt;book&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;However, subjectively speaking, this sucks. I don't know if you've ever had to work with an app that works this way, but it's a bad time for users. Best case scenario, this is going to take a lot of time and a lot of bandwidth due to the overhead of making one API per book. Even with HTTP/3 or whatever, where HTTP is no longer one transaction per connection. And the browser is going to choke if you fire off dozens of AJAX&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; requests at once.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;Okay, okay. I know that what I described is a ridiculous approach that I definitely have never seen in the wild, much less worked on an app that does it. What we'd actually do is add a new link to the &lt;code&gt;author&lt;/code&gt; model that does the relational hop for us on the back-end and return the results we want. Something like &lt;code&gt;/author/123/publishers&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;I don't know about you, but I hate adding boilerplate endpoints to apps. Seems like something metaprogramming would handle for you. There would need to be some guidelines from the programmer, though. If I just gave the program my database and told it to figure it out, I'd end up with technically valid but meaningless relationships.&lt;sup class="footnote-ref" id="fnref-5"&gt;&lt;a href="#fn-5"&gt;5&lt;/a&gt;&lt;/sup&gt; Not to mention the cycles.&lt;/p&gt;
-&lt;p&gt;What I find myself describing almost exists already, but it's not HATEOAS. It's GraphQL.&lt;/p&gt;
-&lt;p&gt;I know there are a lot of GraphQL haters out there. And I totally understand. It's not as simple to add GraphQL to an app as it is to incrementally add endpoints that speak JSON. Most GraphQL implementations, both front-end and back-end, are heavy-weight dependencies. And GraphQL itself is not a panacea for the problem of connecting front-end and back-end.&lt;/p&gt;
-&lt;p&gt;I've used GraphQL a few times in my career. Never for anything that's Serious Business™️. One time was in a Rails app. Another time was with Gatsby.&lt;/p&gt;
-&lt;p&gt;What impressed me most about using it was the quality of the developer experience. Once you set up your models, querying data was a breeze. Introspection, auto-completion, and type inference made writing queries a joy. Having your data query live in the same file as your display logic was the same kind of revelation as when React gave us JSX and our templates could live with the display logic. It's a code locality win.&lt;/p&gt;
-&lt;p&gt;Combine that with Prisma's tooling&lt;sup class="footnote-ref" id="fnref-6"&gt;&lt;a href="#fn-6"&gt;6&lt;/a&gt;&lt;/sup&gt; on the back-end and the need to write boilerplate endpoints virtually disappears.&lt;/p&gt;
-&lt;p&gt;GraphQL also solves the problem of data validation and sanitation, which HATEOAS doesn't address. Neither solves the problem of authorization, though. My point is that metaprogramming can't account for all the drudgery associated with a CRUD back-end.&lt;/p&gt;
-&lt;h2 id="the-other-hateoas"&gt;The &lt;em&gt;other&lt;/em&gt; HATEOAS&lt;/h2&gt;
-&lt;p&gt;Let's get pedantic for a second. I talked about HATEOAS and I gave an example using JSON. The example I gave is an example of HATEOAS, but it's just one implementation. The most important word in HATEOAS is "hypermedia". The JSON examples I gave qualify as hypermedia because they have links.&lt;/p&gt;
-&lt;p&gt;You know what else qualifies as hypermedia? The OG, HTML! Hyper text markup language.&lt;/p&gt;
-&lt;p&gt;There are some folks who have made various tools exploring this idea of HTML as HATEOAS. Their latest creation is &lt;a href="https://htmx.org/"&gt;HTMX&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;I think it would be worth trying to create a web application using HTMX. The problem is, it bucks the trends of Big JavaScript™️.&lt;/p&gt;
-&lt;p&gt;You can have the things that make development easier:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Templates and display logic live together&lt;/li&gt;
-&lt;li&gt;Data queries and display logic live together&lt;/li&gt;
-&lt;li&gt;No more endpoint boilerplate hell... maybe?&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The catch is, you'll be going back to rendering your HTML on the server side. But at least you don't have to render &lt;em&gt;entire&lt;/em&gt; pages per request. You can absolutely return page fragments that get inserted into an existing page.&lt;sup class="footnote-ref" id="fnref-7"&gt;&lt;a href="#fn-7"&gt;7&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;h2 id="wrapping-up"&gt;Wrapping up&lt;/h2&gt;
-&lt;p&gt;I don't mean to be overly critical of the web dev hippies out there. I see you. I love you. I agree with you most of the time.&lt;/p&gt;
-&lt;p&gt;I am critical of JSON HATEOAS implementations. Without some kind of tools for metaprogramming, I've found it leads to boilerplate fatigue. I don't enjoy churning out CRUD endpoints. I also hate when adding a new endpoint leads to a large impact radius in the code. Adding one new model, for example, is one thing. But then I have to modify all the endpoints of all the other models that contain relationships to the new endpoint that I want to utilize.&lt;/p&gt;
-&lt;p&gt;I don't think JSON HATEOAS implementations are inherently bad. How can they be? They're implementations. I don't think hypermedia is bad. How could I? The whole web is built on it. I do think that hypermedia is often an inappropriate medium to drive some of the applications we use it for. But, to its credit, hypermedia is adaptable enough that we can usually bend it into something resembling the shape we desire.&lt;/p&gt;
-&lt;p&gt;I have found that GraphQL, as a query language, seems a lot more powerful than JSON HATEOAS implementations to quickly produce maintainable web applications. But it's mostly due to the quality of its assistive tools. If I had to write GraphQL queries by hand with nothing to help me, I would probably be complaining about it, too.&lt;/p&gt;
-&lt;hr/&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;REST is an architectural style, not a standard. Therefore, "correctness" is up to interpretation.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;"Correct" REST can be pretty controversial. For example, server-side sessions are technically disallowed, whether that means using a session ID in a cookie or as part of the URI. This is because sessions introduce state, whereas REST is supposed to be stateless. Also, sessions mean there is data which is opaque to the user, which is deemed a security and privacy risk. But what's the alternative? Sending credentials along with every request that needs it seems less secure to me (assuming sessions are implemented securely, which is a &lt;em&gt;big&lt;/em&gt; assumption, I know). JSON Web Tokens are not opaque, for better or worse, but it's considered better practice to prefer a session token for systems where the application server &lt;em&gt;is&lt;/em&gt; the authentication authority.&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;It's 2023. Are we still calling this AJAX? This is just how the web works now, right? 🤷&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-4"&gt;&lt;p&gt;Ask me how I know.&lt;a class="footnote" href="#fnref-4"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-5"&gt;&lt;p&gt;My library card catalog example is too simple for an example, but anyone who has worked with a production database knows what I'm talking about.&lt;a class="footnote" href="#fnref-5"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-6"&gt;&lt;p&gt;I'm not a fan of ORMs generally, but I've found Ecto and Prisma to be the least objectionable in my experience so far. Neither is perfect, but I'm particularly impressed by Prisma's tooling, which generates Typescript types for your database models. We need more metaprogramming tools like this.&lt;a class="footnote" href="#fnref-6"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-7"&gt;&lt;p&gt;I haven't tried this myself yet, but I'm very intrigued by the concept. The ultimate would be if all response bodies are complete HTML pages. I'm not sure how that would work. Iframes everywhere seems too heavy. It just feels weird to me to return HTML &lt;em&gt;fragments&lt;/em&gt; from a back-end.&lt;a class="footnote" href="#fnref-7"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/hateoas-i-want-to-believe/</guid>
-      <pubDate>Tue, 16 May 2023 00:00:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
