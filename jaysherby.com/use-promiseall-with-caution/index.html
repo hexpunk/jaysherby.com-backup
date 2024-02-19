@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Use Promise.all With Caution | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="Use Promise.all With Caution">
+<meta name="description" content="A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of Promise.all.
+First, let&#x27;s briefly review how promises...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Use Promise.all With Caution">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/use-promiseall-with-caution/">
+<meta property="og:description" content="A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of Promise.all.
+First, let&#x27;s briefly review how promises...">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/use-promiseall-with-caution/">
+<meta property="twitter:title" content="Use Promise.all With Caution">
+<meta property="twitter:description" content="A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of Promise.all.
+First, let&#x27;s briefly review how promises...">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Use Promise.all With Caution",
+    "url": "https://jaysherby.com/use-promiseall-with-caution/",
+    "description": "A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of Promise.all.
+First, let&#x27;s briefly review how promises...",
+    "about": {
+      "@type": "Use Promise.all With Caution",
+      "description": "A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of Promise.all.
+First, let&#x27;s briefly review how promises..."
+    }
+  }
+</script>
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+
+  
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+
+  <style>
+      
+      
+:root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+/* Blockquote styles for conversations with AI */
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+/* Make embedded images centered and interrupt content */
+main img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give hint that <details> are clickable to reveal more */
+details > summary {
+  cursor: pointer;
+}
+
+/* Make "Made with Bear" footer always at the bottom of the page */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+
+/* Hide upvote UI on pages */
+body.page #upvote-form {
+  display: none !important;
+}
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+body:hover {
+    border-image: url("https://jaysherby.com/hit/ApQZBkdaoUUjQXmaXHje/");
+    border-width: 0;
+}
+
+
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    Use Promise.all With Caution
+</h1>
+
+<p>
+    <i>
+        <time datetime="2024-02-19">
+            19 Feb, 2024
+        </time>
+    </i>
+</p>
+
+
+    <p>A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"><code>Promise.all</code></a>.</p>
+<p>First, let's briefly review how promises behave when <code>Promise.all</code> is not used. For our scenario, let's imagine we need to make multiple network calls.</p>
+<div class="highlight"><pre><span></span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/1'</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/2'</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/3'</span><span class="p">));</span>
+
+<span class="c1">// Or using async/await...</span>
+
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/1'</span><span class="p">);</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/2'</span><span class="p">);</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/3'</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>In this example, a network call is made to <code>http://example.com/1</code>. The code waits until that call is complete. Then it makes a call to <code>http://example.com/2</code> and waits for that call to complete. Finally, a call is made to <code>http://example.com/3</code>. It's important to note that only one network call is made at a time.</p>
+<p>Don't get too caught up on the fact that we're making network calls. I used this as an example because most JavaScript developers will be familiar with <code>fetch</code> as a function that returns a promise. You can substitute any type of promise.</p>
+<p>These promises, while asynchronous, are being run serially. <code>Promise.all</code> can be a performance super power that <em>may</em> allow multiple promises to run in parallel.<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup> It finally returns when either all of the promises passed to it resolve, or when any one promise is rejected.</p>
+<div class="highlight"><pre><span></span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/1'</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/2'</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/3'</span><span class="p">),</span>
+<span class="p">]);</span>
+</pre></div>
+
+<p>In the typical case, this version should run faster than the serial example because all three promises can run simultaneously.</p>
+<p>However, it's very important to think critically before applying <code>Promise.all</code>. Here's a simplified version of the first bug I encountered.</p>
+<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Item</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">user_id</span><span class="o">:</span><span class="w"> </span><span class="kt">id</span><span class="p">,</span><span class="w"> </span><span class="nx">checked</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">checked</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">})</span>
+<span class="p">);</span>
+</pre></div>
+
+<p>At first glance, this seems like a reasonable thing to do. Updating all the items simultaneously will speed this up, right?  In actuality, this resulted in an error.</p>
+<p>The first warning sign is that there is no limit on the number of items that belong to this particular user. Most of the time this will probably be fine. But what if a user has an idiosyncratic number of unchecked items? What if it's hundreds or thousands? Your server is going to attempt to run an unhealthy number of promises at once.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
+<p>In the real code, this was using the ORM <a href="https://sequelize.org/">Sequelize</a>. Sequelize keeps a pool of database connections. Whenever you make a call to the database, a connection from the pool is used. Most of the time, only one connection is used per request. If you're doing something fancy with <code>Promise.all</code>, maybe more than one connection is used simultaneously per request. In this case, if the number of items exceeds the maximum number of connections allowed in the pool, you'll receive an error, which is exactly what happened.</p>
+<p>To fix this, you could increase the maximum number of connections allowed in the pool. But how many is enough? Because items are created by users, there is no realistic maximum number. I chose to make the promises run serially instead.</p>
+<p>I had run into similar issues regarding simultaneous database calls in the past and I had already added the <a href="http://bluebirdjs.com">Bluebird</a> library to this particular project. It includes a function called <a href="http://bluebirdjs.com/docs/api/promise.mapseries.html"><code>mapSeries</code></a> which does exactly what I need.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">P</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'bluebird'</span><span class="p">;</span>
+
+<span class="c1">// ...snip...</span>
+
+<span class="nx">P</span><span class="p">.</span><span class="nx">mapSeries</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">checked</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+
+<p>If you don't like Bluebird, there are other libraries available to control the level of concurrency when <code>Promise.all</code> is used. Some of them even include the ability to specify concurrency limits higher than 1. I encourage the reader to experiment and see if they can roll their own function that takes an array of promises and awaits them serially.</p>
+<p>The other bug I encountered was in a different project, but was once again a misapplication of <code>Promise.all</code>. In this case, it was in a database migration for use with the <a href="https://knexjs.org/">Knex</a> ORM.</p>
+<div class="highlight"><pre><span></span><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">up</span><span class="p">(</span><span class="nx">knex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+<span class="w">    </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_a'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">    </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_b'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">  </span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+
+<p>I didn't dive too deeply into the root cause of this migration failing because I'd already been primed to be suspicious of unnecessary use of <code>Promise.all</code> by the previous bug from earlier in the week. My best guess is that because <code>table_b</code> has a foreign key that points to <code>table_a</code>, the database threw an error when this migration attempted to alter <code>table_b</code> while <code>table_a</code> was still in the process of being altered.</p>
+<p>In any case, the solution was very straightforward. Use Knex's promise chaining as it was designed to be used.</p>
+<div class="highlight"><pre><span></span><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">up</span><span class="p">(</span><span class="nx">knex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_a'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_b'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="p">};</span>
+</pre></div>
+
+<p>This version of the migration worked without issue.</p>
+<p>These examples show the need to think critically whenever you reach for <code>Promise.all</code> or any other promise utility that results in parallelism in your code.</p>
+<ul>
+<li>Don't use <code>Promise.all</code> if you don't know how many promises you may be passing in ahead of time.</li>
+<li>Don't use <code>Promise.all</code> if your promises all depend on a shared, limited resource.</li>
+<li>Don't use <code>Promise.all</code> if the order in which the promises resolve matters.</li>
+</ul>
+<hr/>
+<section class="footnotes">
+<ol>
+<li id="fn-1"><p>I say "may" because it depends on what the promises are doing.<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
+<li id="fn-2"><p>My understanding is that most JavaScript runtimes have an upper limit to how many promises they'll execute in parallel when <code>Promise.all</code> is used, but I don't think any particular number is specified in the ECMAScript specification.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
+</ol>
+</section>
+
+
+
+
+
+    
+    <p class="tags">
+        
+        <a href="../blog/index.html%3Fq=javascript.html">#javascript</a>
+        
+        <a href="../blog/index.html%3Fq=typescript.html">#typescript</a>
+        
+    </p>
+    
+
+    
+    <form id="upvote-form" action="https://jaysherby.com/upvote/ApQZBkdaoUUjQXmaXHje/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="ApQZBkdaoUUjQXmaXHje" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+  </footer>
+</body>
+</html>
