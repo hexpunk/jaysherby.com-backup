@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>How I Fixed Laggy Wifi In Debian 12 | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+
+
+<meta name="jaysherby" content="look-for-the-bear-necessities">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="How I Fixed Laggy Wifi In Debian 12">
+<meta name="description" content="The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="How I Fixed Laggy Wifi In Debian 12">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/">
+<meta property="og:description" content="The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/">
+<meta property="twitter:title" content="How I Fixed Laggy Wifi In Debian 12">
+<meta property="twitter:description" content="The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "How I Fixed Laggy Wifi In Debian 12",
+    "url": "https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/",
+    "description": "The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...",
+    "about": {
+      "@type": "How I Fixed Laggy Wifi In Debian 12",
+      "description": "The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y..."
+    }
+  }
+</script>
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+
+  
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+
+  <style>
+      
+      
+:root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+/* Blockquote styles for conversations with AI */
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+/* Make embedded images centered and interrupt content */
+main img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give hint that <details> are clickable to reveal more */
+details > summary {
+  cursor: pointer;
+}
+
+/* Make "Made with Bear" footer always at the bottom of the page */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+
+/* Hide upvote UI on pages */
+body.page #upvote-form {
+  display: none !important;
+}
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+body:hover {
+    border-image: url("https://jaysherby.com/hit/kwoIaZmGrheJviWTGBRI/");
+    border-width: 0;
+}
+
+
+      
+  </style>
+</head>
+
+<body class="post ">
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    How I Fixed Laggy Wifi In Debian 12
+</h1>
+
+<p>
+    <i>
+        <time datetime="2024-02-21">
+            21 Feb, 2024
+        </time>
+    </i>
+</p>
+
+
+    <p>The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It's been dutifully chugging along for more than 4 years, but my needs finally exceed its capabilities.</p>
+<p>I got a good deal on a Lenovo ThinkCentre M910q from <a href="https://www.backmarket.com/">Back Market</a>. When I went to install Debian 12 Bookworm, I found that Debian's non-free firmware packages don't include the necessary drivers for the cheap USB wifi adapter the seller included. Rather than faff about trying to compile and install the kernel module, I bought an Intel 8265 M.2 wifi adapter from Amazon. Its drivers are included in Debian's non-free firmware, and according to Lenovo's service manuals, this was the model they would have included in my machine had that option been chosen during configuration.</p>
+<p>Installation of Debian worked without any issues. However, once the system was running, I noticed SSH sessions were very laggy. Pings to the new machine were averaging around 150 milliseconds, which is ten times longer than pings to the Raspberry Pi it was set to replace.</p>
+<p>After a little searching online, I found the culprit to be the power management on the wifi adapter. I think the wifi adapter goes into a low-power state after a lull in network traffic, but the lull is so short that the time between key presses in a SSH session is enough to trigger it. Because this device is not running on a battery, I feel comfortable turning the wifi adapter's power management off. This appears the solve the issue, and my SSH sessions are properly peppy afterwards.</p>
+<div class="highlight"><pre><span></span>server-user@m910q:~$ sudo iw dev wlp1s0 set power_save off
+</pre></div>
+
+<p>However, there's still a problem. If the system reboots, the power management for the wifi adapter returns to its default state of being turned on.</p>
+<p>Systemd to the rescue. After debugging some examples online that are very close to correct but ultimately out of date, here's the unit file I ended up with and the commands I used to set it up for my wifi adapter.</p>
+<div class="highlight"><pre><span></span>sudo systemctl --full --force edit wlan_always_on@.service
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Keep wireless device %i from sleeping.</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/sbin/iw dev %i set power_save off</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span>sudo systemctl enable --now wlan_always_on@wlp1s0.service
+</pre></div>
+
+<p>This setup may not be perfect. I'm no systemd expect. This is cobbled and cargo culted together. But it works on my machine™.</p>
+
+
+
+
+
+    
+    <p class="tags">
+        
+        <a href="../blog/index.html%3Fq=home&#32;server.html">#home server</a>
+        
+        <a href="../blog/index.html%3Fq=linux.html">#linux</a>
+        
+        <a href="../blog/index.html%3Fq=systemd.html">#systemd</a>
+        
+    </p>
+    
+
+    
+    <form id="upvote-form" action="https://jaysherby.com/upvote/kwoIaZmGrheJviWTGBRI/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="kwoIaZmGrheJviWTGBRI" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+  </footer>
+</body>
+</html>
