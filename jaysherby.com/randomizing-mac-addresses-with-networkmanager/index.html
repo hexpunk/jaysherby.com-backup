@@ -331,7 +331,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -372,8 +372,7 @@ managed=false
 [device]
 wifi.scan-rand-mac-address=no
 </pre></div>
-
-<p>Shame on you, Pop!_OS!  See <code>wifi.scan-rand-mac-address=no</code>?  That turns off MAC randomization during access point scanning! That means you're leaking your MAC address before you even connect to wifi. Passive listeners can track you. This isn't even the default behavior <a href="https://blogs.gnome.org/thaller/2016/08/26/mac-address-spoofing-in-networkmanager-1-4-0/">as of NetworkManager 1.4.0</a>. This is pretty embarrassing. Even Android randomizes your MAC address when scanning nowadays.</p>
+<p>Shame on you, Pop!_OS!  See <code>wifi.scan-rand-mac-address=no</code>?  That turns off MAC randomization during access point scanning! That means you're leaking your MAC address before you even connect to wifi. Passive listeners can track you. This isn't even the default behavior <a href='https://blogs.gnome.org/thaller/2016/08/26/mac-address-spoofing-in-networkmanager-1-4-0/'>as of NetworkManager 1.4.0</a>. This is pretty embarrassing. Even Android randomizes your MAC address when scanning nowadays.</p>
 <p>Here are my changes:</p>
 <div class="highlight"><pre><span></span>[main]
 plugins=ifupdown,keyfile
@@ -388,7 +387,6 @@ wifi.scan-rand-mac-address=yes
 ethernet.cloned-mac-address=random
 wifi.cloned-mac-address=random
 </pre></div>
-
 <p>I changed <code>wifi.scan-rand-mac-address</code> to <code>yes</code>, even though it's the default behavior. Just to be extra sure.</p>
 <p>I also added a setting called <code>cloned-mac-address</code> to both ethernet<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup> and wifi, and set it to <code>random</code>. This setting has a few other possible values. I'll quote the manual.</p>
 <blockquote>
@@ -396,20 +394,19 @@ wifi.cloned-mac-address=random
 </blockquote>
 <p>In other words, <code>permanent</code> and probably <code>preserve</code> will leak your physical MAC address when you connect to an access point. <code>stable</code> won't leak your physical MAC address, but it will result in a given access point seeing the same fake MAC address every time you connect to it.  That doesn't really prevent tracking if every Starbucks access point presents identically.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup> I want <code>random</code>. It generates a new, random MAC address on every connection.</p>
 <p>There. No more tracking. Now I just have to fill out that stupid captive portal form every time I go to Starbucks with my laptop.<sup class="footnote-ref" id="fnref-5"><a href="index.html#fn-5">5</a></sup></p>
-<h2 id="but-what-if-my-router-yells-at-me">But what if my router yells at me?</h2>
-<p>This happened to me. My Synology router started sending push notifications to my phone every time I turned on my laptop, asking me if I know this mysterious device that just connected.</p>
+<h2 id=but-what-if-my-router-yells-at-me>But what if my router yells at me?</h2><p>This happened to me. My Synology router started sending push notifications to my phone every time I turned on my laptop, asking me if I know this mysterious device that just connected.</p>
 <p>I needed to make an exception to the rules, but just for this one wifi network.  Happily, the option to change this setting is actually in the GUI.</p>
-<p><img alt="Oh, no! I forgot to censor my home network's SSID!" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678841041-0.png"/></p>
+<p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1678841041-0.png" alt="Oh, no! I forgot to censor my home network's SSID!" /></p>
 <p>You can see here I've set this particular connection to <code>stable</code>. Works like a charm.</p>
 <p>I'm sure there's a way to do this on the command line, or in a configuration file somewhere, but I haven't needed to figure that out yet.</p>
-<hr/>
+<hr />
 <section class="footnotes">
 <ol>
-<li id="fn-1"><p>I have no idea if Starbucks is actively using the data they're collecting, but they <em>are</em> collecting it. Even if it's just within log files. I mean, they wouldn't ask you a bunch of personal information if they weren't going to use it for <em>something</em>, right? I'm sure they tell you what they're doing with it in their T&amp;C. But who reads those?<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
-<li id="fn-2"><p>I've noticed that they'll deny you access if you make up random email domains. Gmail addresses seem to always work, though.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
-<li id="fn-3"><p>My laptop doesn't have a built-in ethernet port, so this is probably unnecessary. But it's not hurting anything, and it'll protect me in the one-in-a-million chance I ever plug in a USB-to-ethernet dongle.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
-<li id="fn-4"><p>And almost every Starbucks access point does present identically. This is why your phone or laptop will automatically connect to Starbucks wifi even if you've never been to that particular location before.<a class="footnote" href="index.html#fnref-4">↩</a></p></li>
-<li id="fn-5"><p>Yep.  I'm apparently willing to pay that price because I care that much about my privacy.  Do you think I like living this way?  I guess my Walter Mitty daydreams include living in the world of <em>Hackers (1995)</em>, and running Silk Road from coffee shops but <em>not</em> getting caught like Ulbricht did.<a class="footnote" href="index.html#fnref-5">↩</a></p></li>
+<li id="fn-1"><p>I have no idea if Starbucks is actively using the data they're collecting, but they <em>are</em> collecting it. Even if it's just within log files. I mean, they wouldn't ask you a bunch of personal information if they weren't going to use it for <em>something</em>, right? I'm sure they tell you what they're doing with it in their T&C. But who reads those?<a href="index.html#fnref-1" class="footnote">&#8617;</a></p></li>
+<li id="fn-2"><p>I've noticed that they'll deny you access if you make up random email domains. Gmail addresses seem to always work, though.<a href="index.html#fnref-2" class="footnote">&#8617;</a></p></li>
+<li id="fn-3"><p>My laptop doesn't have a built-in ethernet port, so this is probably unnecessary. But it's not hurting anything, and it'll protect me in the one-in-a-million chance I ever plug in a USB-to-ethernet dongle.<a href="index.html#fnref-3" class="footnote">&#8617;</a></p></li>
+<li id="fn-4"><p>And almost every Starbucks access point does present identically. This is why your phone or laptop will automatically connect to Starbucks wifi even if you've never been to that particular location before.<a href="index.html#fnref-4" class="footnote">&#8617;</a></p></li>
+<li id="fn-5"><p>Yep.  I'm apparently willing to pay that price because I care that much about my privacy.  Do you think I like living this way?  I guess my Walter Mitty daydreams include living in the world of <em>Hackers (1995)</em>, and running Silk Road from coffee shops but <em>not</em> getting caught like Ulbricht did.<a href="index.html#fnref-5" class="footnote">&#8617;</a></p></li>
 </ol>
 </section>
 

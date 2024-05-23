@@ -12,16 +12,16 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Homebrew Shell Completion Is Worth Your Time</title>
       <link>https://jaysherby.com/homebrew-shell-completion-is-worth-your-time/</link>
-      <description>&lt;p&gt;&lt;img alt="Original art, nautilus shell" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679798555-0.png"/&gt;&lt;/p&gt;
+      <description>&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679798555-0.png" alt="Original art, nautilus shell" /&gt;&lt;/p&gt;
 &lt;p&gt;I finally gave the Auth0 command line tool a try yesterday at work. I installed it via Homebrew since I use a MacBook Pro at work. I was hoping I could use it to quickly automate a repetitive task using a shell script. Unfortunately, Auth0's tool isn't currently able to block user accounts.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 &lt;p&gt;I noticed that their tool had a way to output a shell completion configuration. That led me down a rabbit hole, revealing that lots of tools I've installed via Homebrew ship with shell completions! They just aren't being used by default.&lt;/p&gt;
-&lt;p&gt;I'm not going to repeat the instructions here because Homebrew has &lt;a href="https://docs.brew.sh/Shell-Completion"&gt;a webpage&lt;/a&gt; with concise yet detailed instructions for adding shell completions to your configuration.&lt;/p&gt;
+&lt;p&gt;I'm not going to repeat the instructions here because Homebrew has &lt;a href='https://docs.brew.sh/Shell-Completion'&gt;a webpage&lt;/a&gt; with concise yet detailed instructions for adding shell completions to your configuration.&lt;/p&gt;
 &lt;p&gt;It's worth your time to set this up. Shell completions are a super power. I'm much less productive if I don't have git shell completions available.&lt;/p&gt;
 &lt;p&gt;I will note that setting this up for zsh, now the default shell in MacOS, is the most involved of all the supported shells. It's worth the 5 minute investment, though.&lt;/p&gt;
-&lt;hr/&gt;
+&lt;hr /&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;I opened &lt;a href="https://github.com/auth0/auth0-cli/issues/683"&gt;a feature ticket&lt;/a&gt;.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;I opened &lt;a href='https://github.com/auth0/auth0-cli/issues/683'&gt;a feature ticket&lt;/a&gt;.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
 </description>

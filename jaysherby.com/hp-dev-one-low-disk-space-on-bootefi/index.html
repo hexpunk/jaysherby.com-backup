@@ -331,7 +331,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -360,7 +360,7 @@ body.page #upvote-form {
 <p>I searched the internet and while there are plenty of people complaining about this issue, there seem to be few fixes.  Many recommend increasing the size of the partition to 1 GB, though they admit it's a complicated process to do so.  The easiest way is a full reinstall of the OS, although you can technically resize the partitions without such a drastic course of action if you're willing to futz around.</p>
 <p>I tried doing a "system refresh" via means built into Pop!_OS. I didn't lose any of my personal data, but I did have to reinstall all my applications. It seemed to fix the issue, although boot partition usage still hovered on the brink at 95%.</p>
 <p>That fix lasted all of a week.  There was another kernel update today causing usage to hit 97%. The warning returned.</p>
-<p>I did some more searching today and found <a href="https://github.com/pop-os/pop/issues/1714">this GitHub thread</a>. For posterity, if you're using an HP Dev One laptop like I am, there's a high likelihood that an old, already installed firmware update is hanging around in the boot partition, taking up precious space.</p>
+<p>I did some more searching today and found <a href='https://github.com/pop-os/pop/issues/1714'>this GitHub thread</a>. For posterity, if you're using an HP Dev One laptop like I am, there's a high likelihood that an old, already installed firmware update is hanging around in the boot partition, taking up precious space.</p>
 <p>It's safe to delete <code>/boot/efi/EFI/HP</code> and <code>/boot/efi/EFI/pop</code> directories, which hold firmware update files.</p>
 <p>After deleting those directories, my boot partition is now down to a relatively safe 82% usage.</p>
 

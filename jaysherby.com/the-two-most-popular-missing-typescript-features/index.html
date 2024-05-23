@@ -335,7 +335,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -359,10 +359,9 @@ body.page #upvote-form {
 </p>
 
 
-    <p><img alt="Original art, the suspense is terrible, I hope it'll last" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png"/></p>
+    <p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png" alt="Original art, the suspense is terrible, I hope it'll last" /></p>
 <p>There are two features I think should be in Typescript that are currently missing. It's not just <em>my</em> opinion, either. When I was researching this blog post, I discovered that the tickets requesting these two features are the most discussed tickets with the "suggestion" tag still open. If I could wave a magic wand to change Typescript in any way, I'd add these two features.</p>
-<h2 id="13219-throws-clause-and-typed-catch-clause"><a href="https://github.com/microsoft/TypeScript/issues/13219">#13219</a> <code>throws</code> clause and typed catch clause</h2>
-<p>This missing feature came up in discussion on a pull request of mine at work this week. A particular function had a return type of <code>Promise&lt;boolean&gt;</code> and included a <code>try...catch</code> statement in its body. A friend and colleague<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup> left a comment asking why the possible error types weren't represented in the return type of the function. Maybe something like <code>Promise&lt;boolean, AppException&gt;</code>?</p>
+<h2 id=a-href-https-github-com-microsoft-typescript-issues-13219-13219-a-code-throws-code-clause-and-typed-catch-clause><a href='https://github.com/microsoft/TypeScript/issues/13219'>#13219</a> <code>throws</code> clause and typed catch clause</h2><p>This missing feature came up in discussion on a pull request of mine at work this week. A particular function had a return type of <code>Promise&lt;boolean&gt;</code> and included a <code>try...catch</code> statement in its body. A friend and colleague<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup> left a comment asking why the possible error types weren't represented in the return type of the function. Maybe something like <code>Promise&lt;boolean, AppException&gt;</code>?</p>
 <p>The answer is that the <code>Promise</code> type doesn't support a second type variable to describe the value returned on rejection of a promise.</p>
 <p>As I suspected, the lack of a rejection type mirrors how caught error types are handled. (Or should I say, not handled?)</p>
 <div class="highlight"><pre><span></span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
@@ -371,11 +370,10 @@ body.page #upvote-form {
 <span class="w">  </span><span class="c1">// What is the type of `e`?</span>
 <span class="p">}</span>
 </pre></div>
-
 <p>Depending on the version of Typescript you're using and how you have configured it, the type of <code>e</code> in the code above is either <code>any</code> or <code>unknown</code>.</p>
 <p>That's pretty unsatisfying to me, and it leads to a lot of boilerplate in every <code>catch</code> block where I have to write a bunch of <code>if</code> blocks to detect the type of <code>e</code> and handle it appropriately. And I still have to cover my ass in case I missed a type. I have no way of being absolutely sure I covered everything that might have been thrown.</p>
 <p>JavaScript is particularly annoying when it comes to <code>throw</code>-ing things because almost any value can be thrown, not just sub-types of <code>Error</code>. You can throw strings, numbers, null. Almost anything your heart desires.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
-<p>I'd prefer it if Typescript could tell me all the possible types that might be thrown by a particular function or block of code. And I'm not alone. 1,349 people have given the 👍 reaction to <a href="https://github.com/microsoft/TypeScript/issues/13219">microsoft/Typescript#13219</a>.</p>
+<p>I'd prefer it if Typescript could tell me all the possible types that might be thrown by a particular function or block of code. And I'm not alone. 1,349 people have given the 👍 reaction to <a href='https://github.com/microsoft/TypeScript/issues/13219'>microsoft/Typescript#13219</a>.</p>
 <p>The syntax suggested mirrors a feature already present in crusty, old Java.</p>
 <div class="highlight"><pre><span></span><span class="w"> </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">fetchFile</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="p">,</span><span class="w"> </span><span class="n">NullPointerException</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// code that can throw IOException</span>
@@ -383,7 +381,6 @@ body.page #upvote-form {
 <span class="w">    </span><span class="c1">// code that can throw NullPointerException</span>
 <span class="p">}</span>
 </pre></div>
-
 <p>The big upshot of this feature in Java, besides your tools being able to warn you when you're not handling something your code might throw, is it enables the following type of <code>try...catch</code> syntax.</p>
 <div class="highlight"><pre><span></span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">fetchFile</span><span class="p">();</span>
@@ -393,11 +390,9 @@ body.page #upvote-form {
 <span class="w">    </span><span class="c1">// handle NullPointerException appropriately</span>
 <span class="p">}</span>
 </pre></div>
-
-<p>I vastly prefer this syntax over a single <code>catch</code> block containing repeated <code>if...else</code> blocks with <code>e instanceof AppError</code> conditions to detect each type. It's important to note that <a href="https://github.com/microsoft/TypeScript/issues/13219">microsoft/Typescript#13219</a> <em>does not</em> include this new <code>try...catch</code> syntax. I couldn't find a ticket requesting such a feature. But adding the <code>throws</code> annotation to function signatures might set the stage for it.</p>
+<p>I vastly prefer this syntax over a single <code>catch</code> block containing repeated <code>if...else</code> blocks with <code>e instanceof AppError</code> conditions to detect each type. It's important to note that <a href='https://github.com/microsoft/TypeScript/issues/13219'>microsoft/Typescript#13219</a> <em>does not</em> include this new <code>try...catch</code> syntax. I couldn't find a ticket requesting such a feature. But adding the <code>throws</code> annotation to function signatures might set the stage for it.</p>
 <p>When might we see the <code>throws</code> clause in Typescript? I wouldn't hold my breath. This ticket has been open for 7 years! But a boy can dream, can't he?</p>
-<h2 id="202-nominal-types"><a href="https://github.com/microsoft/TypeScript/issues/202">#202</a> Nominal types</h2>
-<p>Typescript has a structural type system. What does this mean?</p>
+<h2 id=a-href-https-github-com-microsoft-typescript-issues-202-202-a-nominal-types><a href='https://github.com/microsoft/TypeScript/issues/202'>#202</a> Nominal types</h2><p>Typescript has a structural type system. What does this mean?</p>
 <div class="highlight"><pre><span></span><span class="kd">interface</span><span class="w"> </span><span class="nx">Car</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
@@ -414,7 +409,7 @@ body.page #upvote-form {
 <span class="p">}</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">dodgeViper</span><span class="o">:</span><span class="w"> </span><span class="kt">Car</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'Dodge Viper'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Dodge Viper&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">31</span><span class="p">,</span>
 <span class="p">};</span>
 
@@ -422,15 +417,14 @@ body.page #upvote-form {
 <span class="c1">// The Dodge Viper is a 31 year old car.</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">brunoTheDog</span><span class="o">:</span><span class="w"> </span><span class="kt">Dog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'Bruno'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Bruno&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">breed</span><span class="o">:</span><span class="w"> </span><span class="s1">'terrier'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">breed</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;terrier&#39;</span><span class="p">,</span>
 <span class="p">};</span>
 
 <span class="nx">announceCar</span><span class="p">(</span><span class="nx">brunoTheDog</span><span class="p">);</span><span class="w"> </span><span class="c1">// &lt;- Typescript is a-okay with this.</span>
 <span class="c1">// The Bruno is a 5 year old car.</span>
 </pre></div>
-
 <p>So, uh... that was weird. I passed a <code>Dog</code> value to the <code>announceCar</code> function, which says it accepts a <code>Car</code> value. And Typescript was fine with it.</p>
 <p>That's because <code>Dog</code> is structurally compatible with <code>Car</code>. <code>Dog</code> has the same structural properties as <code>Car</code>, plus a <code>breed</code> key. Anything that expects a <code>Car</code> can also accept a <code>Dog</code>. A <code>Car</code> can't pass as a <code>Dog</code>, though, because <code>Car</code> is missing the <code>breed</code> key.</p>
 <p>Compare that to C, which has a nominal type system.</p>
@@ -447,12 +441,12 @@ body.page #upvote-form {
 <span class="p">}</span><span class="w"> </span><span class="n">Dog</span><span class="p">;</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">announce_car</span><span class="p">(</span><span class="n">Car</span><span class="w"> </span><span class="o">*</span><span class="n">car</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">"The %s is a %d year old car.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">car</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">car</span><span class="o">-&gt;</span><span class="n">age</span><span class="p">);</span>
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;The %s is a %d year old car.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">car</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">car</span><span class="o">-&gt;</span><span class="n">age</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">Car</span><span class="w"> </span><span class="n">dodge_viper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">"Dodge Viper"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Dodge Viper&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="p">.</span><span class="n">age</span><span class="o">=</span><span class="mi">31</span>
 <span class="w">  </span><span class="p">};</span>
 
@@ -460,16 +454,16 @@ body.page #upvote-form {
 <span class="w">  </span><span class="c1">// The Dodge Viper is a 31 year old car.</span>
 
 <span class="w">  </span><span class="n">Dog</span><span class="w"> </span><span class="n">bruno</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">"Bruno"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Bruno&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="p">.</span><span class="n">age</span><span class="o">=</span><span class="mi">5</span>
 <span class="w">  </span><span class="p">};</span>
 
 <span class="w">  </span><span class="n">announce_car</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bruno</span><span class="p">);</span>
 <span class="w">  </span><span class="cm">/*</span>
-<span class="cm">   * main.c:31:16: error: incompatible pointer types passing 'Dog *' to parameter of type 'Car *' [-Werror,-Wincompatible-pointer-types]</span>
+<span class="cm">   * main.c:31:16: error: incompatible pointer types passing &#39;Dog *&#39; to parameter of type &#39;Car *&#39; [-Werror,-Wincompatible-pointer-types]</span>
 <span class="cm">   *   announce_car(&amp;bruno);</span>
 <span class="cm">   *                ^~~~~~</span>
-<span class="cm">   * main.c:13:24: note: passing argument to parameter 'car' here</span>
+<span class="cm">   * main.c:13:24: note: passing argument to parameter &#39;car&#39; here</span>
 <span class="cm">   * void announce_car(Car *car) {</span>
 <span class="cm">   *                        ^</span>
 <span class="cm">   */</span>
@@ -477,9 +471,8 @@ body.page #upvote-form {
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-
 <p>This C program is almost identical to the Typescript code, except that I've made the <code>Car</code> and <code>Dog</code> types structurally identical to one another. C does not let me pass a <code>Dog</code> to the <code>announce_car</code> function.<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup> If I really wanted to pass a <code>Dog</code> to <code>announce_car</code> in a nominally typed language, I'd have to cast it to a <code>Car</code> or manually create a new <code>Car</code> with the values from my <code>Dog</code>.</p>
-<p>IMHO, unless you already understand the difference between structural typing and nominal typing, <a href="https://github.com/microsoft/TypeScript/issues/202">microsoft/Typescript#202</a> doesn't do a very good job explaining it. But the feature being requested is the ability to opt into nominal typing for a given type. If I could specify that <code>Car</code> is a nominal type and a function expects a <code>Car</code>, you'd need to either give it a <code>Car</code> or cast the value you're passing into a <code>Car</code> first.</p>
+<p>IMHO, unless you already understand the difference between structural typing and nominal typing, <a href='https://github.com/microsoft/TypeScript/issues/202'>microsoft/Typescript#202</a> doesn't do a very good job explaining it. But the feature being requested is the ability to opt into nominal typing for a given type. If I could specify that <code>Car</code> is a nominal type and a function expects a <code>Car</code>, you'd need to either give it a <code>Car</code> or cast the value you're passing into a <code>Car</code> first.</p>
 <p>But... why? Why do people want this feature so badly?</p>
 <p>Let me give you the most concrete example I've seen for why nominal typing could be so helpful.</p>
 <div class="highlight"><pre><span></span><span class="kr">type</span><span class="w"> </span><span class="nx">CarID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
@@ -505,7 +498,7 @@ body.page #upvote-form {
 <span class="p">}</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">updateCarName</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">CarID</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Car</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Sets a Car's name in the database</span>
+<span class="w">    </span><span class="c1">// Sets a Car&#39;s name in the database</span>
 
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Car</span><span class="p">;</span><span class="w"> </span><span class="c1">// Pretend this actually works</span>
 <span class="p">}</span>
@@ -518,26 +511,24 @@ body.page #upvote-form {
 
 <span class="kd">let</span><span class="w"> </span><span class="nx">bruno</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loadDog</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
 
-<span class="nx">updateCarName</span><span class="p">(</span><span class="nx">bruno</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="s2">"Chevy Bel Air"</span><span class="p">);</span>
+<span class="nx">updateCarName</span><span class="p">(</span><span class="nx">bruno</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Chevy Bel Air&quot;</span><span class="p">);</span>
 </pre></div>
-
 <p>The problem is in the last line. I'm passing a <code>DogID</code> to a function that expects a <code>CarID</code>. This is incorrect and can cause serious data corruption in my database. Typescript doesn't flag this as incorrect currently. Because Typescript's type system is structural, <code>type CarID = number;</code> causes <code>CarID</code> to be nothing more than a synonym for <code>number</code>.</p>
 <p>Although <code>CarID</code> and <code>DogID</code> are technically both numbers, they are <em>not</em> semantically identical. If they could be declared as nominal types, Typescript would flag my attempt to pass <code>bruno.id</code> to <code>updateCarName</code> as a type error.</p>
 <p>If I was really, <em>really</em> sure that I was doing the right thing, I could make Typescript accept it by casting, like this:</p>
-<div class="highlight"><pre><span></span><span class="nx">updateCarName</span><span class="p">(</span><span class="nx">bruno</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">CarID</span><span class="p">,</span><span class="w"> </span><span class="s2">"Chevy Bel Air"</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="nx">updateCarName</span><span class="p">(</span><span class="nx">bruno</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">CarID</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Chevy Bel Air&quot;</span><span class="p">);</span>
 </pre></div>
-
-<p>This may seem like an odd concept, having explicit nominal types in an otherwise structural type system. I tried searching for prior art, but I didn't really find anything that works quite like what's being proposed in <a href="https://github.com/microsoft/TypeScript/issues/202">microsoft/Typescript#202</a>. In Elm, you can achieve a similar effect using algebraic data types. Typescript doesn't support algebraic data types and it likely never will as that's a whole different beast.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup> Flow treats classes as nominal types, but that's all. It's not something you can opt into for basic types like numbers.</p>
-<p>If you read through the <a href="https://github.com/microsoft/TypeScript/issues/202">microsoft/Typescript#202</a> ticket, you'll see plenty of people's attempts to achieve the desired effect using Typescript as it exists today. There are also plenty of options available on NPM. The general technique goes by many names: opaque types, branded types, tagged types, flavored types, etc. There are multiple variations on the theme that have their own advantages and drawbacks. While the more mainstream implementations are serviceable, I'd wager the concept would be easier to work with as a first-class feature of the language.<sup class="footnote-ref" id="fnref-5"><a href="index.html#fn-5">5</a></sup></p>
+<p>This may seem like an odd concept, having explicit nominal types in an otherwise structural type system. I tried searching for prior art, but I didn't really find anything that works quite like what's being proposed in <a href='https://github.com/microsoft/TypeScript/issues/202'>microsoft/Typescript#202</a>. In Elm, you can achieve a similar effect using algebraic data types. Typescript doesn't support algebraic data types and it likely never will as that's a whole different beast.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup> Flow treats classes as nominal types, but that's all. It's not something you can opt into for basic types like numbers.</p>
+<p>If you read through the <a href='https://github.com/microsoft/TypeScript/issues/202'>microsoft/Typescript#202</a> ticket, you'll see plenty of people's attempts to achieve the desired effect using Typescript as it exists today. There are also plenty of options available on NPM. The general technique goes by many names: opaque types, branded types, tagged types, flavored types, etc. There are multiple variations on the theme that have their own advantages and drawbacks. While the more mainstream implementations are serviceable, I'd wager the concept would be easier to work with as a first-class feature of the language.<sup class="footnote-ref" id="fnref-5"><a href="index.html#fn-5">5</a></sup></p>
 <p>How does this feature request compare to the <code>throws</code> feature request from the first half of this blog post? It has fewer 👍 reactions, but more discussion. As the issue number implies, it's been around longer. A whole 9 years! Looking at the request honestly, I think nominal types would be less impactful for the average developer than the <code>throws</code> feature. But it would still be a nice addition because it could help eliminate an entire class of bugs if used diligently.</p>
-<hr/>
+<hr />
 <section class="footnotes">
 <ol>
-<li id="fn-1"><p>Shout out to Emily! Thanks for the great question and the inspiration for this blog post. ❤️<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
-<li id="fn-2"><p>Interestingly, you can't throw <code>void</code>. Thank goodness for small favors, I guess.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
-<li id="fn-3"><p>Well, it would let me pass a <code>Dog</code> to <code>announce_car</code> if I hadn't compiled it with the <code>-Werror</code> flag. In that case, the compiler emits the same message as a warning and lets me do it anyway, which does work. But it only works because the types are literally the same. If I add a <code>breed</code> field to <code>Dog</code> after <code>name</code> but before <code>age</code> and set <code>breed</code> to "terrier", <code>announce_car</code> will emit "The Bruno is a 4195924 year old car." But that's beyond the scope of the point I'm trying to make here.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
-<li id="fn-4"><p>FWIW, I love algebraic data types. I think they're more expressive than what Typescript currently has. But I don't think ADTs can map cleanly onto JavaScript's type system, meaning it's incompatible with Typescript's design goals.<a class="footnote" href="index.html#fnref-4">↩</a></p></li>
-<li id="fn-5"><p>The way most opaque type implementations work amounts to lying to the type system. Take <a href="https://github.com/ts-essentials/ts-essentials/tree/master/lib/opaque">the implementation from ts-essentials</a> for example. The implementation is only 9 lines long. It's got some interesting conditional types in there. I'm not exactly sure what bug it's trying to protect against. At the end of the day, the actual, literal type of <code>Opaque&lt;number, 'CarID'&gt;</code> would be <code>number &amp; { [__OPAQUE_TYPE__]: 'CarID' }</code>. But that's a lie. Numeric literals are "turned into" the opaque type via assertion: <code>5 as CarID</code>. There is no <code>__OPAQUE_TYPE__</code> on the value. <code>(1 as UserID)[__OPAQUE_TYPE__]</code> is valid according to the compiler. The ts-essentials implementation prevents us from being able to call its bluff by declaring <code>__OPAQUE_TYPE__</code> as a unique symbol that's never actually created or given a value, much less exported, so it's impossible to actually access that value since there's no way to access it. <a href="https://www.typescriptlang.org/play?#code/C4TwDgpgBAysBOBLAdgcwDKOBeBDANgDwAq4EAfFALxSmRQQAe2yAJgM5TsIqpQD8UABTckaBswhtOdaIOQQAbjigAuWmQCUaqAuXwA3ACgjrCAGN8ueNHMB7ZNygB9ZwHkACgEEAigFUAUWdiAE0PIOd1AFdkRABHKOh2EABbACM7fGMjUHoAdSwACzcwXASIEjsAaykJFg4uHjRKGgBvIygoG1xWB3wQKABtV09fQOCwiIBddWJqqWMAX2zc6BKyxJIyABpaeeQ6qQbRXha9moOmes44MQwsHAJKi8pBWSgAMigC4GLS8ueUko6j0OBWZCgAGFrABJAAi1Cg6wByCi6RwuwA5ND4PDMeRsvgIMAoIhWABGdQ4+GI8lQXCcalw7L2RyZCAAOnwdlQQjJ5OG7m8-iCoXCrimmgMQA">Try it in the playground</a> to see what I mean. I've copied and pasted the code from ts-essentials. It compiles fine but throws an error at runtime.<a class="footnote" href="index.html#fnref-5">↩</a></p></li>
+<li id="fn-1"><p>Shout out to Emily! Thanks for the great question and the inspiration for this blog post. ❤️<a href="index.html#fnref-1" class="footnote">&#8617;</a></p></li>
+<li id="fn-2"><p>Interestingly, you can't throw <code>void</code>. Thank goodness for small favors, I guess.<a href="index.html#fnref-2" class="footnote">&#8617;</a></p></li>
+<li id="fn-3"><p>Well, it would let me pass a <code>Dog</code> to <code>announce_car</code> if I hadn't compiled it with the <code>-Werror</code> flag. In that case, the compiler emits the same message as a warning and lets me do it anyway, which does work. But it only works because the types are literally the same. If I add a <code>breed</code> field to <code>Dog</code> after <code>name</code> but before <code>age</code> and set <code>breed</code> to "terrier", <code>announce_car</code> will emit "The Bruno is a 4195924 year old car." But that's beyond the scope of the point I'm trying to make here.<a href="index.html#fnref-3" class="footnote">&#8617;</a></p></li>
+<li id="fn-4"><p>FWIW, I love algebraic data types. I think they're more expressive than what Typescript currently has. But I don't think ADTs can map cleanly onto JavaScript's type system, meaning it's incompatible with Typescript's design goals.<a href="index.html#fnref-4" class="footnote">&#8617;</a></p></li>
+<li id="fn-5"><p>The way most opaque type implementations work amounts to lying to the type system. Take <a href='https://github.com/ts-essentials/ts-essentials/tree/master/lib/opaque'>the implementation from ts-essentials</a> for example. The implementation is only 9 lines long. It's got some interesting conditional types in there. I'm not exactly sure what bug it's trying to protect against. At the end of the day, the actual, literal type of <code>Opaque&lt;number, 'CarID'&gt;</code> would be <code>number &amp; { [__OPAQUE_TYPE__]: 'CarID' }</code>. But that's a lie. Numeric literals are "turned into" the opaque type via assertion: <code>5 as CarID</code>. There is no <code>__OPAQUE_TYPE__</code> on the value. <code>(1 as UserID)[__OPAQUE_TYPE__]</code> is valid according to the compiler. The ts-essentials implementation prevents us from being able to call its bluff by declaring <code>__OPAQUE_TYPE__</code> as a unique symbol that's never actually created or given a value, much less exported, so it's impossible to actually access that value since there's no way to access it. <a href='https://www.typescriptlang.org/play?#code/C4TwDgpgBAysBOBLAdgcwDKOBeBDANgDwAq4EAfFALxSmRQQAe2yAJgM5TsIqpQD8UABTckaBswhtOdaIOQQAbjigAuWmQCUaqAuXwA3ACgjrCAGN8ueNHMB7ZNygB9ZwHkACgEEAigFUAUWdiAE0PIOd1AFdkRABHKOh2EABbACM7fGMjUHoAdSwACzcwXASIEjsAaykJFg4uHjRKGgBvIygoG1xWB3wQKABtV09fQOCwiIBddWJqqWMAX2zc6BKyxJIyABpaeeQ6qQbRXha9moOmes44MQwsHAJKi8pBWSgAMigC4GLS8ueUko6j0OBWZCgAGFrABJAAi1Cg6wByCi6RwuwA5ND4PDMeRsvgIMAoIhWABGdQ4+GI8lQXCcalw7L2RyZCAAOnwdlQQjJ5OG7m8-iCoXCrimmgMQA'>Try it in the playground</a> to see what I mean. I've copied and pasted the code from ts-essentials. It compiles fine but throws an error at runtime.<a href="index.html#fnref-5" class="footnote">&#8617;</a></p></li>
 </ol>
 </section>
 
