@@ -335,7 +335,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -359,29 +359,23 @@ body.page #upvote-form {
 </p>
 
 
-    <p><img alt="Original art, with apologies to Donald Sutherland" src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png"/></p>
+    <p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679176611-0.png" alt="Original art, with apologies to Donald Sutherland" /></p>
 <p>I made the leap from Docker to Podman.  Well... only on my personal laptop. Podman isn't a completely hassle-free, drop-in replacement for Docker.  It's damn close!  Close enough that I'm willing to use it at home, but it's still finicky and different enough that I'd spend too much time futzing at work trying to use it while keeping everything Docker-compatible for my colleagues.</p>
 <p>Here are some tips if, like me, you're coming from Docker and you just want to get productive.</p>
-<h2 id="i-need-docker-compose">I need Docker Compose</h2>
-<p>A large part of Docker's value to me comes from Docker Compose. If switching to Podman meant losing Docker Compose, I wouldn't have switched.</p>
+<h2 id=i-need-docker-compose>I need Docker Compose</h2><p>A large part of Docker's value to me comes from Docker Compose. If switching to Podman meant losing Docker Compose, I wouldn't have switched.</p>
 <p>Thankfully, Pop!_OS (and probably any other platforms that include Podman in their repos) has a package called <code>podman-docker</code> that satisfies packages that depend on Docker. Just make sure you install <code>podman-docker</code> before or at the same time as <code>docker-compose</code> so APT doesn't try to install Docker to satisfy Docker Compose's dependencies.</p>
-<p>If you're feeling adventurous, <a href="https://github.com/containers/podman-compose">Podman Compose</a> is a thing. But it's not available via my OS's default repositories and Docker Compose is.</p>
-<h3 id="permissionerror-errno-13-permission-denied">PermissionError: [Errno 13] Permission denied</h3>
-<p>I recently received this error when I tried running Docker Compose. I had already installed <code>podman-docker</code> like I mentioned. The solution was to add this to my <code>.bash_profile</code>:</p>
+<p>If you're feeling adventurous, <a href='https://github.com/containers/podman-compose'>Podman Compose</a> is a thing. But it's not available via my OS's default repositories and Docker Compose is.</p>
+<h3 id=permissionerror-errno-13-permission-denied>PermissionError: [Errno 13] Permission denied</h3><p>I recently received this error when I tried running Docker Compose. I had already installed <code>podman-docker</code> like I mentioned. The solution was to add this to my <code>.bash_profile</code>:</p>
 <div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">DOCKER_HOST</span><span class="o">=</span>unix:///run/user/<span class="nv">$UID</span>/podman/podman.sock
 </pre></div>
-
-<h2 id="i-need-docker-hub">I need Docker Hub</h2>
-<p>I also wouldn't use Podman if it meant I lost Docker Hub.</p>
+<h2 id=i-need-docker-hub>I need Docker Hub</h2><p>I also wouldn't use Podman if it meant I lost Docker Hub.</p>
 <p>The easiest way to get access to Docker Hub with Podman is to write the following file to <code>$HOME/.config/containers/registries.conf</code>:<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup></p>
 <div class="highlight"><pre><span></span>[registries.search]
-registries = ['docker.io']
+registries = [&#39;docker.io&#39;]
 </pre></div>
-
-<h2 id="potentially-insufficient-uids-or-gids-available-in-user-namespace">Potentially insufficient UIDs or GIDs available in user namespace</h2>
-<p>I had just installed Podman and I wanted use the NodeJS image from Docker Hub.</p>
+<h2 id=potentially-insufficient-uids-or-gids-available-in-user-namespace>Potentially insufficient UIDs or GIDs available in user namespace</h2><p>I had just installed Podman and I wanted use the NodeJS image from Docker Hub.</p>
 <div class="highlight"><pre><span></span>$ podman run -it --rm node
-Resolving "node" using unqualified-search registries (/home/jsherby/.config/containers/registries.conf)
+Resolving &quot;node&quot; using unqualified-search registries (/home/jsherby/.config/containers/registries.conf)
 Trying to pull docker.io/library/node:latest...
 Getting image source signatures
 Copying blob ca3bce705f6c done  
@@ -393,19 +387,17 @@ Copying blob 4f4cf292bc62 done
 Copying blob 8347f8b4b86b done  
 Copying blob c5f20f1b0856 done  
 Copying blob d220dfa3e187 done  
-Error: writing blob: adding layer with blob "sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0": Error processing tar file(exit status 1): potentially insufficient UIDs or GIDs available in user namespace (requested 0:42 for /etc/gshadow): Check /etc/subuid and /etc/subgid: lchown /etc/gshadow: invalid argument
+Error: writing blob: adding layer with blob &quot;sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0&quot;: Error processing tar file(exit status 1): potentially insufficient UIDs or GIDs available in user namespace (requested 0:42 for /etc/gshadow): Check /etc/subuid and /etc/subgid: lchown /etc/gshadow: invalid argument
 </pre></div>
-
 <p>This seems to be a common issue.</p>
 <p>First, make sure the <code>fuse-overlayfs</code> package is installed.</p>
 <p>If you look around the internet, you're going to find advice telling you to add the following file at <code>$HOME/.config/containers/storage.conf</code>:<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
 <div class="highlight"><pre><span></span>[storage]
-driver = "overlay"
+driver = &quot;overlay&quot;
 
 [storage.options.overlay]
-ignore_chown_errors = "true"
+ignore_chown_errors = &quot;true&quot;
 </pre></div>
-
 <p><strong>BUT BE WARNED!</strong> This change is meaningful and makes Podman behave differently than you probably expect. I'll quote the manual directly.</p>
 <blockquote>
 <p>ignore_chown_errors can be set to allow a non privileged user running with a single UID within a user namespace to run containers. The user can pull and use any image even those with multiple uids. Note multiple UIDs will be squashed down to the default uid in the container. These images will have no separation between the users in the container.</p>
@@ -414,14 +406,13 @@ ignore_chown_errors = "true"
 <p>Instead, I added my user to <code>/etc/subuid</code> and <code>/etc/subgid</code>.  Here's what both files look like on my machine:<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup></p>
 <div class="highlight"><pre><span></span>jsherby:100000:65536
 </pre></div>
-
 <p>Then I ran <code>podman system migrate</code> and I was good to go.</p>
-<hr/>
+<hr />
 <section class="footnotes">
 <ol>
-<li id="fn-1"><p><code>/etc/containers/registries.conf</code> is the equivalent system-wide config file.<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
-<li id="fn-2"><p><code>/etc/containers/storage.conf</code> is the equivalent system-wide config file.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
-<li id="fn-3"><p>When supporting namespaces for multiple users, the middle value needs to be offset so the namespaces don't overlap. Check the man pages that come with your local <code>shadow</code> package for details.<a class="footnote" href="index.html#fnref-3">↩</a></p></li>
+<li id="fn-1"><p><code>/etc/containers/registries.conf</code> is the equivalent system-wide config file.<a href="index.html#fnref-1" class="footnote">&#8617;</a></p></li>
+<li id="fn-2"><p><code>/etc/containers/storage.conf</code> is the equivalent system-wide config file.<a href="index.html#fnref-2" class="footnote">&#8617;</a></p></li>
+<li id="fn-3"><p>When supporting namespaces for multiple users, the middle value needs to be offset so the namespaces don't overlap. Check the man pages that come with your local <code>shadow</code> package for details.<a href="index.html#fnref-3" class="footnote">&#8617;</a></p></li>
 </ol>
 </section>
 

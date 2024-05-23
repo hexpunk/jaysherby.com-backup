@@ -13,7 +13,7 @@ Hiring? Check my résumé to see if we're a match....</description>
       <title>Can I Roll My Own State Container For React?</title>
       <link>https://jaysherby.com/can-i-roll-my-own-state-container-for-react/</link>
       <description>&lt;p&gt;I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.&lt;/p&gt;
-&lt;p&gt;I was surprised when others brought up some libraries I hadn't heard of called &lt;a href="https://recoiljs.org/"&gt;Recoil&lt;/a&gt; and &lt;a href="https://github.com/pmndrs/zustand"&gt;Zustand&lt;/a&gt;. I've reviewed them briefly, and it looks like they each bring interesting benefits and improvements over bog-standard Redux. Without having actually used either of them, that's really the most I can say about them.&lt;/p&gt;
+&lt;p&gt;I was surprised when others brought up some libraries I hadn't heard of called &lt;a href='https://recoiljs.org/'&gt;Recoil&lt;/a&gt; and &lt;a href='https://github.com/pmndrs/zustand'&gt;Zustand&lt;/a&gt;. I've reviewed them briefly, and it looks like they each bring interesting benefits and improvements over bog-standard Redux. Without having actually used either of them, that's really the most I can say about them.&lt;/p&gt;
 &lt;p&gt;The last time I worked on a React app that benefited from the type of state container that Redux provides was around five years ago. I used Redux at that time. I've still used React since then, but the apps I've worked on have synchronized their Big State™️ via their back-ends. I've found React's built-in hooks to be adequate for the rest. I'll reach for third-party libraries for form management, but otherwise the built-in hooks and custom hooks composed from them tend to do the job.&lt;/p&gt;
 &lt;p&gt;At some point since the &lt;code&gt;useReducer&lt;/code&gt; hook landed, the notion that Redux isn't really necessary anymore stuck in my brain. You should be able to roll your own version using React's core features now, right?&lt;/p&gt;
 &lt;p&gt;When I think of Redux, I think of three main features: The Reducer™️, the ability to access the state container from arbitrary components without having to pass stuff up and down the tree, and selectors. In the version I'm going to throw together here, the reducer and state container are provided by &lt;code&gt;useReducer&lt;/code&gt;, and the arbitrary component state container access will be provided by a React context. Selectors should be an implementation detail. 👀&lt;/p&gt;
@@ -26,7 +26,7 @@ Hiring? Check my résumé to see if we're a match....</description>
   createContext,
   useContext,
   useReducer
-} from "react";
+} from &amp;quot;react&amp;quot;;
 
 type StoreContext&amp;lt;S, A&amp;gt; = Context&amp;lt;{ state: S; dispatch: Dispatch&amp;lt;A&amp;gt; }&amp;gt;;
 
@@ -55,11 +55,10 @@ export function Store&amp;lt;S, A&amp;gt;({
   );
 }
 &lt;/pre&gt;&lt;/div&gt;
-
 &lt;p&gt;I've created a convenience function called &lt;code&gt;createStoreContext&lt;/code&gt; that takes an initial state and returns a context that will hold your app's state. The only thing that might be considered tricky here is that I'm using a no-op function as the placeholder for the dispatch function until the context is provided to the &lt;code&gt;Store&lt;/code&gt; component.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;Store&lt;/code&gt; component is what I'd call a surrogate context provider component. I made up that word salad just now to describe it, but it's a common pattern. It acts like a context provider, but it adds the logic for how the context is going to be used. In this case, that logic is just the &lt;code&gt;useReducer&lt;/code&gt; function.&lt;/p&gt;
 &lt;p&gt;Next, I'll set up the app-specific types and logic for a contrived example app. This app has two pieces of state: a string and a number.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;createStoreContext&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"./Store"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;createStoreContext&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;./Store&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="kd"&gt;interface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -67,17 +66,17 @@ export function Store&amp;lt;S, A&amp;gt;({
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Action&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"INCREMENT_NUMBER"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"DECREMENT_NUMBER"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"CHANGE_TEXT"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;updatedText&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;INCREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;DECREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;CHANGE_TEXT&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;updatedText&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
 
 &lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;initialState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;50&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"initial text"&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;initial text&amp;quot;&lt;/span&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
 
 &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceText&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"CHANGE_TEXT"&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;CHANGE_TEXT&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;updatedText&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
@@ -87,10 +86,10 @@ export function Store&amp;lt;S, A&amp;gt;({
 
 &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceNumber&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"INCREMENT_NUMBER"&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;INCREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"DECREMENT_NUMBER"&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;DECREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
@@ -107,22 +106,21 @@ export function Store&amp;lt;S, A&amp;gt;({
 
 &lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;AppState&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;createStoreContext&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Action&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;initialState&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
 &lt;p&gt;I hope you were able to stay awake through all that. I made some opinionated choices about composing reducers, but any valid reducer function will work.&lt;/p&gt;
 &lt;p&gt;I decided to create the context instance in this file rather than in the root &lt;code&gt;App&lt;/code&gt; component to make the dependency tree a little cleaner since every component that connects to our state container will depend on that context instance.&lt;/p&gt;
 &lt;p&gt;Speaking of the root &lt;code&gt;App&lt;/code&gt; component, I'll make that now.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React from "react";
-import { Store } from "./Store";
-import { AppState, reducer } from "./state";
-import TextView from "./TextView";
-import NumberView from "./NumberView";
-import "./styles.css";
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React from &amp;quot;react&amp;quot;;
+import { Store } from &amp;quot;./Store&amp;quot;;
+import { AppState, reducer } from &amp;quot;./state&amp;quot;;
+import TextView from &amp;quot;./TextView&amp;quot;;
+import NumberView from &amp;quot;./NumberView&amp;quot;;
+import &amp;quot;./styles.css&amp;quot;;
 
 export default function App() {
   return (
     &amp;lt;Store context={AppState} reducer={reducer}&amp;gt;
-      &amp;lt;div className="App"&amp;gt;
-        &amp;lt;h1&amp;gt;Here's a sample app!&amp;lt;/h1&amp;gt;
+      &amp;lt;div className=&amp;quot;App&amp;quot;&amp;gt;
+        &amp;lt;h1&amp;gt;Here&amp;#39;s a sample app!&amp;lt;/h1&amp;gt;
         &amp;lt;TextView /&amp;gt;
         &amp;lt;NumberView /&amp;gt;
       &amp;lt;/div&amp;gt;
@@ -130,39 +128,37 @@ export default function App() {
   );
 }
 &lt;/pre&gt;&lt;/div&gt;
-
 &lt;p&gt;I'm passing the &lt;code&gt;AppState&lt;/code&gt; context into the &lt;code&gt;Store&lt;/code&gt; component as well as the app's reducer. I'm going to write two components that directly utilize the app state: TextView and NumberView.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ChangeEventHandler, useCallback, useContext } from "react";
-import { AppState } from "./state";
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ChangeEventHandler, useCallback, useContext } from &amp;quot;react&amp;quot;;
+import { AppState } from &amp;quot;./state&amp;quot;;
 
 export default function TextView() {
   const { state, dispatch } = useContext(AppState);
   const handleChange = useCallback&amp;lt;ChangeEventHandler&amp;lt;HTMLInputElement&amp;gt;&amp;gt;(
     (event) =&amp;gt;
-      dispatch({ type: "CHANGE_TEXT", updatedText: event.target.value }),
+      dispatch({ type: &amp;quot;CHANGE_TEXT&amp;quot;, updatedText: event.target.value }),
     [dispatch]
   );
 
   return (
     &amp;lt;div&amp;gt;
       &amp;lt;h2&amp;gt;Change my text!&amp;lt;/h2&amp;gt;
-      &amp;lt;input type="text" value={state.text} onChange={handleChange} /&amp;gt;
+      &amp;lt;input type=&amp;quot;text&amp;quot; value={state.text} onChange={handleChange} /&amp;gt;
     &amp;lt;/div&amp;gt;
   );
 }
 &lt;/pre&gt;&lt;/div&gt;
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ReactEventHandler, useCallback, useContext } from "react";
-import { AppState } from "./state";
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ReactEventHandler, useCallback, useContext } from &amp;quot;react&amp;quot;;
+import { AppState } from &amp;quot;./state&amp;quot;;
 
 export default function NumberView() {
   const { state, dispatch } = useContext(AppState);
   const handleIncrement = useCallback&amp;lt;ReactEventHandler&amp;gt;(
-    (event) =&amp;gt; dispatch({ type: "INCREMENT_NUMBER" }),
+    (event) =&amp;gt; dispatch({ type: &amp;quot;INCREMENT_NUMBER&amp;quot; }),
     [dispatch]
   );
   const handleDecrement = useCallback&amp;lt;ReactEventHandler&amp;gt;(
-    (event) =&amp;gt; dispatch({ type: "DECREMENT_NUMBER" }),
+    (event) =&amp;gt; dispatch({ type: &amp;quot;DECREMENT_NUMBER&amp;quot; }),
     [dispatch]
   );
 
@@ -175,19 +171,17 @@ export default function NumberView() {
   );
 }
 &lt;/pre&gt;&lt;/div&gt;
-
 &lt;p&gt;At this point, the app works. I'm using React's &lt;code&gt;useContext&lt;/code&gt; hook directly to access the state and the dispatch function.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="My beautiful app" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1688085276-0.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1688085276-0.png" alt="My beautiful app" /&gt;&lt;/p&gt;
 &lt;p&gt;But there's a pretty big problem. Because each component depends on the entire application state, every component re-renders on every state change regardless of whether the change was actually relevant to the component in question. In other words, I need selectors.&lt;/p&gt;
 &lt;p&gt;This is where my hand-rolled scheme falls apart. There's currently no way to avoid these types of unnecessary re-renders while using a single context. No matter what kind of memoization strategies you employ, the &lt;code&gt;useContext&lt;/code&gt; hook will trigger a re-render of every component attached to the context upon a state change.&lt;/p&gt;
-&lt;p&gt;I'm not the only one out there who thinks this is a glaring omission from React's API. There's &lt;a href="https://github.com/reactjs/rfcs/pull/119"&gt;an open RFC&lt;/a&gt; for just such a feature that's been hanging out since 2019.&lt;/p&gt;
-&lt;p&gt;If you were &lt;em&gt;really&lt;/em&gt; determined to write your own app container only using React primitives, the next place I'd look would be the relatively new &lt;a href="https://react.dev/reference/react/useSyncExternalStore"&gt;&lt;code&gt;useSyncExternalStore&lt;/code&gt; hook&lt;/a&gt;. I'm almost certain you can achieve the desired effects with that hook, but it's just not as interesting. You'd be building Redux from bare JavaScript to interface with the &lt;code&gt;useSyncExternalStore&lt;/code&gt; API without being able to lean on any other built-in hooks. At that point, just use a library.&lt;/p&gt;
-&lt;h2 id="update"&gt;UPDATE&lt;/h2&gt;
-&lt;p&gt;After discussing this with a friend and former co-worker&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, this could probably also be accomplished using a higher-order component to conditionally re-render components. I personally dislike the ergonomics of HOCs in this era of hooks. Besides &lt;code&gt;React.memo&lt;/code&gt;, which could be argued isn't a "true" HOC, I haven't had to use HOCs in years.&lt;/p&gt;
-&lt;hr/&gt;
+&lt;p&gt;I'm not the only one out there who thinks this is a glaring omission from React's API. There's &lt;a href='https://github.com/reactjs/rfcs/pull/119'&gt;an open RFC&lt;/a&gt; for just such a feature that's been hanging out since 2019.&lt;/p&gt;
+&lt;p&gt;If you were &lt;em&gt;really&lt;/em&gt; determined to write your own app container only using React primitives, the next place I'd look would be the relatively new &lt;a href='https://react.dev/reference/react/useSyncExternalStore'&gt;&lt;code&gt;useSyncExternalStore&lt;/code&gt; hook&lt;/a&gt;. I'm almost certain you can achieve the desired effects with that hook, but it's just not as interesting. You'd be building Redux from bare JavaScript to interface with the &lt;code&gt;useSyncExternalStore&lt;/code&gt; API without being able to lean on any other built-in hooks. At that point, just use a library.&lt;/p&gt;
+&lt;h2 id=update&gt;UPDATE&lt;/h2&gt;&lt;p&gt;After discussing this with a friend and former co-worker&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, this could probably also be accomplished using a higher-order component to conditionally re-render components. I personally dislike the ergonomics of HOCs in this era of hooks. Besides &lt;code&gt;React.memo&lt;/code&gt;, which could be argued isn't a "true" HOC, I haven't had to use HOCs in years.&lt;/p&gt;
+&lt;hr /&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;Shout out to &lt;a href="https://medium.com/@wtgjxj"&gt;James&lt;/a&gt; this time.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;Shout out to &lt;a href='https://medium.com/@wtgjxj'&gt;James&lt;/a&gt; this time.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
 </description>
@@ -206,8 +200,8 @@ export default function NumberView() {
 &lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;''&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;group&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;''&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;group&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
 
 &lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;handleSubmit&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;formState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;errors&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useForm&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
@@ -220,24 +214,23 @@ export default function NumberView() {
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;TextInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"name"&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;
 &lt;span class="err"&gt;/&amp;gt;&lt;/span&gt;
 
 &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;SelectInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"group"&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;group&amp;quot;&lt;/span&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;)}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
 &lt;p&gt;Let me break this down in words briefly to make sure we're on the same page.&lt;/p&gt;
 &lt;p&gt;This component checks a user's groups, which is provided by a custom hook called &lt;code&gt;useUser&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The form's default value for &lt;code&gt;group&lt;/code&gt; is a blank string if the given user has multiple groups available to them. If the user has just one group, which is the most common case, their group's value is automatically the default value for that form input.&lt;/p&gt;
 &lt;p&gt;Later, we choose to only render the &lt;code&gt;group&lt;/code&gt; field if there are multiple choices to choose from.&lt;/p&gt;
-&lt;p&gt;In practice, &lt;em&gt;this won't work&lt;/em&gt;. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the &lt;code&gt;"group"&lt;/code&gt; field.&lt;/p&gt;
+&lt;p&gt;In practice, &lt;em&gt;this won't work&lt;/em&gt;. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the &lt;code&gt;&amp;quot;group&amp;quot;&lt;/code&gt; field.&lt;/p&gt;
 &lt;p&gt;What gives? We set the default value for that field! Making things even more confusing, if we add a logging statement like &lt;code&gt;console.log(getValues())&lt;/code&gt;, it will log an empty object until we start interacting with the form. It's like the default values aren't being used at all.&lt;/p&gt;
 &lt;p&gt;After futzing around for a couple of hours and getting nowhere, here's the result.&lt;/p&gt;
 &lt;ol&gt;
@@ -250,38 +243,35 @@ export default function NumberView() {
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Its not default state for the form, to include additional form values:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Register hidden input: &lt;code&gt;&amp;lt;input type="hidden" ref={register} name="test" /&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;Register hidden input: &lt;code&gt;&amp;lt;input type=&amp;quot;hidden&amp;quot; ref={register} name=&amp;quot;test&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Combine values at onSubmit callback.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;-- &lt;a href="https://legacy.react-hook-form.com/v6/api#useForm"&gt;React Hook Form docs for &lt;code&gt;useForm&lt;/code&gt;, specifically under &lt;code&gt;defaultValues&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;-- &lt;a href='https://legacy.react-hook-form.com/v6/api#useForm'&gt;React Hook Form docs for &lt;code&gt;useForm&lt;/code&gt;, specifically under &lt;code&gt;defaultValues&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;This little tidbit is what tipped me off to this situation.&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 &lt;p&gt;There's also a clue in the FAQs for v7 in the answer for the question, "How to work with modal or tab forms?"&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;It's important to understand React Hook Form embraces native form behavior by storing input state inside each input (except custom &lt;code&gt;register&lt;/code&gt; at &lt;code&gt;useEffect&lt;/code&gt;). One of the common misconceptions is that when working with modal or tab forms, by mounting and unmounting form/inputs that inputs state will remain. That is incorrect. Instead, the correct solution would be to build a new form for your form inside each modal or tab and capture your submission data in local or global state and then do something with the combined data.&lt;/p&gt;
-&lt;p&gt;-- &lt;a href="https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms"&gt;React Hook Form FAQs, "How to work with modal or tab forms?"&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;-- &lt;a href='https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms'&gt;React Hook Form FAQs, "How to work with modal or tab forms?"&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;These bits of information, pieced together, answer the question of why every piece of data in a React Hook Form-based form must have an input associated with it, even if it's a hidden input.&lt;/p&gt;
-&lt;h2 id="a-leaky-abstraction"&gt;A Leaky Abstraction&lt;/h2&gt;
-&lt;p&gt;I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.&lt;/p&gt;
-&lt;h3 id="the-abstraction"&gt;The Abstraction&lt;/h3&gt;
-&lt;p&gt;I'm using React Hook Form to reduce the boilerplate of form state management.  I could write my own state management for any given form using only React built-ins like &lt;code&gt;useReducer&lt;/code&gt; or I guess a dozen or so &lt;code&gt;useState&lt;/code&gt; instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h2 id=a-leaky-abstraction&gt;A Leaky Abstraction&lt;/h2&gt;&lt;p&gt;I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.&lt;/p&gt;
+&lt;h3 id=the-abstraction&gt;The Abstraction&lt;/h3&gt;&lt;p&gt;I'm using React Hook Form to reduce the boilerplate of form state management.  I could write my own state management for any given form using only React built-ins like &lt;code&gt;useReducer&lt;/code&gt; or I guess a dozen or so &lt;code&gt;useState&lt;/code&gt; instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 &lt;p&gt;I would assume when I'm using a form state management library, it's doing this same stuff for me behind the scenes. It's just handling all of that tedious boilerplate code for me, but I assume the semantics, like a separation between data and view, would remain the same.&lt;/p&gt;
-&lt;h3 id="the-leak"&gt;The Leak&lt;/h3&gt;
-&lt;p&gt;As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.&lt;/p&gt;
+&lt;h3 id=the-leak&gt;The Leak&lt;/h3&gt;&lt;p&gt;As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.&lt;/p&gt;
 &lt;p&gt;I'm willing to believe that my form is the edge case here. Most forms on the web can be built using React Hook Form and you'll never need to know about these implementation details. Most forms probably show all inputs every render. But we were improving UX so that users don't need to care about a required dropdown input if there's only one option to select from.&lt;/p&gt;
 &lt;p&gt;I want to make it clear here that I'm not calling React Hook Form a leaky abstraction as an insult. I still mostly like the library, even if it's not built the same way I would choose to build it. I'm going to continue using it. I still prefer it to Formik. But this is an implementation detail, or perhaps a consequential design philosophy, that users should be aware of.&lt;/p&gt;
-&lt;hr/&gt;
+&lt;hr /&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;Because I regularly confuse the name as &lt;code&gt;react-form-hook&lt;/code&gt;, I've given up and lovingly refer to it as &lt;code&gt;react-man-door-hand-hook-car-door&lt;/code&gt; instead. I'm sure my coworkers have become tired of this joke.&lt;a class="footnote" href="#fnref-1"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;This is the second shout out to Emily on my blog! ❤️&lt;a class="footnote" href="#fnref-2"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;Note the docs' mention of combining the default data at the time of submission of the form. I did consider this approach after I'd already implemented an input component that intelligently used a hidden input when it made sense. But this approach wouldn't have worked in my case because I'm using schema validation to validate the form. Before I even got the chance to inject my default value, the validation would have failed and my submit function wouldn't have been called. I could have moved validation into my submit function, but then I'd lose the convenience of React Hook Form's built-in error messages. I guess I could make two versions of the schema, but who knows what unexpected gotchas that would uncover? It's a house of cards situation, and using a hidden input was the best choice.&lt;a class="footnote" href="#fnref-3"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-4"&gt;&lt;p&gt;It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.&lt;a class="footnote" href="#fnref-4"&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;Because I regularly confuse the name as &lt;code&gt;react-form-hook&lt;/code&gt;, I've given up and lovingly refer to it as &lt;code&gt;react-man-door-hand-hook-car-door&lt;/code&gt; instead. I'm sure my coworkers have become tired of this joke.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;This is the second shout out to Emily on my blog! ❤️&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;Note the docs' mention of combining the default data at the time of submission of the form. I did consider this approach after I'd already implemented an input component that intelligently used a hidden input when it made sense. But this approach wouldn't have worked in my case because I'm using schema validation to validate the form. Before I even got the chance to inject my default value, the validation would have failed and my submit function wouldn't have been called. I could have moved validation into my submit function, but then I'd lose the convenience of React Hook Form's built-in error messages. I guess I could make two versions of the schema, but who knows what unexpected gotchas that would uncover? It's a house of cards situation, and using a hidden input was the best choice.&lt;a href="#fnref-3" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-4"&gt;&lt;p&gt;It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.&lt;a href="#fnref-4" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
 </description>

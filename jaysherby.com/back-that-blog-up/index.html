@@ -335,7 +335,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -359,23 +359,21 @@ body.page #upvote-form {
 </p>
 
 
-    <p><img alt="Original art, The Sherbmeister. Makin' copies." src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679543245-0.png"/></p>
-<p>There was a post on Hacker News about a week ago titled <a href="https://news.ycombinator.com/item?id=35164819">"Ask HN: What has your personal website/blog done for you?"</a>. As someone who has tried to blog for years but only recently started doing it in earnest, a lot of comments rang true to me.</p>
+    <p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679543245-0.png" alt="Original art, The Sherbmeister. Makin' copies." /></p>
+<p>There was a post on Hacker News about a week ago titled <a href='https://news.ycombinator.com/item?id=35164819'>"Ask HN: What has your personal website/blog done for you?"</a>. As someone who has tried to blog for years but only recently started doing it in earnest, a lot of comments rang true to me.</p>
 <p>I, too, have bounced off of many static site generators. While I strongly agree with the ethos behind static site generators, I find the barrier to writing to be too high. When I'm in the mood to write, I need to be able to load up a web page with a text box and just start writing.</p>
-<p>Bear Blog, the service I'm currently using to host this site, provides exactly what I need. Kudos to <a href="https://herman.bearblog.dev/">Herman Martinus</a> for developing and maintaining this fantastic service.</p>
-<p>There was something else in that Hacker News thread that made me a little nervous, though. <a href="https://news.ycombinator.com/item?id=35201556">A particular comment</a> mentioned keeping copies of their blog posts, which came in handy when their platform of choice shut down. Many others echoed this sentiment of keeping backups of your work, just in case.</p>
+<p>Bear Blog, the service I'm currently using to host this site, provides exactly what I need. Kudos to <a href='https://herman.bearblog.dev/'>Herman Martinus</a> for developing and maintaining this fantastic service.</p>
+<p>There was something else in that Hacker News thread that made me a little nervous, though. <a href='https://news.ycombinator.com/item?id=35201556'>A particular comment</a> mentioned keeping copies of their blog posts, which came in handy when their platform of choice shut down. Many others echoed this sentiment of keeping backups of your work, just in case.</p>
 <p>Herman is doing a fantastic job, but he's only one person, and shit happens sometimes. I decided build a little safety net by using GitHub Actions to automatically back up my blog.</p>
-<h2 id="a-shell-script">A shell script</h2>
-<details>
-<summary>View the complete shell script</summary>
-<h3 id="github-workflows-backup-sh"><code>.github/workflows/backup.sh</code></h3>
-<div class="highlight"><pre><span></span><span class="ch">#! /bin/sh</span>
+<h2 id=a-shell-script>A shell script</h2><details>
+  <summary>View the complete shell script</summary>
+<h3 id=code-github-workflows-backup-sh-code><code>.github/workflows/backup.sh</code></h3><div class="highlight"><pre><span></span><span class="ch">#! /bin/sh</span>
 
 <span class="nb">set</span><span class="w"> </span>-e
 <span class="nb">set</span><span class="w"> </span>-u
 
 <span class="c1"># Delete all directories that are not hidden to avoid keeping deleted files.</span>
-find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s1">'.*'</span><span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span><span class="s2">"{}"</span><span class="w"> </span><span class="se">\;</span>
+find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;.*&#39;</span><span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="w"> </span><span class="se">\;</span>
 
 <span class="c1"># Download website and images, ignoring /hit and /upvote paths.</span>
 wget<span class="w"> </span>--wait<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
@@ -385,25 +383,24 @@ wget<span class="w"> </span>--wait<span class="o">=</span><span class="m">2</spa
 <span class="w">     </span>--convert-links<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--adjust-extension<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--span-hosts<span class="w"> </span><span class="se">\</span>
-<span class="w">     </span>--domains<span class="o">=</span><span class="s2">"jaysherby.com,digitaloceanspaces.com"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">"hit,upvote"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--domains<span class="o">=</span><span class="s2">&quot;jaysherby.com,digitaloceanspaces.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">&quot;hit,upvote&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-e<span class="w"> </span><span class="nv">robots</span><span class="o">=</span>off<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>https://jaysherby.com
 
-<span class="c1"># Delete CSRF tokens since they'll change every page load.</span>
+<span class="c1"># Delete CSRF tokens since they&#39;ll change every page load.</span>
 <span class="c1"># Delete last build date tag since it will change often.</span>
-find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.html*"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'/&lt;input.*name="csrfmiddlewaretoken".*&gt;/d'</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d'</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.html*&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;input.*name=&quot;csrfmiddlewaretoken&quot;.*&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
 
 <span class="c1"># Detect any added, changed, or deleted files</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>git<span class="w"> </span>ls-files<span class="w"> </span>--modified<span class="w"> </span>--deleted<span class="w"> </span>--others<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>git<span class="w"> </span>ls-files<span class="w"> </span>--modified<span class="w"> </span>--deleted<span class="w"> </span>--others<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>git<span class="w"> </span>add<span class="w"> </span>-A
-<span class="w">  </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Backup </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">"</span>
+<span class="w">  </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Backup </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
 <span class="w">  </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 <span class="k">fi</span>
 </pre></div>
-
 </details>
 <p>Let me start with Wget. It's doing the heavy lifting here to basically crawl my site and download everything.</p>
 <div class="highlight"><pre><span></span>wget<span class="w"> </span>--wait<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
@@ -413,60 +410,54 @@ find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </spa
 <span class="w">     </span>--convert-links<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--adjust-extension<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--span-hosts<span class="w"> </span><span class="se">\</span>
-<span class="w">     </span>--domains<span class="o">=</span><span class="s2">"jaysherby.com,digitaloceanspaces.com"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">"hit,upvote"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--domains<span class="o">=</span><span class="s2">&quot;jaysherby.com,digitaloceanspaces.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">&quot;hit,upvote&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-e<span class="w"> </span><span class="nv">robots</span><span class="o">=</span>off<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>https://jaysherby.com
 </pre></div>
-
-<p>Most of these options are copy-pasted from an article I found called <a href="https://simpleit.rocks/linux/how-to-download-a-website-with-wget-the-right-way/">"How To Download A Website With Wget The Right Way"</a>. I prefer having the options spelled out long-hand in scripts like this over single character arguments. It's easier to understand.</p>
+<p>Most of these options are copy-pasted from an article I found called <a href='https://simpleit.rocks/linux/how-to-download-a-website-with-wget-the-right-way/'>"How To Download A Website With Wget The Right Way"</a>. I prefer having the options spelled out long-hand in scripts like this over single character arguments. It's easier to understand.</p>
 <p>I made a few changes from the example on the site I linked to above.</p>
 <ul>
 <li>I removed the <code>--user-agent</code> argument. Wget's default is fine.</li>
 <li>I removed the <code>--no-clobber</code> argument because it's not pertinent in my case for reasons that will become clear in a moment.</li>
 <li>I removed the <code>--limit-rate=20K</code> argument because although I understand the purpose of setting <code>--wait=2</code> to avoid overwhelming the server with a ton of requests all at once, it seems to me like limiting the transfer speed would end up wasting precious time that could be spent serving other clients. It really doesn't matter for the amount of traffic I get anyway.</li>
-<li>I added <code>--span-hosts</code> and <code>--domains="jaysherby.com,digitaloceanspaces.com"</code> to ensure images are downloaded. Bear Blog is currently hosted on Digital Ocean and images are stored in their Spaces product, which is more or less a clone of AWS S3. This feature is currently configured such that image URLs live in a subdomain of <code>digitaloceanspaces.com</code>.</li>
-<li>I added <code>--exclude-directories="hit,upvote"</code>. Wget was downloading files from <code>/hit</code> which is how Bear Blog powers its analytics service. It's currently implemented by setting URLs in that path as a border image applied to the page body on hover. Clever! But it currently only returns a response of <a href="https://github.com/HermanMartinus/bearblog/blob/89cff8645af2e7b21d382dc59ed7eacfb7b971d3/blogs/views/analytics.py#L69">"Logged"</a>, which is useless for my backups and would present as noise in my analytics. The <code>/upvote</code> path is how posts are "toasted". Wget should never follow these by default since they are form actions, but better safe than sorry.</li>
+<li>I added <code>--span-hosts</code> and <code>--domains=&quot;jaysherby.com,digitaloceanspaces.com&quot;</code> to ensure images are downloaded. Bear Blog is currently hosted on Digital Ocean and images are stored in their Spaces product, which is more or less a clone of AWS S3. This feature is currently configured such that image URLs live in a subdomain of <code>digitaloceanspaces.com</code>.</li>
+<li>I added <code>--exclude-directories=&quot;hit,upvote&quot;</code>. Wget was downloading files from <code>/hit</code> which is how Bear Blog powers its analytics service. It's currently implemented by setting URLs in that path as a border image applied to the page body on hover. Clever! But it currently only returns a response of <a href='https://github.com/HermanMartinus/bearblog/blob/89cff8645af2e7b21d382dc59ed7eacfb7b971d3/blogs/views/analytics.py#L69'>"Logged"</a>, which is useless for my backups and would present as noise in my analytics. The <code>/upvote</code> path is how posts are "toasted". Wget should never follow these by default since they are form actions, but better safe than sorry.</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="c1"># Delete CSRF tokens since they'll change every page load.</span>
+<div class="highlight"><pre><span></span><span class="c1"># Delete CSRF tokens since they&#39;ll change every page load.</span>
 <span class="c1"># Delete last build date tag since it will change often.</span>
-find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.html*"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'/&lt;input.*name="csrfmiddlewaretoken".*&gt;/d'</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d'</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.html*&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;input.*name=&quot;csrfmiddlewaretoken&quot;.*&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
 </pre></div>
-
 <p>This command looks through the HTML files and removes two patterns from them.</p>
 <p>The first is a hidden input within the "toast" forms that contains a CSRF token. I'm removing this because, as the comment says, the value will be different on every page load. That will make for a lot of unnecessary noise in my backups.</p>
 <p>The second is the last build date tag that is found within my blog's RSS file. This is updated on a regular basis whether any content has changed or not. Again, this would make for a lot of noise in my backups.</p>
 <p>Notice in the second sed command that the slash in the HTML tag is escaped! I originally overlooked this and it bit me. 🤦</p>
-<p>Quick shout out to <a href="https://sed.js.org/">this website</a> that is like <a href="https://regex101.com/">Regex 101</a> for sed. It saved me a lot of time testing out my sed commands.</p>
+<p>Quick shout out to <a href='https://sed.js.org/'>this website</a> that is like <a href='https://regex101.com/'>Regex 101</a> for sed. It saved me a lot of time testing out my sed commands.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Detect any added, changed, or deleted files</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>git<span class="w"> </span>ls-files<span class="w"> </span>--modified<span class="w"> </span>--deleted<span class="w"> </span>--others<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>git<span class="w"> </span>ls-files<span class="w"> </span>--modified<span class="w"> </span>--deleted<span class="w"> </span>--others<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>git<span class="w"> </span>add<span class="w"> </span>-A
-<span class="w">  </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Backup </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">"</span>
+<span class="w">  </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Backup </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
 <span class="w">  </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 <span class="k">fi</span>
 </pre></div>
-
 <p>This does what it says on the tin.  It uses the <code>git ls-files</code> command to determine if any files have changed. If so, it makes a commit with the current timestamp in the commit message and pushes it up.</p>
 <p>Let's skip back to the beginning of the script.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Delete all directories that are not hidden to avoid keeping deleted files.</span>
-find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s1">'.*'</span><span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span><span class="s2">"{}"</span><span class="w"> </span><span class="se">\;</span>
+find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;.*&#39;</span><span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="w"> </span><span class="se">\;</span>
 </pre></div>
-
 <p>If the script has run at least once before, the git repository will have two directories at its root: <code>jaysherby.com</code> and <code>bear-images.sfo2.cdn.digitaloceanspaces.com</code>. This command is a little idiosyncratic for a shell script, but it mimics what I would do at the command line. It finds and recursively deletes all top-level, non-hidden directories.</p>
 <p>This is to facilitate the removal of potentially deleted pages and files. For the purposes of my backups, I want the git history to reflect file deletion since I can always recover deleted content.</p>
 <p>Unfortunately, Wget doesn't have anything built into it like Rsync's various <code>--delete</code> arguments, which will make sure your source and destination match exactly after synchronization by deleting files from the destination that no longer exist at the source.</p>
 <p>I find this particularly unfortunate because it means having to download my blog's images on every backup attempt despite Wget's automatic <code>If-Modified-Since</code> header support and Digital Ocean Spaces' <code>304 Not Modified</code> support. Bear Blog itself doesn't appear to support <code>If-Modified-Since</code> request headers at this time. Although that doesn't really matter since I can't leverage it anyway.</p>
-<h2 id="a-github-actions-workflow">A GitHub Actions workflow</h2>
-<details>
-<summary>View the complete YAML file</summary>
-<h3 id="github-workflows-backup-yml"><code>.github/workflows/backup.yml</code></h3>
-<div class="highlight"><pre><span></span>name: Back Up Website
+<h2 id=a-github-actions-workflow>A GitHub Actions workflow</h2><details>
+  <summary>View the complete YAML file</summary>
+<h3 id=code-github-workflows-backup-yml-code><code>.github/workflows/backup.yml</code></h3><div class="highlight"><pre><span></span>name: Back Up Website
 
 on:
   schedule:
-    - cron: "0 17 * * *"
+    - cron: &quot;0 17 * * *&quot;
 
   workflow_dispatch:
 
@@ -474,7 +465,7 @@ jobs:
   back-up:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v3"
+      - uses: &quot;actions/checkout@v3&quot;
 
       - name: Install required packages
         run: |
@@ -483,65 +474,58 @@ jobs:
 
       - name: Configure identity
         run: |
-          git config --global user.email "10983817+hexpunk@users.noreply.github.com"
-          git config --global user.name "hexpunk"
+          git config --global user.email &quot;10983817+hexpunk@users.noreply.github.com&quot;
+          git config --global user.name &quot;hexpunk&quot;
 
       - name: Run backup script
         run: sh $GITHUB_WORKSPACE/.github/workflows/backup.sh
 </pre></div>
-
 </details>
 <p>The GitHub Actions workflow file was thankfully straightforward to write.</p>
 <div class="highlight"><pre><span></span><span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">"0</span><span class="nv"> </span><span class="s">17</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">17</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
 
 <span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
 </pre></div>
-
-<p>Run the script daily at noon Central Standard Time, my local time zone, so if it ever fails, I get emailed about it at a reasonable time. GitHub Actions are set to Coordinated Universal Time, hence the offset. I used <a href="https://crontab.guru/">this website</a> to refresh my memory of cron expression syntax.</p>
+<p>Run the script daily at noon Central Standard Time, my local time zone, so if it ever fails, I get emailed about it at a reasonable time. GitHub Actions are set to Coordinated Universal Time, hence the offset. I used <a href='https://crontab.guru/'>this website</a> to refresh my memory of cron expression syntax.</p>
 <p>The <code>workflow_dispatch</code> key is there so I can run the job manually via the web interface if I need to.</p>
 <div class="highlight"><pre><span></span><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">back-up</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="s">"actions/checkout@v3"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;actions/checkout@v3&quot;</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install required packages</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">sudo apt-get update</span>
 <span class="w">          </span><span class="no">sudo apt-get install -y findutils git sed wget</span>
 </pre></div>
-
 <p>The first step checks out the git repository. The second step installs all required software to run the script. All of these tools are currently installed by default in the <code>ubuntu-latest</code> job runner. Better safe than sorry, though.</p>
-<p><a href="https://docs.github.com/en/actions/using-github-hosted-runners/customizing-github-hosted-runners">Remember to use <code>sudo</code></a> to install software in GitHub's <code>ubuntu-latest</code> job runner, unlike the usual situation for Docker containers. This one bit me.</p>
+<p><a href='https://docs.github.com/en/actions/using-github-hosted-runners/customizing-github-hosted-runners'>Remember to use <code>sudo</code></a> to install software in GitHub's <code>ubuntu-latest</code> job runner, unlike the usual situation for Docker containers. This one bit me.</p>
 <div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure identity</span>
 <span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">git config --global user.email "10983817+hexpunk@users.noreply.github.com"</span>
-<span class="w">    </span><span class="no">git config --global user.name "hexpunk"</span>
+<span class="w">    </span><span class="no">git config --global user.email &quot;10983817+hexpunk@users.noreply.github.com&quot;</span>
+<span class="w">    </span><span class="no">git config --global user.name &quot;hexpunk&quot;</span>
 </pre></div>
-
-<p>I was surprised to find out the job runner didn't have any git identity set up by default. I added my own username and GitHub's email alias for my account. If you're not using your email alias on GitHub, <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address">you really should be</a>.</p>
+<p>I was surprised to find out the job runner didn't have any git identity set up by default. I added my own username and GitHub's email alias for my account. If you're not using your email alias on GitHub, <a href='https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address'>you really should be</a>.</p>
 <div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run backup script</span>
 <span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh $GITHUB_WORKSPACE/.github/workflows/backup.sh</span>
 </pre></div>
-
 <p>Finally, run the script I wrote.</p>
-<h2 id="setting-permissions">Setting permissions</h2>
-<p>One last consideration before this setup is ready to roll. Because the shell script is checking files into git, I had to set up the repository's Actions settings accordingly.</p>
-<p><img alt="Give Actions read and write permissions." src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587165-0.png"/></p>
+<h2 id=setting-permissions>Setting permissions</h2><p>One last consideration before this setup is ready to roll. Because the shell script is checking files into git, I had to set up the repository's Actions settings accordingly.</p>
+<p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587165-0.png" alt="Give Actions read and write permissions." /></p>
 <p>The repository I set up for this is public. GitHub sets a monthly limit to the amount of time Actions can run per month on private repositories before you're either cut off or you have to pay. I don't want randos taking advantage of this to run malicious actions, so I set this setting to disallow unapproved collaborators from triggering Actions.</p>
-<p><img alt="Strangers shouldn't be able to run Actions on this repository." src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587578-0.png"/></p>
+<p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587578-0.png" alt="Strangers shouldn't be able to run Actions on this repository." /></p>
 <p>Finally, I set the repository so only actions authored by me and GitHub can be run. I need to allow GitHub's official actions since I'm using their "checkout" action in my workflow.</p>
-<p><img alt="Only allow my actions and GitHub's actions." src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587709-0.png"/></p>
+<p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1679587709-0.png" alt="Only allow my actions and GitHub's actions." /></p>
 <p>This setting is a little redundant since I've already disallowed unapproved collaborators, but better safe than sorry.</p>
 <p>That's it. Works like a charm. Every day at noon, it automatically backs up my blog for free.</p>
 <p>This approach should be adaptable for backing up almost any kind of website.</p>
-<h2 id="how-might-this-fail">How might this fail?</h2>
-<p>Whenever I have to make choices that involve trade-offs, I like to document how my decisions might betray me down the line.</p>
+<h2 id=how-might-this-fail>How might this fail?</h2><p>Whenever I have to make choices that involve trade-offs, I like to document how my decisions might betray me down the line.</p>
 <p>First and foremost, I'm completely at Herman's mercy here. He may choose to change how Bear Blog works in ways that will make my script fail. If he changes how analytics, upvotes, or image storage works, it may break my backups in ways I won't immediately notice.</p>
 <p>Second, I'm also at the mercy of Microsoft since I'm relying on GitHub. In the unlikely event that GitHub completely disappears one day, my backups are gone. Microsoft could also choose to fundamentally change how their Actions product works, or what versions of software packages are available on the platform.</p>
-<p>Microsoft could also suddenly decide my use of GitHub as a backup storage service runs afoul of their T&amp;C. Seems unlikely. I doubt I'm costing them an entire cent. But it's technically possible.</p>
+<p>Microsoft could also suddenly decide my use of GitHub as a backup storage service runs afoul of their T&C. Seems unlikely. I doubt I'm costing them an entire cent. But it's technically possible.</p>
 <p>I find these risks acceptable for my use case.</p>
 
 

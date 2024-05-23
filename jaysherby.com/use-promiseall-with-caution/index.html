@@ -336,7 +336,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -360,31 +360,29 @@ body.page #upvote-form {
 </p>
 
 
-    <p>A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"><code>Promise.all</code></a>.</p>
+    <p>A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all'><code>Promise.all</code></a>.</p>
 <p>First, let's briefly review how promises behave when <code>Promise.all</code> is not used. For our scenario, let's imagine we need to make multiple network calls.</p>
-<div class="highlight"><pre><span></span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/1'</span><span class="p">)</span>
-<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/2'</span><span class="p">))</span>
-<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/3'</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/1&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/2&#39;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/3&#39;</span><span class="p">));</span>
 
 <span class="c1">// Or using async/await...</span>
 
 <span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/1'</span><span class="p">);</span>
-<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/2'</span><span class="p">);</span>
-<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/3'</span><span class="p">);</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/1&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/2&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/3&#39;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-
 <p>In this example, a network call is made to <code>http://example.com/1</code>. The code waits until that call is complete. Then it makes a call to <code>http://example.com/2</code> and waits for that call to complete. Finally, a call is made to <code>http://example.com/3</code>. It's important to note that only one network call is made at a time.</p>
 <p>Don't get too caught up on the fact that we're making network calls. I used this as an example because most JavaScript developers will be familiar with <code>fetch</code> as a function that returns a promise. You can substitute any type of promise.</p>
 <p>These promises, while asynchronous, are being run serially. <code>Promise.all</code> can be a performance super power that <em>may</em> allow multiple promises to run in parallel.<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup> It finally returns when either all of the promises passed to it resolve, or when any one promise is rejected.</p>
 <div class="highlight"><pre><span></span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
-<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/1'</span><span class="p">),</span>
-<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/2'</span><span class="p">),</span>
-<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">'http://example.com/3'</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/1&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/2&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/3&#39;</span><span class="p">),</span>
 <span class="p">]);</span>
 </pre></div>
-
 <p>In the typical case, this version should run faster than the serial example because all three promises can run simultaneously.</p>
 <p>However, it's very important to think critically before applying <code>Promise.all</code>. Here's a simplified version of the first bug I encountered.</p>
 <div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Item</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
@@ -395,46 +393,42 @@ body.page #upvote-form {
 <span class="w">  </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">checked</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">})</span>
 <span class="p">);</span>
 </pre></div>
-
 <p>At first glance, this seems like a reasonable thing to do. Updating all the items simultaneously will speed this up, right?  In actuality, this resulted in an error.</p>
 <p>The first warning sign is that there is no limit on the number of items that belong to this particular user. Most of the time this will probably be fine. But what if a user has an idiosyncratic number of unchecked items? What if it's hundreds or thousands? Your server is going to attempt to run an unhealthy number of promises at once.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
-<p>In the real code, this was using the ORM <a href="https://sequelize.org/">Sequelize</a>. Sequelize keeps a pool of database connections. Whenever you make a call to the database, a connection from the pool is used. Most of the time, only one connection is used per request. If you're doing something fancy with <code>Promise.all</code>, maybe more than one connection is used simultaneously per request. In this case, if the number of items exceeds the maximum number of connections allowed in the pool, you'll receive an error, which is exactly what happened.</p>
+<p>In the real code, this was using the ORM <a href='https://sequelize.org/'>Sequelize</a>. Sequelize keeps a pool of database connections. Whenever you make a call to the database, a connection from the pool is used. Most of the time, only one connection is used per request. If you're doing something fancy with <code>Promise.all</code>, maybe more than one connection is used simultaneously per request. In this case, if the number of items exceeds the maximum number of connections allowed in the pool, you'll receive an error, which is exactly what happened.</p>
 <p>To fix this, you could increase the maximum number of connections allowed in the pool. But how many is enough? Because items are created by users, there is no realistic maximum number. I chose to make the promises run serially instead.</p>
-<p>I had run into similar issues regarding simultaneous database calls in the past and I had already added the <a href="http://bluebirdjs.com">Bluebird</a> library to this particular project. It includes a function called <a href="http://bluebirdjs.com/docs/api/promise.mapseries.html"><code>mapSeries</code></a> which does exactly what I need.</p>
-<div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">P</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'bluebird'</span><span class="p">;</span>
+<p>I had run into similar issues regarding simultaneous database calls in the past and I had already added the <a href='http://bluebirdjs.com'>Bluebird</a> library to this particular project. It includes a function called <a href='http://bluebirdjs.com/docs/api/promise.mapseries.html'><code>mapSeries</code></a> which does exactly what I need.</p>
+<div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">P</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;bluebird&#39;</span><span class="p">;</span>
 
 <span class="c1">// ...snip...</span>
 
 <span class="nx">P</span><span class="p">.</span><span class="nx">mapSeries</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">checked</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">});</span>
 </pre></div>
-
 <p>If you don't like Bluebird, there are other libraries available to control the level of concurrency when <code>Promise.all</code> is used. Some of them even include the ability to specify concurrency limits higher than 1. I encourage the reader to experiment and see if they can roll their own function that takes an array of promises and awaits them serially.</p>
-<p>The other bug I encountered was in a different project, but was once again a misapplication of <code>Promise.all</code>. In this case, it was in a database migration for use with the <a href="https://knexjs.org/">Knex</a> ORM.</p>
+<p>The other bug I encountered was in a different project, but was once again a misapplication of <code>Promise.all</code>. In this case, it was in a database migration for use with the <a href='https://knexjs.org/'>Knex</a> ORM.</p>
 <div class="highlight"><pre><span></span><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">up</span><span class="p">(</span><span class="nx">knex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
-<span class="w">    </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_a'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">&#39;table_a&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">&#39;column_a&#39;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}),</span>
-<span class="w">    </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_b'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">&#39;table_b&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">&#39;column_a&#39;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}),</span>
 <span class="w">  </span><span class="p">]);</span>
 <span class="p">};</span>
 </pre></div>
-
 <p>I didn't dive too deeply into the root cause of this migration failing because I'd already been primed to be suspicious of unnecessary use of <code>Promise.all</code> by the previous bug from earlier in the week. My best guess is that because <code>table_b</code> has a foreign key that points to <code>table_a</code>, the database threw an error when this migration attempted to alter <code>table_b</code> while <code>table_a</code> was still in the process of being altered.</p>
 <p>In any case, the solution was very straightforward. Use Knex's promise chaining as it was designed to be used.</p>
 <div class="highlight"><pre><span></span><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">up</span><span class="p">(</span><span class="nx">knex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span>
-<span class="w">    </span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_a'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">&#39;table_a&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">&#39;column_a&#39;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">})</span>
-<span class="w">    </span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">'table_b'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">'column_a'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">&#39;table_b&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">table</span><span class="p">.</span><span class="nx">index</span><span class="p">(</span><span class="s1">&#39;column_a&#39;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="p">};</span>
 </pre></div>
-
 <p>This version of the migration worked without issue.</p>
 <p>These examples show the need to think critically whenever you reach for <code>Promise.all</code> or any other promise utility that results in parallelism in your code.</p>
 <ul>
@@ -442,11 +436,11 @@ body.page #upvote-form {
 <li>Don't use <code>Promise.all</code> if your promises all depend on a shared, limited resource.</li>
 <li>Don't use <code>Promise.all</code> if the order in which the promises resolve matters.</li>
 </ul>
-<hr/>
+<hr />
 <section class="footnotes">
 <ol>
-<li id="fn-1"><p>I say "may" because it depends on what the promises are doing.<a class="footnote" href="index.html#fnref-1">↩</a></p></li>
-<li id="fn-2"><p>My understanding is that most JavaScript runtimes have an upper limit to how many promises they'll execute in parallel when <code>Promise.all</code> is used, but I don't think any particular number is specified in the ECMAScript specification.<a class="footnote" href="index.html#fnref-2">↩</a></p></li>
+<li id="fn-1"><p>I say "may" because it depends on what the promises are doing.<a href="index.html#fnref-1" class="footnote">&#8617;</a></p></li>
+<li id="fn-2"><p>My understanding is that most JavaScript runtimes have an upper limit to how many promises they'll execute in parallel when <code>Promise.all</code> is used, but I don't think any particular number is specified in the ECMAScript specification.<a href="index.html#fnref-2" class="footnote">&#8617;</a></p></li>
 </ol>
 </section>
 

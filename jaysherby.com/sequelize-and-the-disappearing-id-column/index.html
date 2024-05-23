@@ -336,7 +336,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -372,12 +372,11 @@ body.page #upvote-form {
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">DataTypes.TEXT</span><span class="p">,</span>
 <span class="p">},</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">sequelize</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">'Book'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Book&#39;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="nx">Book</span><span class="p">.</span><span class="nx">BookAuthors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Book</span><span class="p">.</span><span class="nx">hasMany</span><span class="p">(</span><span class="nx">BookAuthor</span><span class="p">);</span>
 </pre></div>
-
 <div class="highlight"><pre><span></span><span class="c1">// Author.model.ts</span>
 
 <span class="kd">class</span><span class="w"> </span><span class="nx">Author</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Model</span><span class="w"> </span><span class="p">{}</span>
@@ -386,10 +385,9 @@ body.page #upvote-form {
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">DataTypes.TEXT</span><span class="p">,</span>
 <span class="p">},</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">sequelize</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">'Author'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Author&#39;</span><span class="p">,</span>
 <span class="p">});</span>
 </pre></div>
-
 <div class="highlight"><pre><span></span><span class="c1">// BookAuthor.model.ts</span>
 
 <span class="kd">class</span><span class="w"> </span><span class="nx">BookAuthor</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Model</span><span class="w"> </span><span class="p">{</span>
@@ -399,13 +397,12 @@ body.page #upvote-form {
 
 <span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">init</span><span class="p">({},</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">sequelize</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">'BookAuthor'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;BookAuthor&#39;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">Book</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">belongsTo</span><span class="p">(</span><span class="nx">Book</span><span class="p">);</span>
 <span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">Author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">BookAuthor</span><span class="p">.</span><span class="nx">belongsTo</span><span class="p">(</span><span class="nx">Author</span><span class="p">);</span>
 </pre></div>
-
 <p>You may have already noticed something a little non-idiomatic. The Book model is using <code>hasMany</code> instead of <code>belongsToMany</code>. That's how this was set up in the actual code I was working in.</p>
 <p>Let's do a simple query to see what the data structure looks like.</p>
 <div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
@@ -421,24 +418,22 @@ body.page #upvote-form {
 <span class="w">  </span><span class="p">)</span>
 <span class="p">);</span>
 </pre></div>
-
 <div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Hobbit"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"BookAuthors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The Hobbit&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;BookAuthors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"BookId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"AuthorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"Author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"J. R. R. Tolkien"</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;BookId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;AuthorId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Author&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;J. R. R. Tolkien&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
-
 <p>Fantastic.  No surprises there.</p>
 <p>Fast forward a couple of months and a bug was reported. An error was occurring because of a missing ID field in the results of that same query.</p>
 <p>Let's run the query again and see what we get.</p>
@@ -446,24 +441,23 @@ body.page #upvote-form {
 <span class="gi">+++ after.json  2023-12-23 20:50:59.674119628 +0000</span>
 <span class="gu">@@ -1,15 +1,14 @@</span>
 <span class="w"> </span>{
-<span class="w"> </span>  "id": 1,
-<span class="w"> </span>  "name": "The Hobbit",
-<span class="w"> </span>  "BookAuthors": [
+<span class="w"> </span>  &quot;id&quot;: 1,
+<span class="w"> </span>  &quot;name&quot;: &quot;The Hobbit&quot;,
+<span class="w"> </span>  &quot;BookAuthors&quot;: [
 <span class="w"> </span>    {
-<span class="gd">-      "id": 1,</span>
-<span class="w"> </span>      "BookId": 1,
-<span class="w"> </span>      "AuthorId": 1,
-<span class="w"> </span>      "Author": {
-<span class="w"> </span>        "id": 1,
-<span class="w"> </span>        "name": "J. R. R. Tolkien"
+<span class="gd">-      &quot;id&quot;: 1,</span>
+<span class="w"> </span>      &quot;BookId&quot;: 1,
+<span class="w"> </span>      &quot;AuthorId&quot;: 1,
+<span class="w"> </span>      &quot;Author&quot;: {
+<span class="w"> </span>        &quot;id&quot;: 1,
+<span class="w"> </span>        &quot;name&quot;: &quot;J. R. R. Tolkien&quot;
 <span class="w"> </span>      }
 <span class="w"> </span>    }
 <span class="w"> </span>  ]
 <span class="w"> </span>}
 </pre></div>
-
 <p>Sure enough, the <code>id</code> of the join table is missing. The <code>id</code> column of the table still existed. This was an active project, so many files had been changed between the previous release, which I could confirm still returned the <code>id</code> of the join table, and the current version of the code. But the <code>BookAuthor.model.ts</code> file <em>had not changed</em>.</p>
-<p>I could work around the issue by adding <code>attributes: { include: ["id"] }</code> like so:</p>
+<p>I could work around the issue by adding <code>attributes: { include: [&quot;id&quot;] }</code> like so:</p>
 <div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
 <span class="w">  </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
 <span class="w">    </span><span class="p">(</span>
@@ -472,7 +466,7 @@ body.page #upvote-form {
 <span class="w">        </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">          </span><span class="p">{</span>
 <span class="w">            </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">BookAuthor</span><span class="p">,</span>
-<span class="w">            </span><span class="nx">attributes</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">            </span><span class="nx">attributes</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
 <span class="w">            </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">Author</span><span class="w"> </span><span class="p">}],</span>
 <span class="w">          </span><span class="p">},</span>
 <span class="w">        </span><span class="p">],</span>
@@ -483,10 +477,9 @@ body.page #upvote-form {
 <span class="w">  </span><span class="p">)</span>
 <span class="p">);</span>
 </pre></div>
-
-<p>But that didn't explain <em>why</em> the <code>id</code> was suddenly missing. It took a <a href="https://git-scm.com/docs/git-bisect">git bisect</a> script for me to figure it out. Git's bisect command is a very powerful tool and I recommend you add it to your tool belt if you haven't already.</p>
+<p>But that didn't explain <em>why</em> the <code>id</code> was suddenly missing. It took a <a href='https://git-scm.com/docs/git-bisect'>git bisect</a> script for me to figure it out. Git's bisect command is a very powerful tool and I recommend you add it to your tool belt if you haven't already.</p>
 <p>If you want to try to figure it out for yourself, stop here.</p>
-<hr/>
+<hr />
 <p>After running git bisect, the culprit was a seemingly innocent change to the <code>Author.model.ts</code> file. A developer had added <code>belongsToMany</code> to the Author model to make it easier to traverse the relationship between Author and Book.</p>
 <div class="highlight"><pre><span></span><span class="c1">// Author.model.ts</span>
 
@@ -500,13 +493,12 @@ body.page #upvote-form {
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">sequelize</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s2">"Author"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">modelName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Author&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">);</span>
 
 <span class="nx">Author</span><span class="p">.</span><span class="nx">Books</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Author</span><span class="p">.</span><span class="nx">belongsToMany</span><span class="p">(</span><span class="nx">Book</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">through</span><span class="o">:</span><span class="w"> </span><span class="kt">BookAuthor</span><span class="w"> </span><span class="p">});</span>
 </pre></div>
-
 <p>Using the <code>belongsToMany</code> function to mark the BookAuthor model definitively as a join table in the eyes of Sequelize causes Sequelize to hide the <code>id</code> column. Sequelize uses the foreign keys of join tables as a complex unique primary key.</p>
 <p>When you look at it from the point of view of Sequelize's happy path, this makes complete sense. This is how Sequelize thinks join tables should be defined. When you look at it through a historical lens, it's surprising behavior that a change to some other model should cause a column to disappear from the results of a query.</p>
 

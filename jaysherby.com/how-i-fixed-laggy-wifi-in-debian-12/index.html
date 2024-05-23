@@ -331,7 +331,7 @@ body.page #upvote-form {
       </h1>
     </a>
     <nav>
-      <p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
 
     </nav>
   </header>
@@ -356,17 +356,15 @@ body.page #upvote-form {
 
 
     <p>The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It's been dutifully chugging along for more than 4 years, but my needs finally exceed its capabilities.</p>
-<p>I got a good deal on a Lenovo ThinkCentre M910q from <a href="https://www.backmarket.com/">Back Market</a>. When I went to install Debian 12 Bookworm, I found that Debian's non-free firmware packages don't include the necessary drivers for the cheap USB wifi adapter the seller included. Rather than faff about trying to compile and install the kernel module, I bought an Intel 8265 M.2 wifi adapter from Amazon. Its drivers are included in Debian's non-free firmware, and according to Lenovo's service manuals, this was the model they would have included in my machine had that option been chosen during configuration.</p>
+<p>I got a good deal on a Lenovo ThinkCentre M910q from <a href='https://www.backmarket.com/'>Back Market</a>. When I went to install Debian 12 Bookworm, I found that Debian's non-free firmware packages don't include the necessary drivers for the cheap USB wifi adapter the seller included. Rather than faff about trying to compile and install the kernel module, I bought an Intel 8265 M.2 wifi adapter from Amazon. Its drivers are included in Debian's non-free firmware, and according to Lenovo's service manuals, this was the model they would have included in my machine had that option been chosen during configuration.</p>
 <p>Installation of Debian worked without any issues. However, once the system was running, I noticed SSH sessions were very laggy. Pings to the new machine were averaging around 150 milliseconds, which is ten times longer than pings to the Raspberry Pi it was set to replace.</p>
 <p>After a little searching online, I found the culprit to be the power management on the wifi adapter. I think the wifi adapter goes into a low-power state after a lull in network traffic, but the lull is so short that the time between key presses in a SSH session is enough to trigger it. Because this device is not running on a battery, I feel comfortable turning the wifi adapter's power management off. This appears the solve the issue, and my SSH sessions are properly peppy afterwards.</p>
 <div class="highlight"><pre><span></span>server-user@m910q:~$ sudo iw dev wlp1s0 set power_save off
 </pre></div>
-
 <p>However, there's still a problem. If the system reboots, the power management for the wifi adapter returns to its default state of being turned on.</p>
 <p>Systemd to the rescue. After debugging some examples online that are very close to correct but ultimately out of date, here's the unit file I ended up with and the commands I used to set it up for my wifi adapter.</p>
 <div class="highlight"><pre><span></span>sudo systemctl --full --force edit wlan_always_on@.service
 </pre></div>
-
 <div class="highlight"><pre><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Keep wireless device %i from sleeping.</span>
 <span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
@@ -377,10 +375,8 @@ body.page #upvote-form {
 <span class="k">[Install]</span>
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
 </pre></div>
-
 <div class="highlight"><pre><span></span>sudo systemctl enable --now wlan_always_on@wlp1s0.service
 </pre></div>
-
 <p>This setup may not be perfect. I'm no systemd expect. This is cobbled and cargo culted together. But it works on my machine™.</p>
 
 

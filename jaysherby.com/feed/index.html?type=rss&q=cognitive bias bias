@@ -12,8 +12,8 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Counting My Chickens Before They Hatch</title>
       <link>https://jaysherby.com/counting-my-chickens-before-they-hatch/</link>
-      <description>&lt;p&gt;&lt;img alt="Original art: Cucco from The Legend of Zelda: Breath of the Wild" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682818406-0.png"/&gt;&lt;/p&gt;
-&lt;p&gt;I made &lt;a href="https://jaysherby.com/three-hens-three-eggs-three-days/"&gt;a post&lt;/a&gt; yesterday about a particular word problem.&lt;/p&gt;
+      <description>&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682818406-0.png" alt="Original art: Cucco from The Legend of Zelda: Breath of the Wild" /&gt;&lt;/p&gt;
+&lt;p&gt;I made &lt;a href='https://jaysherby.com/three-hens-three-eggs-three-days/'&gt;a post&lt;/a&gt; yesterday about a particular word problem.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"3 hens lay 3 eggs in 3 days. How many eggs do 12 hens give in 12 days?"&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -43,16 +43,14 @@ Hiring? Check my résumé to see if we're a match....</description>
 &lt;p&gt;Next, I generalized the relationship into an algebraic equation.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;z&lt;/em&gt; = ( &lt;em&gt;x&lt;/em&gt; / &lt;em&gt;a&lt;/em&gt; ) * ( &lt;em&gt;y&lt;/em&gt; / &lt;em&gt;b&lt;/em&gt; ) * &lt;em&gt;c&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Because multiplication is commutative, the assigned values of &lt;em&gt;a&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt; can be swapped so long as &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt; are also swapped. But &lt;em&gt;c&lt;/em&gt; and &lt;em&gt;z&lt;/em&gt; must be the produced quantities.&lt;/p&gt;
-&lt;h2 id="enter-leibniz"&gt;Enter Leibniz&lt;/h2&gt;
-&lt;p&gt;What the hell did I just discover? After a little research this morning, this appears to be an application of the &lt;a href="https://en.wikipedia.org/wiki/Product_rule"&gt;product rule&lt;/a&gt;, originally discovered by Gottfried Leibniz in the late 1600s.&lt;/p&gt;
-&lt;h2 id="about-those-sat-questions"&gt;About those SAT questions&lt;/h2&gt;
-&lt;p&gt;In my blog post from yesterday, I mentioned how much I hate those SAT pattern recognition questions because the human mind is capable of finding a pattern to fit almost any sequence. Does this formula constitute a pattern?&lt;/p&gt;
+&lt;h2 id=enter-leibniz&gt;Enter Leibniz&lt;/h2&gt;&lt;p&gt;What the hell did I just discover? After a little research this morning, this appears to be an application of the &lt;a href='https://en.wikipedia.org/wiki/Product_rule'&gt;product rule&lt;/a&gt;, originally discovered by Gottfried Leibniz in the late 1600s.&lt;/p&gt;
+&lt;h2 id=about-those-sat-questions&gt;About those SAT questions&lt;/h2&gt;&lt;p&gt;In my blog post from yesterday, I mentioned how much I hate those SAT pattern recognition questions because the human mind is capable of finding a pattern to fit almost any sequence. Does this formula constitute a pattern?&lt;/p&gt;
 &lt;p&gt;The variables in my equation have very specific meanings. Plugging in random numbers will always result in an answer, but it will be devoid of meaning.&lt;/p&gt;
 &lt;p&gt;We &lt;em&gt;can&lt;/em&gt; turn this into a sequence, though. Every sixth number in the sequence is the result of plugging the previous five numbers into my formula. We can keep going on like that forever.&lt;/p&gt;
 &lt;p&gt;There's a precedent for this type of relationship: the Fibonacci sequence. It's a sequence. It's right there in the name. It's a much simpler sequence from mine since each number is calculated using only the previous &lt;em&gt;two&lt;/em&gt; elements of the sequence.&lt;/p&gt;
 &lt;p&gt;Nonetheless, I have successfully defined a sequence. The problem with this is, if I'm allowed to introduce constants into my equation, given enough time I can deduce an equation that will fit any of the possible answers given to me in a multiple choice SAT question. All answers are equally valid. That means every question like this should be answered with the "not enough information" choice.&lt;/p&gt;
 &lt;p&gt;As much as I'd like to blow up this entire class of question, there is one major exception. My explanation only holds &lt;em&gt;if the element you're being asked to identify is the next element in the sequence&lt;/em&gt;. If you are given elements of the sequence after the one you're being asked to identify, the number of equations that can describe the sequence is finite.&lt;/p&gt;
-&lt;hr/&gt;
+&lt;hr /&gt;
 &lt;p&gt;In case you were interested, here are the first 20 elements of the pattern. It's not too interesting since it almost immediately flies off towards infinity.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;3&lt;/li&gt;
@@ -84,32 +82,28 @@ Hiring? Check my résumé to see if we're a match....</description>
     <item>
       <title>Three Hens, Three Eggs, Three Days</title>
       <link>https://jaysherby.com/three-hens-three-eggs-three-days/</link>
-      <description>&lt;p&gt;&lt;img alt="Original art: Exeggcute, an egg-like Pokémon" src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682722199-0.png"/&gt;&lt;/p&gt;
+      <description>&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682722199-0.png" alt="Original art: Exeggcute, an egg-like Pokémon" /&gt;&lt;/p&gt;
 &lt;p&gt;I read a blog post about cognitive biases this week that included this word problem.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"3 hens lay 3 eggs in 3 days. How many eggs do 12 hens give in 12 days?"&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;It was presented to grade school children, and everyone, including the teacher but excluding the post's author, thought the answer was 12 eggs.&lt;/p&gt;
-&lt;h2 id="the-correct-answer"&gt;The correct answer&lt;/h2&gt;
-&lt;p&gt;The correct answer is 48 eggs. The correct way to find the answer is to deduce logically that when 3 hens, &lt;em&gt;total&lt;/em&gt;, lay 3 eggs, &lt;em&gt;total&lt;/em&gt;, in 3 days, that means each hen takes 3 days to lay a single egg.&lt;/p&gt;
+&lt;h2 id=the-correct-answer&gt;The correct answer&lt;/h2&gt;&lt;p&gt;The correct answer is 48 eggs. The correct way to find the answer is to deduce logically that when 3 hens, &lt;em&gt;total&lt;/em&gt;, lay 3 eggs, &lt;em&gt;total&lt;/em&gt;, in 3 days, that means each hen takes 3 days to lay a single egg.&lt;/p&gt;
 &lt;p&gt;12 days divided by 3 days is 4. A single hen will lay 4 eggs in 12 days. Multiply 4 eggs by 12 hens and there will be a total of 48 eggs.&lt;/p&gt;
-&lt;h2 id="the-counter-example"&gt;The counter-example&lt;/h2&gt;
-&lt;p&gt;This word problem reminds me of &lt;a href="https://en.wikipedia.org/wiki/Brooks%27s_law"&gt;Brooks's law&lt;/a&gt;, popularly shared as:&lt;/p&gt;
+&lt;h2 id=the-counter-example&gt;The counter-example&lt;/h2&gt;&lt;p&gt;This word problem reminds me of &lt;a href='https://en.wikipedia.org/wiki/Brooks%27s_law'&gt;Brooks's law&lt;/a&gt;, popularly shared as:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"nine women can't make a baby in one month"&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Seems like a good counter-example to help those who find the answer to the hens problem to be 12.&lt;/p&gt;
 &lt;p&gt;9 women can make 9 babies in 9 months. How many babies can &lt;em&gt;x&lt;/em&gt; women make in &lt;em&gt;x&lt;/em&gt; months, where &lt;em&gt;x&lt;/em&gt; is less than 9?&lt;/p&gt;
-&lt;h2 id="right-answer-wrong-method"&gt;Right answer, wrong method&lt;/h2&gt;
-&lt;p&gt;The hens problem has some implied logic to it that can trip up the mind. If it was worded as "3 hens lay 1 egg each over the course of 3 days", I doubt there would be any difficulty to this problem at all. But the way it's worded is purposely ambiguous and implies prior knowledge of how hens lay eggs.&lt;/p&gt;
+&lt;h2 id=right-answer-wrong-method&gt;Right answer, wrong method&lt;/h2&gt;&lt;p&gt;The hens problem has some implied logic to it that can trip up the mind. If it was worded as "3 hens lay 1 egg each over the course of 3 days", I doubt there would be any difficulty to this problem at all. But the way it's worded is purposely ambiguous and implies prior knowledge of how hens lay eggs.&lt;/p&gt;
 &lt;p&gt;Let's strip all of the implicit knowledge from the problem. 3 widgets produce 3 gizmos in 3 days. How many gizmos do 12 widgets produce in 12 days?&lt;/p&gt;
 &lt;p&gt;We don't really know &lt;em&gt;how&lt;/em&gt; widgets produce gizmos. We only know that 3 widgets produce 3 gizmos in 3 days. For all we know, producing gizmos is a group effort and 3 widgets are able to collaborate such that they can create 1 gizmo every day.&lt;/p&gt;
 &lt;p&gt;If we assume that, 3 widgets can create 12 gizmos in 12 days. 12 widgets is 4 times as many as 3 widgets, so they should be able to create 4 times as many gizmos in the same amount of time. 12 gizmos times 4 is 48 gizmos.&lt;/p&gt;
 &lt;p&gt;That's still the right answer despite coming to the wrong logical conclusion about &lt;em&gt;how&lt;/em&gt; a &lt;del&gt;widget&lt;/del&gt; hen produces &lt;del&gt;a gizmo&lt;/del&gt; an egg. In fact, I suspect that the numbers 3 and 12 were specifically chosen for this word problem exactly so that division leaves no remainder, meaning that either approach results in the correct answer.&lt;/p&gt;
 &lt;p&gt;If the number of days and hens was 13, for example, they'd lay 52 eggs. A hen either lays an egg or doesn't. It doesn't lay a third of an egg per day.&lt;/p&gt;
 &lt;p&gt;In the case of widgets and gizmos, we'd have to decide whether a single widget would be able to produce a single gizmo in 3 days, or if a gizmo is unable to be produced &lt;em&gt;at all&lt;/em&gt; without 3 widgets participating.&lt;/p&gt;
-&lt;h2 id="pattern-recognition"&gt;Pattern recognition&lt;/h2&gt;
-&lt;p&gt;The typical reason as to why a person might jump to the conclusion that the answer is 12 eggs is that they see a pattern in the numbers.&lt;/p&gt;
+&lt;h2 id=pattern-recognition&gt;Pattern recognition&lt;/h2&gt;&lt;p&gt;The typical reason as to why a person might jump to the conclusion that the answer is 12 eggs is that they see a pattern in the numbers.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;3, 3, 3, 12, 12, ?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;This is probably the correct answer to why people would answer "12 eggs". The brain is a connection-making machine, for better &lt;em&gt;and&lt;/em&gt; worse. But is 12 a valid answer to &lt;em&gt;this&lt;/em&gt; question, or are we being deceived?&lt;/p&gt;
 &lt;p&gt;This is a common format for SAT questions. You are given a sequence of numbers and asked to give the next number in the pattern. It's considered such a fundamental logic problem that there are versions for younger people that use shapes and colors.&lt;/p&gt;
@@ -123,10 +117,9 @@ Hiring? Check my résumé to see if we're a match....</description>
 &lt;p&gt;The sequence can't go any further forward, but it could go on backwards towards infinity.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;...³⁄₁₆, ³⁄₁₆, ³⁄₁₆, ³⁄₁₆, ³⁄₁₆, ¾, ¾, ¾, ¾, 3, 3, 3, 12, 12, 48.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Therefore, the correct answer to the question of what the next number in the sequence &lt;em&gt;3, 3, 3, 12, 12, ?&lt;/em&gt; cannot be determined without more information about the sequence.&lt;/p&gt;
-&lt;h2 id="the-moral"&gt;The moral&lt;/h2&gt;
-&lt;p&gt;The moral to the story, if there is one at all, is not to trust your lizard brain when it comes to logic problems. Or trust, but also verify. Our brains are &lt;em&gt;so&lt;/em&gt; good at finding patterns and correlations, we tend to see them where they don't exist at all.&lt;/p&gt;
-&lt;hr/&gt;
-&lt;p&gt;Wanna see more chicken-egg-day shenanigans? I wrote &lt;a href="https://jaysherby.com/counting-my-chickens-before-they-hatch/"&gt;even more&lt;/a&gt; about this the day after this post.&lt;/p&gt;
+&lt;h2 id=the-moral&gt;The moral&lt;/h2&gt;&lt;p&gt;The moral to the story, if there is one at all, is not to trust your lizard brain when it comes to logic problems. Or trust, but also verify. Our brains are &lt;em&gt;so&lt;/em&gt; good at finding patterns and correlations, we tend to see them where they don't exist at all.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Wanna see more chicken-egg-day shenanigans? I wrote &lt;a href='https://jaysherby.com/counting-my-chickens-before-they-hatch/'&gt;even more&lt;/a&gt; about this the day after this post.&lt;/p&gt;
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/three-hens-three-eggs-three-days/</guid>
