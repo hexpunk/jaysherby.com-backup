@@ -86,6 +86,11 @@ It was presented to grade school children, and everyone, includi..."
     
     
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -381,7 +386,7 @@ body.page #upvote-form {
 
 <p>
     <i>
-        <time datetime="2023-04-28">
+        <time datetime="2023-04-28T21:52Z">
             28 Apr, 2023
         </time>
     </i>

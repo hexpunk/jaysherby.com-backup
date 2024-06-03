@@ -57,6 +57,11 @@
     
     
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -352,7 +357,7 @@ body.page #upvote-form {
 
 <p>
     <i>
-        <time datetime="2023-07-08">
+        <time datetime="2023-07-08T18:41Z">
             08 Jul, 2023
         </time>
     </i>

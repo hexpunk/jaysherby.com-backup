@@ -86,6 +86,11 @@ I eventually looked at the problem from the point of view of a pattern recogniti
     
     
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -381,7 +386,7 @@ body.page #upvote-form {
 
 <p>
     <i>
-        <time datetime="2023-04-29">
+        <time datetime="2023-04-29T17:45Z">
             29 Apr, 2023
         </time>
     </i>

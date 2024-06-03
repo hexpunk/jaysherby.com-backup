@@ -57,6 +57,11 @@
     
     <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -352,7 +357,7 @@ body.page #upvote-form {
 
 <p>
     <i>
-        <time datetime="2023-06-10">
+        <time datetime="2023-06-10T15:33Z">
             10 Jun, 2023
         </time>
     </i>

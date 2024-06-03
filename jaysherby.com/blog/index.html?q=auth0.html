@@ -59,6 +59,11 @@
 
 
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -331,7 +336,7 @@ body.page #upvote-form {
     <li>
         <span>
             <i>
-                <time datetime="2023-04-22">
+                <time datetime="2023-04-22T00:00Z">
                     22 Apr, 2023
                 </time>
             </i>
@@ -344,7 +349,7 @@ body.page #upvote-form {
     <li>
         <span>
             <i>
-                <time datetime="2023-03-09">
+                <time datetime="2023-03-09T00:00Z">
                     09 Mar, 2023
                 </time>
             </i>

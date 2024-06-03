@@ -59,6 +59,11 @@
 
 
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -331,7 +336,7 @@ body.page #upvote-form {
     <li>
         <span>
             <i>
-                <time datetime="2024-02-21">
+                <time datetime="2024-02-21T04:21Z">
                     21 Feb, 2024
                 </time>
             </i>
