@@ -72,6 +72,11 @@ When I visited last year, the theme was Commodore 64 as it was the 40th annivers
     
     
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -367,7 +372,7 @@ body.page #upvote-form {
 
 <p>
     <i>
-        <time datetime="2023-09-10">
+        <time datetime="2023-09-10T01:42Z">
             10 Sep, 2023
         </time>
     </i>

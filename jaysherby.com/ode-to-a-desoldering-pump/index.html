@@ -71,6 +71,11 @@ The most perso..."
     
     
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -366,7 +371,7 @@ body.page #upvote-form {
 
 <p>
     <i>
-        <time datetime="2023-10-03">
+        <time datetime="2023-10-03T16:19Z">
             03 Oct, 2023
         </time>
     </i>
