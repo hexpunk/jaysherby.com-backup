@@ -81,6 +81,11 @@ Originally, I didn&#x27;t see what the fuss was about. WASM,..."
     
     
 
+
+  <script>
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `timezone=${tz};path=/`
+  </script>  
   
   
 
@@ -376,7 +381,7 @@ body.page #upvote-form {
 
 <p>
     <i>
-        <time datetime="2023-05-02">
+        <time datetime="2023-05-02T20:01Z">
             02 May, 2023
         </time>
     </i>
