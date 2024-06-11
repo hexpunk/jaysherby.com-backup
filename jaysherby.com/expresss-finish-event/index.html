@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
   
-  <title>Fact Check: Is Svelte Ditching Typescript? | Jay&#x27;s blog</title>
+  <title>Express&#x27;s &quot;finish&quot; Event | Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
     
@@ -15,37 +15,22 @@
     <meta name="jaysherby" content="look-for-the-bear-necessities">
 
     <!-- Primary Meta Tags -->
-<meta name="title" content="Fact Check: Is Svelte Ditching Typescript?">
-<meta name="description" content="
-
-
-&lt;✅|❌&gt; 
-
-A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev community today. If you&#x27;re unfamiliar, Svelte is a front-end component framew...">
+<meta name="title" content="Express&#x27;s &quot;finish&quot; Event">
+<meta name="description" content="Let&#x27;s say you want to write some middleware for  that does something after the request is complete. The standard advice on the web is to add an event listene...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
-<meta property="og:title" content="Fact Check: Is Svelte Ditching Typescript?">
+<meta property="og:title" content="Express&#x27;s &quot;finish&quot; Event">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://jaysherby.com/fact-check-is-svelte-ditching-typescript/">
-<meta property="og:description" content="
-
-
-&lt;✅|❌&gt; 
-
-A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev community today. If you&#x27;re unfamiliar, Svelte is a front-end component framew...">
+<meta property="og:url" content="https://jaysherby.com/expresss-finish-event/">
+<meta property="og:description" content="Let&#x27;s say you want to write some middleware for  that does something after the request is complete. The standard advice on the web is to add an event listene...">
 
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary">
-<meta property="twitter:url" content="https://jaysherby.com/fact-check-is-svelte-ditching-typescript/">
-<meta property="twitter:title" content="Fact Check: Is Svelte Ditching Typescript?">
-<meta property="twitter:description" content="
-
-
-&lt;✅|❌&gt; 
-
-A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev community today. If you&#x27;re unfamiliar, Svelte is a front-end component framew...">
+<meta property="twitter:url" content="https://jaysherby.com/expresss-finish-event/">
+<meta property="twitter:title" content="Express&#x27;s &quot;finish&quot; Event">
+<meta property="twitter:description" content="Let&#x27;s say you want to write some middleware for  that does something after the request is complete. The standard advice on the web is to add an event listene...">
 
 
 
@@ -54,22 +39,12 @@ A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev communit
   {
     "@context": "http://schema.org",
     "@type": "article",
-    "name": "Fact Check: Is Svelte Ditching Typescript?",
-    "url": "https://jaysherby.com/fact-check-is-svelte-ditching-typescript/",
-    "description": "
-
-
-&lt;✅|❌&gt; 
-
-A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev community today. If you&#x27;re unfamiliar, Svelte is a front-end component framew...",
+    "name": "Express&#x27;s &quot;finish&quot; Event",
+    "url": "https://jaysherby.com/expresss-finish-event/",
+    "description": "Let&#x27;s say you want to write some middleware for  that does something after the request is complete. The standard advice on the web is to add an event listene...",
     "about": {
-      "@type": "Fact Check: Is Svelte Ditching Typescript?",
-      "description": "
-
-
-&lt;✅|❌&gt; 
-
-A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev community today. If you&#x27;re unfamiliar, Svelte is a front-end component framew..."
+      "@type": "Express&#x27;s &quot;finish&quot; Event",
+      "description": "Let&#x27;s say you want to write some middleware for  that does something after the request is complete. The standard advice on the web is to add an event listene..."
     }
   }
 </script>
@@ -80,7 +55,7 @@ A choice made by Svelte&#x27;s creator, Rich Harris, rocked the web dev communit
     
 
     
-    
+    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
   
   
   
@@ -344,7 +319,7 @@ body.page #upvote-form {
 
 <style>
     body:hover {
-        border-image: url("https://jaysherby.com/hit/WpVSTMwNzaGKgqbTCLby/");
+        border-image: url("https://jaysherby.com/hit/HPhtrKTzaGXENxEbKDfI/");
         border-width: 0;
     }
 </style>
@@ -372,32 +347,42 @@ body.page #upvote-form {
 
 
 <h1>
-    Fact Check: Is Svelte Ditching Typescript?
+    Express&#x27;s &quot;finish&quot; Event
 </h1>
 
 <p>
     <i>
-        <time datetime="2023-05-10T22:38Z">
-            10 May, 2023
+        <time datetime="2024-06-11T16:11Z">
+            11 Jun, 2024
         </time>
     </i>
 </p>
 
 
-    <hr />
-<h2 id=claim>Claim:</h2><blockquote>
-<p>Svelte is dropping Typescript in favor of JSDoc comments.</p>
-</blockquote>
-<h2 id=rating>Rating:</h2><p><✅|❌> <strong>Mixed</strong></p>
-<hr />
-<p>A choice made by Svelte's creator, Rich Harris, rocked the web dev community today. If you're unfamiliar, Svelte is a front-end component framework that rides the fence between JavaScript framework and programming language. The seemingly contentious decision was to alter how the internal compiler uses Typescript.</p>
-<p><a href='https://github.com/sveltejs/svelte/pull/8569'>The pull request</a>, which was locked as "too heated" earlier today after it trended on Hacker News, at first glance may look like Typescript is being ditched for plain, old JavaScript. However, looks can be deceiving.</p>
-<p>As explained in <a href='https://youtu.be/MJHO6FSioPI'>a video</a> and <a href='https://twitter.com/Rich_Harris/status/1350436286948122625'>a tweet</a> by Harris, Typescript is <em>not</em> being ditched. Instead, the Svelte compiler code is moving towards an interesting and often overlooked feature of Typescript: <a href='https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html'>JSDoc Typescript</a>.</p>
-<p>I've been using Typescript as my primary front-end language for about five years now, and I must admit I didn't know JSDoc TS was a thing until today. And I think Harris may be on to something here.</p>
-<p>JSDoc TS uses special doc comment annotations that the Typescript compiler understands to add most of the benefits of Typescript's type checking to bog standard JavaScript code. The major advantage, which is the primary reason behind Harris's choice, is that you get the rich type-checking guarantees of Typescript without the required build step to strip out the Typescript and turn your code back into JavaScript.</p>
-<p>I remember a time when there were no build steps required to develop a rich, interactive website. Then we started breaking out our files into modules, which is generally a good thing. But this requires a build step to at least concatenate all of your source files together before your code can run in the browser. More build steps were added until we ended up with a build <em>pipeline</em>.</p>
-<p>Lamenting the loss of the simplicity of web development is so common that it's become a meme in developer circles. But the good news is that with overwhelming support of <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules'>modules</a> and <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap'>import maps</a> in browsers, I think we're closer than ever to returning to a build-less front-end world. But I don't want to give up the advantages of Typescript.</p>
-<p>Maybe JSDoc TS is the best of both worlds? I'm willing to give it a shot next time I start a small personal project.</p>
+    <p>Let's say you want to write some middleware for <a href='https://expressjs.com/'>Express</a> that does something after the request is complete. The standard advice on the web is to add an event listener to the response object listening for the "finish" event.</p>
+<div class="highlight"><pre><span></span><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// DON&#39;T USE THIS!!!</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Request finished&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="w">  </span><span class="nx">next</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+<p>I learned the hard way that the "finish" event doesn't always get fired. There are lots of ways you can screw this up as a programmer.  "finish" may not fire if:</p>
+<ul>
+<li>there's a break in the middleware chain, i.e. not calling <code>next</code></li>
+<li>the response isn't completed using <code>res.send</code> or <code>res.end</code></li>
+<li>an error isn't handled somewhere, including uncaught exceptions in promises</li>
+</ul>
+<p>But even if you're the best, most diligent programmer on Earth, if the client closes the connection before the request has been completed, that's enough to cause the "finish" event to never fire for that request.</p>
+<p>Maybe that's the behavior you want. Maybe you only want your event listener to fire on <em>successful</em> requests. If so, carry on. But if you're like me and you want your event listener to fire after <em>every</em> request, you should listen for a different event. I fixed my issue by listening for the "close" event, which is always fired.</p>
+<div class="highlight"><pre><span></span><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Request finished&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="w">  </span><span class="nx">next</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
 
 
 
@@ -406,9 +391,9 @@ body.page #upvote-form {
     
 
     
-    <form id="upvote-form" action="https://jaysherby.com/upvote/WpVSTMwNzaGKgqbTCLby/" method="post" style="display: inline">
+    <form id="upvote-form" action="https://jaysherby.com/upvote/HPhtrKTzaGXENxEbKDfI/" method="post" style="display: inline">
     <small>
-        <input hidden name="uid" value="WpVSTMwNzaGKgqbTCLby" style="display:none">
+        <input hidden name="uid" value="HPhtrKTzaGXENxEbKDfI" style="display:none">
         <input hidden name="title" style="display:none">
         
         <button
@@ -420,7 +405,7 @@ body.page #upvote-form {
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
-            <small class="upvote-count">6</small>
+            <small class="upvote-count">1</small>
         </button>
     </small>        
 </form>
