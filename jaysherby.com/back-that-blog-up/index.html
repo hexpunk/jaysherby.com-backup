@@ -439,13 +439,16 @@ find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </spa
 </ul>
 <div class="highlight"><pre><span></span><span class="c1"># Delete CSRF tokens since they&#39;ll change every page load.</span>
 <span class="c1"># Delete last build date tag since it will change often.</span>
+<span class="c1"># Delete &quot;updated&quot; dates that are always the current timestamp in feed pages.</span>
 find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.html*&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;input.*name=&quot;csrfmiddlewaretoken&quot;.*&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;updated&gt;.*&lt;\/updated&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
 </pre></div>
-<p>This command looks through the HTML files and removes two patterns from them.</p>
+<p>This command looks through the HTML files and removes three patterns from them.</p>
 <p>The first is a hidden input within the "toast" forms that contains a CSRF token. I'm removing this because, as the comment says, the value will be different on every page load. That will make for a lot of unnecessary noise in my backups.</p>
 <p>The second is the last build date tag that is found within my blog's RSS file. This is updated on a regular basis whether any content has changed or not. Again, this would make for a lot of noise in my backups.</p>
+<p>The final pattern is an "updated" tag that seems to always contain the timestamp when the page was generated. These are present on pages in the <code>/feed</code> URL path.</p>
 <p>Notice in the second sed command that the slash in the HTML tag is escaped! I originally overlooked this and it bit me. 🤦</p>
 <p>Quick shout out to <a href='https://sed.js.org/'>this website</a> that is like <a href='https://regex101.com/'>Regex 101</a> for sed. It saved me a lot of time testing out my sed commands.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Detect any added, changed, or deleted files</span>
