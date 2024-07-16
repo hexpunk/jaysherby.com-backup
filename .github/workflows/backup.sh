@@ -21,9 +21,11 @@ wget --wait=2 \
 
 # Delete CSRF tokens since they'll change every page load.
 # Delete last build date tag since it will change often.
+# Delete "updated" dates that are always the current timestamp in feed pages.
 find . -type f -name "*.html*" \
        -exec sed -i '/<input.*name="csrfmiddlewaretoken".*>/d' {} \; \
-       -exec sed -i '/<lastBuildDate>.*<\/lastBuildDate>/d' {} \;
+       -exec sed -i '/<lastBuildDate>.*<\/lastBuildDate>/d' {} \; \
+       -exec sed -i '/<updated>.*<\/updated>/d' {} \;
 
 # Detect any added, changed, or deleted files
 if [ -n "$(git ls-files --modified --deleted --others)" ]; then
