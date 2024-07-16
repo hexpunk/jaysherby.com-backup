@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T17:11:38.484636+00:00</updated>
+  <updated>2024-07-16T22:28:53.263701+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +20,7 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/expresss-finish-event/</id>
     <title>Express's "finish" Event</title>
-    <updated>2024-06-11T16:11:16.519858+00:00</updated>
+    <updated>2024-07-16T22:11:08.778553+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>
@@ -51,7 +51,7 @@ Hiring? Check  to see...</subtitle>
 &lt;/pre&gt;&lt;/div&gt;
 </content>
     <link href="https://jaysherby.com/expresss-finish-event/" rel="alternate"/>
-    <published>2024-06-11T16:11:16.519618+00:00</published>
+    <published>2024-06-11T16:11:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/</id>
@@ -401,273 +401,6 @@ Hiring? Check  to see...</subtitle>
     <published>2023-09-10T01:42:53.336765+00:00</published>
   </entry>
   <entry>
-    <id>https://jaysherby.com/computer-science-primer-for-writers-and-authors/</id>
-    <title>Computer Science Primer For Writers And Authors</title>
-    <updated>2023-08-10T21:27:51.098808+00:00</updated>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;It's a very tumultuous time for creative humans at the moment. Writers, musicians, and artists are being told they're at risk of being replaced by AI. The irony is not lost on me that rather than trying to automate away the drudgery of life, AI tech bros seem focused on automating the very things that are uniquely human, the things most of us would prefer to spend our time on. Those who seek to commercialize these AI tools must not put much value on art if they think it can be automated and mass-produced. It's not just an insult to those who produce art, but to those who consume it.&lt;/p&gt;
-&lt;p&gt;I read &lt;a href='https://www.techdirt.com/2023/08/08/the-fear-of-ai-just-killed-a-very-useful-tool/'&gt;an article from Techdirt&lt;/a&gt; today that concerned me, however. A person named Benji Smith created a website called Prosecraft that analyzed commercial books and provided interesting statistics. A number of authors whose books' statistics appeared on the site were very unhappy about it. The resulting backlash led to Prosecraft being taken down.&lt;/p&gt;
-&lt;p&gt;The backlash, however, seems a bit misguided. If you're a computer scientist or a software developer, the reason it's misguided is probably obvious. If you're a layman, I completely understand your confusion. The Techdirt article doesn't really explain why lumping Prosecraft in with the AI that people are rightly concerned about is unfair.&lt;/p&gt;
-&lt;p&gt;In this post, I aim to break down the terminology so that even if you don't know a nibble from a byte, you can have an informed opinion about artificial intelligence.&lt;/p&gt;
-&lt;h2 id=what-is-artificial-intelligence&gt;What is Artificial Intelligence?&lt;/h2&gt;&lt;p&gt;This question is at least as difficult as that classic philosophical quandary, what is art? The problem with defining artificial intelligence is rooted in the problem of defining intelligence. The answer is murky, at best.&lt;/p&gt;
-&lt;p&gt;If you hear the term "artificial general intelligence", it generally refers to a machine or computer program exhibiting human-like intelligence that can be applied across subjects and disciplines. Artificial general intelligence, or AGI, does not exist at this point in time. Whether or not it's even possible is still debated.&lt;/p&gt;
-&lt;p&gt;Besides being hard to define, artificial intelligence has historically been a moving goal post. Someone will develop an algorithm (fancy talk for a set of instructions to solve a given problem) that does something previously thought to be difficult or near impossible. It's lauded as "artificial intelligence"! That is, until the solution is studied and becomes well-understood. The field advances and that algorithm is no longer considered to be AI anymore.&lt;/p&gt;
-&lt;p&gt;This may be a cynical view, but I believe that AI, in practice, is any cutting edge technology that provides solutions that appear human-like, to a problem that was until recently thought to be computationally difficult. As soon as it's no longer considered cutting edge, it's no longer considered AI.&lt;/p&gt;
-&lt;p&gt;Let's move away from AI as a term as it's all but meaningless.&lt;/p&gt;
-&lt;h2 id=what-is-currently-meant-by-ai&gt;What is currently meant by "AI"?&lt;/h2&gt;&lt;p&gt;When you see "AI" being tossed around in the press, what's usually being discussed is the field of machine learning or ML. There are many different techniques being used right now, but you need to understand that this isn't magic. It's just statistical analysis.&lt;/p&gt;
-&lt;p&gt;No matter what techniques are being used, it all basically boils down to creating a large and complicated mathematical expression to accomplish a task. The way this is done is through a process called "training". Training takes sets of data, referred to as training data, and uses it to adjust constants within the mathematical expression until the accuracy of the expression improves.&lt;/p&gt;
-&lt;p&gt;Let's use a simple real-world example. Let's say I want an expression that will tell me whether or not there's a cat in a given image. My training data would be a large set of images comprised of two smaller sets, one with cats and one without. I've also labeled each set. Training the model consists of turning each image into a sequence of numbers, running that sequence through the expression, and seeing what number comes out of the expression. The number that comes out of the expression can be thought of as a probability that there's a cat in the image. But we already know there's a cat in the image because we labeled it beforehand. If the model produces a result of, say, 0.62 or 62% confidence, the training process will begin tweaking constants in the expression to get that number closer to 1.&lt;/p&gt;
-&lt;p&gt;Only once training is completed can the model be used. In the example above, once my cat picture model has been trained on all of my example pictures, I can start using it to classify images that haven't been seen before. Machine learning models are not like humans. When I'm using it to classify pictures of cats it's never seen before, it's not "learning" anything new. The model no longer changes.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;That doesn't mean the model is set in stone. If I put together some new pictures of cats and, well, not cats, I can continue training where I left off. I don't necessarily need to start from scratch training a new model. But it wouldn't make sense to continue training the cat classifier model on unknown pictures. If I give it a picture and it thinks there's an 80% likelihood there's a cat in the picture, if I were to then train it on its own results, that would be a recipe for disaster. The meaning behind the training would lose cohesion. It might turn into a classifier for furry things, or a classifier for contrasting objects, or just junk that doesn't really classify anything at all.&lt;/p&gt;
-&lt;p&gt;Generally speaking, the more training data we have to train the model, the more accurate the model will be.&lt;/p&gt;
-&lt;p&gt;Although breakthroughs are happening all the time in the field of machine learning as new techniques emerge, no breakthrough can change the fact that more training data corresponds to better results. There's an insatiable appetite for training data right now. That's a primary reason why services like Reddit and Facebook are getting protective over their data and who can access it. And why companies like Zoom, who technically have access to tons of valuable data that can be used for ML training, are trying to pivot to cash in on that data and the access to it.&lt;/p&gt;
-&lt;p&gt;It's also why individual creators are concerned about the implications of fair use laws. Just because I want to share art with fans via the web, why should companies be able to use it for free to train computer programs to undercut my profits while making art in my personal style? It's an absolutely valid question.&lt;/p&gt;
-&lt;p&gt;Taken to a logical extreme, machine learning may be able to be used as a form of intellectual property laundering. &lt;strong&gt;Obligatory reminder that I am not a lawyer.&lt;/strong&gt; Machine learning sometimes exhibits a problem called "overfitting" where a model will spit out training data verbatim. This is generally considered an undesirable flaw, but it happens quite often. If I train a model on a copyrighted work and it spits out a facsimile of it, is that covered under fair use? I honestly don't know.&lt;/p&gt;
-&lt;p&gt;A similar legal issue was raised during the early days of online music piracy. If Sony sells me a license to the song "Toxic" by Britney Spears, otherwise known as buying music digitally, what are they actually licensing to me? Is it the literal numbers that represent the MP3 file in storage? If so, what if I re-encode the file using different settings or for a different file format like WAV? The numbers that represent the file itself may not have any substantial overlap with the numbers of the MP3 they licensed to me. But if I play it back, my human ears can't tell the difference.&lt;/p&gt;
-&lt;p&gt;I can't cite a court case, but that legal theory was shot down, of course. I'd bet it's only a matter of time before the legal meaning of fair use is changed to exclude machine learning training data. I'm still not a lawyer, though.&lt;/p&gt;
-&lt;h2 id=what-did-prosecraft-do&gt;What did Prosecraft do?&lt;/h2&gt;&lt;p&gt;Now that you have a better understanding of the technology that has everyone concerned, let's look at Prosecraft, the website that was shut down due to artificial intelligence concerns.&lt;/p&gt;
-&lt;p&gt;For a given book, Prosecraft would tell you how many words were in it. From there, it would give percentages about things like how many of the book's words were adverbs. Of the adverbs, how many ended in -ly or not.&lt;/p&gt;
-&lt;p&gt;So far, this is purely in the realm known as natural language processing, or NLP. NLP is a wide field concerned mostly with linguistic statistical analysis aided by computer science. What we've seen Prosecraft do so far hasn't touched anything related to machine learning.&lt;/p&gt;
-&lt;p&gt;If I wanted to replicate the abilities of Prosecraft we've discussed so far, I could do that by making a list of known adverbs from a dictionary. Then my theoretical computer program would process a book's text word by word. It would only have to keep track of how many words it processed, how many of them appear in my list of adverbs, and how many of the adverbs it finds end in -ly. There's no training, no learning, and no retention of the book text after analysis has completed.&lt;/p&gt;
-&lt;p&gt;Prosecraft also offered analysis around a book's vividness versus passiveness. It provided percentages for each as well as showing out-of-context excerpts from the book of what it termed the most vivid page and the most passive page from the book, including color-coding words it considered vivid or passive within those excerpts.&lt;/p&gt;
-&lt;p&gt;The analysis of vividness or passiveness gets a little murky because those can be considered subjective measures. My understanding of how this worked was via sentiment analysis.&lt;/p&gt;
-&lt;h2 id=what-is-sentiment-analysis&gt;What is sentiment analysis?&lt;/h2&gt;&lt;p&gt;Sentiment analysis is a subfield within natural language processing that seeks to automatically identify emotional meaning behind words. The sentence "Jeff Bezos was born in 1964" is purely factual and doesn't really have any sentiment behind it. The sentence "Jeff Bezos is disgusting and I hate him" has a very strong sentiment behind it.&lt;/p&gt;
-&lt;p&gt;But language is tricky. If I said "Jeff Bezos is not a great guy and I don't love him" you understand this is still a negative sentiment. But a simple computer algorithm might just see "Jeff Bezos", "great guy", and "love him" and come to the wrong conclusion. It's this fuzziness that has led people to employ machine learning techniques for sentiment analysis.&lt;/p&gt;
-&lt;p&gt;Prosecraft used sentiment analysis. I don't know what tools or algorithms were used and I don't know how they were used. But my best guess is that they were used to classify words and phrases as "vivid" or "passive voice".&lt;/p&gt;
-&lt;p&gt;It's important to note that the books analyzed on Prosecraft were not used to &lt;em&gt;train&lt;/em&gt; any algorithms to detect these characteristics.&lt;/p&gt;
-&lt;h2 id=wrapping-up&gt;Wrapping up&lt;/h2&gt;&lt;p&gt;I hope I've made it clear that I understand the outrage and panic about AI. Don't believe the hype about artificial general intelligence. A more real threat of machine learning is its potential use to devalue art and the people who make art.&lt;/p&gt;
-&lt;p&gt;However, I agree that Prosecraft was unfairly targeted. What Prosecraft did was provide statistical tools that could help writers and readers. Criticizing Prosecraft would be like criticizing spell check and grammar check tools, once considered AI in their own right!&lt;/p&gt;
-&lt;p&gt;Fred Rogers said, "I went into television because I hated it so." I read that recently and I was floored! I never thought I'd hear Mr. Rogers say he hated anything. But he had the right attitude. When you're strongly repelled by something, it's important to learn as much as you can about it. I hope this post has helped someone learn a little more about something they despise. Just like television, machine learning is a tool. It has the potential to empower us. But it has a lot of potential for misuse as well. I want to make sure we know what we're railing against, because there's a real threat of collateral damage from modern day luddites.&lt;/p&gt;
-&lt;p&gt;—&lt;/p&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;I think this is an important point about things like ChatGPT as well. We're often told to use tools like that cautiously and skeptically. We should be skeptical of what ChatGPT tells us because it might not be telling the truth. (Not lying per se, as that implies intent.) But we should be cautious about what we tell ChatGPT, not because it might learn our personal details and tell them to someone else, but because we're throwing data onto someone else's computer. ChatGPT isn't the risk. Hackers, humans, are the risk.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-</content>
-    <link href="https://jaysherby.com/computer-science-primer-for-writers-and-authors/" rel="alternate"/>
-    <published>2023-08-10T00:00:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/am-i-a-real-developer-yet/</id>
-    <title>Am I A "Real Developer" Yet?</title>
-    <updated>2023-07-08T19:58:13.786855+00:00</updated>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I've fallen into the "real programmer" trap. Despite being gainfully employed as a software developer for all of the past 13 years, I'm finally feeling that impostor syndrome everyone keeps talking about.&lt;/p&gt;
-&lt;p&gt;I started learning the Rust programming language maybe six years ago or so. I had mostly overcome that steep learning curve. I was starting to actually write non-trivial programs. I chose to use Rust to do my coding interview for a job I landed in early 2020. I was getting comfortable with it.&lt;/p&gt;
-&lt;p&gt;Things changed, though. I went to a meetup of Rust users and found them to be just intolerable as a community. A new major version of Rust landed and my old code needed a some changes to run again, and a lot more changes to be considered idiomatic. The new async features landed. It felt like I had to learn a new language all over again.&lt;/p&gt;
-&lt;p&gt;Maybe this would be acceptable if Rust was my daily language. Coding in Rust was a hobby. Depending on what is happening in my life, I may go weeks or even months between opportunities to return to my hobby projects. It wasn't a tenable choice if I wanted to &lt;em&gt;get things done&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;I resolved to learn C. Changes in C are infrequent. The language changes at a glacial pace. But it retains some of the features I found desirable in Rust. It runs very close to the metal compared to other languages, so it tends to be fast. Deployment of artifacts is as simple as sharing a single binary, assuming your dependencies are statically linked.&lt;/p&gt;
-&lt;p&gt;The truth is, I'm struggling. And it's not the language itself. C as a language is pretty reasonable. Sure, there are some rough edges. Pointers aren't hard, but you can get tangled up in them pretty fast. Implicit integer conversion can be a real headache. Overall, though, it's pretty straightforward.&lt;/p&gt;
-&lt;p&gt;What hamstrings C is not the language itself but rather its tooling, or lack thereof. I'm used to relying on a variety of tools when I develop software: formatters, linters, type checkers, unit test runners, package managers, task runners, etc. C's tooling story is spartan, and it really hinders my progress with the language. My experience developing in C is death by a thousand cuts.&lt;/p&gt;
-&lt;p&gt;Let's start with compilation. Compiling a single C source file into an executable that only relies on the standard library can be done with a single command. As a program grows, I'm naturally going to want to separate my code into units in the form of files. There are tons of tools out there to help with this, but the most ubiquitous is Make.&lt;/p&gt;
-&lt;p&gt;I struggle with Make. I've read multiple books, &lt;em&gt;whole-ass books&lt;/em&gt;, about Make and I still can't fully understand it. At its most basic, it's a language-agnostic tool for taking files as input and doing some process to them which then creates new files. Make is brilliant at this use case. It tracks timestamps on files to do the least amount of work necessary when you run your Makefile. I think my main problem with Make is due to how agnostic it is. I'm used to build systems where I only need to point the tool at my entry point and it can figure out the rest. Make can't do that because it doesn't know anything about C. That puts the responsibility on me to code my dependency graph into my Makefile. That's a lot of work! I'm not used to that amount of work to set up a build process. It's very frustrating when I decide to factor certain bits of code out into their own units because I have to update my Makefile as well. I haven't found any way to make this trivial yet. Ideally, I want my build tool to understand C source code enough that I can point it at my entry points and it can build the dependency graph for me.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;C predates the concept of unit tests. That's kind of an insane statement. It explains why there are no default unit test facilities that ship with C's standard library. I'd expect unit tests to be a solved problem for any decently popular language by now. I can't seem to find any unit test libraries or frameworks for C that don't have a huge red flag. There's plenty of "single header file" projects that have a single developer who has thrown them onto Github ten years ago and then abandoned. There are ones that require &lt;em&gt;so much boilerplate&lt;/em&gt;. There are ones that have more dependencies than the program I'm writing. And there's Unity, which requires Ruby to run.&lt;/p&gt;
-&lt;p&gt;I tried writing my own simple unit test setup. How hard can it be if legions of programmers have uploaded theirs on Github and abandoned them? The biggest source of boilerplate in writing unit tests in C seems to be having to add each unit test function to your runner. I made the function definition part of creating a test into a macro that adds the function to a list automatically. In order to do this, I had to go off spec and use GCC-specific code, which I find annoying. I guess it works. 🤷&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;One of the reasons garbage-collected languages are the norm nowadays is because programmers supposedly can't manage memory themselves. Languages like Rust and Zig use ownership models to manage memory more deterministically. How hard can it be, though? For every &lt;code&gt;malloc&lt;/code&gt;, you must also &lt;code&gt;free&lt;/code&gt;. Or so I thought. This is one of those situations where I'd expect static analysis tools to shine. I'd love it if a linter could yell at me in my editor. I haven't found such a tool. I have tried using Valgrind, but I don't understand what it's telling me. It says I'm leaking memory, but I don't understand how. Each &lt;code&gt;malloc&lt;/code&gt; has a corresponding &lt;code&gt;free&lt;/code&gt;, and yet.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;The biggest things I miss from every language I've ever touched are dynamic arrays and associative arrays. Despite the fact that every non-trivial program ever written uses them, the C standard library doesn't have either of these. Because I want to be a "real programmer" I tried to implement them myself. 🙄 I guess I'm just not hardcore enough. I didn't get a traditional Computer Science education, so I missed out on the joys of accomplishing these feats with the added pressure of a university environment. I understand both of these data structures &lt;em&gt;in principle&lt;/em&gt;. Doing it in practice is a different story. Especially trying to do it in a generic way that would work with any kind of data type.&lt;/p&gt;
-&lt;p&gt;I could grab Glib or something that has these structures built-in, but then I lose portability and I have to accept the opinionated way in which the authors have chosen to implement them. I hate opinionated libraries.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;What's the problem? I'm not a "real programmer", I guess. Despite supporting my family for over a decade on a very generous income afforded to me by my profession, despite earning the respect of my coworkers, despite being a tutor and mentor to others, I'm not a "real programmer". I guess I'm just too soft. I grew up with garbage collectors and Visual Studio. I never had it rough. I was born just barely too late for the microcomputers that came with thick manuals and booted into BASIC interpreters. I'm obsessed with dumb concepts like "correctness" and "best practices". I am not a "real programmer". But I guess I want to be...?&lt;/p&gt;
-&lt;p&gt;Linus Torvalds, an impressive programmer, but not exactly an ideal coworker, said "If it compiles, it is good; if it boots up, it is perfect." I wish I could be that cavalier.&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/am-i-a-real-developer-yet/" rel="alternate"/>
-    <published>2023-07-08T18:41:02.981701+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/can-i-roll-my-own-state-container-for-react/</id>
-    <title>Can I Roll My Own State Container For React?</title>
-    <updated>2023-06-30T17:53:12.295300+00:00</updated>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I was recently chatting with some former coworkers. One of them asked if Redux was still the go-to library for React app state management.&lt;/p&gt;
-&lt;p&gt;I was surprised when others brought up some libraries I hadn't heard of called &lt;a href='https://recoiljs.org/'&gt;Recoil&lt;/a&gt; and &lt;a href='https://github.com/pmndrs/zustand'&gt;Zustand&lt;/a&gt;. I've reviewed them briefly, and it looks like they each bring interesting benefits and improvements over bog-standard Redux. Without having actually used either of them, that's really the most I can say about them.&lt;/p&gt;
-&lt;p&gt;The last time I worked on a React app that benefited from the type of state container that Redux provides was around five years ago. I used Redux at that time. I've still used React since then, but the apps I've worked on have synchronized their Big State™️ via their back-ends. I've found React's built-in hooks to be adequate for the rest. I'll reach for third-party libraries for form management, but otherwise the built-in hooks and custom hooks composed from them tend to do the job.&lt;/p&gt;
-&lt;p&gt;At some point since the &lt;code&gt;useReducer&lt;/code&gt; hook landed, the notion that Redux isn't really necessary anymore stuck in my brain. You should be able to roll your own version using React's core features now, right?&lt;/p&gt;
-&lt;p&gt;When I think of Redux, I think of three main features: The Reducer™️, the ability to access the state container from arbitrary components without having to pass stuff up and down the tree, and selectors. In the version I'm going to throw together here, the reducer and state container are provided by &lt;code&gt;useReducer&lt;/code&gt;, and the arbitrary component state container access will be provided by a React context. Selectors should be an implementation detail. 👀&lt;/p&gt;
-&lt;p&gt;Let's start with the bit that should be the same across any application.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, {
-  Context,
-  Dispatch,
-  ReactNode,
-  Reducer,
-  createContext,
-  useContext,
-  useReducer
-} from &amp;quot;react&amp;quot;;
-
-type StoreContext&amp;lt;S, A&amp;gt; = Context&amp;lt;{ state: S; dispatch: Dispatch&amp;lt;A&amp;gt; }&amp;gt;;
-
-interface Props&amp;lt;S, A&amp;gt; {
-  context: StoreContext&amp;lt;S, A&amp;gt;;
-  reducer: Reducer&amp;lt;S, A&amp;gt;;
-  children: ReactNode;
-}
-
-export function createStoreContext&amp;lt;S, A&amp;gt;(initialState: S): StoreContext&amp;lt;S, A&amp;gt; {
-  return createContext({
-    state: initialState,
-    dispatch: (() =&amp;gt; {}) as Dispatch&amp;lt;A&amp;gt;
-  });
-}
-
-export function Store&amp;lt;S, A&amp;gt;({
-  children,
-  context: Context,
-  reducer
-}: Props&amp;lt;S, A&amp;gt;) {
-  const { state: initialState } = useContext(Context);
-  const [state, dispatch] = useReducer(reducer, initialState);
-  return (
-    &amp;lt;Context.Provider value={{ state, dispatch }}&amp;gt;{children}&amp;lt;/Context.Provider&amp;gt;
-  );
-}
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I've created a convenience function called &lt;code&gt;createStoreContext&lt;/code&gt; that takes an initial state and returns a context that will hold your app's state. The only thing that might be considered tricky here is that I'm using a no-op function as the placeholder for the dispatch function until the context is provided to the &lt;code&gt;Store&lt;/code&gt; component.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;Store&lt;/code&gt; component is what I'd call a surrogate context provider component. I made up that word salad just now to describe it, but it's a common pattern. It acts like a context provider, but it adds the logic for how the context is going to be used. In this case, that logic is just the &lt;code&gt;useReducer&lt;/code&gt; function.&lt;/p&gt;
-&lt;p&gt;Next, I'll set up the app-specific types and logic for a contrived example app. This app has two pieces of state: a string and a number.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;createStoreContext&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;./Store&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="kd"&gt;interface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Action&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;INCREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;DECREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;CHANGE_TEXT&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;updatedText&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;initialState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;50&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;initial text&amp;quot;&lt;/span&gt;
-&lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceText&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;CHANGE_TEXT&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;updatedText&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="kt"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceNumber&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;INCREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;DECREMENT_NUMBER&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="kt"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reducer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;State&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;reduceNumber&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;reduceText&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;AppState&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;createStoreContext&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;State&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Action&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;initialState&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I hope you were able to stay awake through all that. I made some opinionated choices about composing reducers, but any valid reducer function will work.&lt;/p&gt;
-&lt;p&gt;I decided to create the context instance in this file rather than in the root &lt;code&gt;App&lt;/code&gt; component to make the dependency tree a little cleaner since every component that connects to our state container will depend on that context instance.&lt;/p&gt;
-&lt;p&gt;Speaking of the root &lt;code&gt;App&lt;/code&gt; component, I'll make that now.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React from &amp;quot;react&amp;quot;;
-import { Store } from &amp;quot;./Store&amp;quot;;
-import { AppState, reducer } from &amp;quot;./state&amp;quot;;
-import TextView from &amp;quot;./TextView&amp;quot;;
-import NumberView from &amp;quot;./NumberView&amp;quot;;
-import &amp;quot;./styles.css&amp;quot;;
-
-export default function App() {
-  return (
-    &amp;lt;Store context={AppState} reducer={reducer}&amp;gt;
-      &amp;lt;div className=&amp;quot;App&amp;quot;&amp;gt;
-        &amp;lt;h1&amp;gt;Here&amp;#39;s a sample app!&amp;lt;/h1&amp;gt;
-        &amp;lt;TextView /&amp;gt;
-        &amp;lt;NumberView /&amp;gt;
-      &amp;lt;/div&amp;gt;
-    &amp;lt;/Store&amp;gt;
-  );
-}
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I'm passing the &lt;code&gt;AppState&lt;/code&gt; context into the &lt;code&gt;Store&lt;/code&gt; component as well as the app's reducer. I'm going to write two components that directly utilize the app state: TextView and NumberView.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ChangeEventHandler, useCallback, useContext } from &amp;quot;react&amp;quot;;
-import { AppState } from &amp;quot;./state&amp;quot;;
-
-export default function TextView() {
-  const { state, dispatch } = useContext(AppState);
-  const handleChange = useCallback&amp;lt;ChangeEventHandler&amp;lt;HTMLInputElement&amp;gt;&amp;gt;(
-    (event) =&amp;gt;
-      dispatch({ type: &amp;quot;CHANGE_TEXT&amp;quot;, updatedText: event.target.value }),
-    [dispatch]
-  );
-
-  return (
-    &amp;lt;div&amp;gt;
-      &amp;lt;h2&amp;gt;Change my text!&amp;lt;/h2&amp;gt;
-      &amp;lt;input type=&amp;quot;text&amp;quot; value={state.text} onChange={handleChange} /&amp;gt;
-    &amp;lt;/div&amp;gt;
-  );
-}
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;import React, { ReactEventHandler, useCallback, useContext } from &amp;quot;react&amp;quot;;
-import { AppState } from &amp;quot;./state&amp;quot;;
-
-export default function NumberView() {
-  const { state, dispatch } = useContext(AppState);
-  const handleIncrement = useCallback&amp;lt;ReactEventHandler&amp;gt;(
-    (event) =&amp;gt; dispatch({ type: &amp;quot;INCREMENT_NUMBER&amp;quot; }),
-    [dispatch]
-  );
-  const handleDecrement = useCallback&amp;lt;ReactEventHandler&amp;gt;(
-    (event) =&amp;gt; dispatch({ type: &amp;quot;DECREMENT_NUMBER&amp;quot; }),
-    [dispatch]
-  );
-
-  return (
-    &amp;lt;div&amp;gt;
-      &amp;lt;h2&amp;gt;Current number: {state.number}&amp;lt;/h2&amp;gt;
-      &amp;lt;button onClick={handleIncrement}&amp;gt;+&amp;lt;/button&amp;gt;
-      &amp;lt;button onClick={handleDecrement}&amp;gt;-&amp;lt;/button&amp;gt;
-    &amp;lt;/div&amp;gt;
-  );
-}
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;At this point, the app works. I'm using React's &lt;code&gt;useContext&lt;/code&gt; hook directly to access the state and the dispatch function.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1688085276-0.png" alt="My beautiful app" /&gt;&lt;/p&gt;
-&lt;p&gt;But there's a pretty big problem. Because each component depends on the entire application state, every component re-renders on every state change regardless of whether the change was actually relevant to the component in question. In other words, I need selectors.&lt;/p&gt;
-&lt;p&gt;This is where my hand-rolled scheme falls apart. There's currently no way to avoid these types of unnecessary re-renders while using a single context. No matter what kind of memoization strategies you employ, the &lt;code&gt;useContext&lt;/code&gt; hook will trigger a re-render of every component attached to the context upon a state change.&lt;/p&gt;
-&lt;p&gt;I'm not the only one out there who thinks this is a glaring omission from React's API. There's &lt;a href='https://github.com/reactjs/rfcs/pull/119'&gt;an open RFC&lt;/a&gt; for just such a feature that's been hanging out since 2019.&lt;/p&gt;
-&lt;p&gt;If you were &lt;em&gt;really&lt;/em&gt; determined to write your own app container only using React primitives, the next place I'd look would be the relatively new &lt;a href='https://react.dev/reference/react/useSyncExternalStore'&gt;&lt;code&gt;useSyncExternalStore&lt;/code&gt; hook&lt;/a&gt;. I'm almost certain you can achieve the desired effects with that hook, but it's just not as interesting. You'd be building Redux from bare JavaScript to interface with the &lt;code&gt;useSyncExternalStore&lt;/code&gt; API without being able to lean on any other built-in hooks. At that point, just use a library.&lt;/p&gt;
-&lt;h2 id=update&gt;UPDATE&lt;/h2&gt;&lt;p&gt;After discussing this with a friend and former co-worker&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, this could probably also be accomplished using a higher-order component to conditionally re-render components. I personally dislike the ergonomics of HOCs in this era of hooks. Besides &lt;code&gt;React.memo&lt;/code&gt;, which could be argued isn't a "true" HOC, I haven't had to use HOCs in years.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;Shout out to &lt;a href='https://medium.com/@wtgjxj'&gt;James&lt;/a&gt; this time.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-</content>
-    <link href="https://jaysherby.com/can-i-roll-my-own-state-container-for-react/" rel="alternate"/>
-    <published>2023-06-29T22:29:33.583127+00:00</published>
-  </entry>
-  <entry>
     <id>https://jaysherby.com/typescript-show-me-the-whole-error/</id>
     <title>Typescript, Show Me The Whole Error!</title>
     <updated>2023-06-21T19:28:27.748683+00:00</updated>
@@ -682,5 +415,161 @@ export default function NumberView() {
 </content>
     <link href="https://jaysherby.com/typescript-show-me-the-whole-error/" rel="alternate"/>
     <published>2023-06-21T19:26:47.414555+00:00</published>
+  </entry>
+  <entry>
+    <id>https://jaysherby.com/react-hook-form-a-leaky-abstraction/</id>
+    <title>React Hook Form: A Leaky Abstraction</title>
+    <updated>2023-06-21T19:28:50.398016+00:00</updated>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.&lt;/p&gt;
+&lt;p&gt;However, this past week I ran into a weird edge case. To set the stage, a friend and colleague&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a &lt;code&gt;&amp;lt;select&amp;gt;&lt;/code&gt; style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.&lt;/p&gt;
+&lt;p&gt;Here's a tiny example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useUser&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;group&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;handleSubmit&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;formState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;errors&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useForm&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;resolver&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;yupResolver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="c1"&gt;// ...snip...&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;TextInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;/&amp;gt;&lt;/span&gt;
+
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;SelectInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;group&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let me break this down in words briefly to make sure we're on the same page.&lt;/p&gt;
+&lt;p&gt;This component checks a user's groups, which is provided by a custom hook called &lt;code&gt;useUser&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The form's default value for &lt;code&gt;group&lt;/code&gt; is a blank string if the given user has multiple groups available to them. If the user has just one group, which is the most common case, their group's value is automatically the default value for that form input.&lt;/p&gt;
+&lt;p&gt;Later, we choose to only render the &lt;code&gt;group&lt;/code&gt; field if there are multiple choices to choose from.&lt;/p&gt;
+&lt;p&gt;In practice, &lt;em&gt;this won't work&lt;/em&gt;. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the &lt;code&gt;&amp;quot;group&amp;quot;&lt;/code&gt; field.&lt;/p&gt;
+&lt;p&gt;What gives? We set the default value for that field! Making things even more confusing, if we add a logging statement like &lt;code&gt;console.log(getValues())&lt;/code&gt;, it will log an empty object until we start interacting with the form. It's like the default values aren't being used at all.&lt;/p&gt;
+&lt;p&gt;After futzing around for a couple of hours and getting nowhere, here's the result.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;getValues()&lt;/code&gt; doesn't know anything about &lt;code&gt;defaultValues&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The values in &lt;code&gt;defaultValues&lt;/code&gt; won't propagate into the form's values unless the form &lt;em&gt;actually renders an input&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Similarly, using &lt;code&gt;setValue()&lt;/code&gt; in a &lt;code&gt;useEffect&lt;/code&gt; hook, for example, won't work for any field in the form that doesn't have an actual input rendered on the page.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is actually mentioned in the documentation, but it's not exactly front and center.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Its not default state for the form, to include additional form values:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Register hidden input: &lt;code&gt;&amp;lt;input type=&amp;quot;hidden&amp;quot; ref={register} name=&amp;quot;test&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Combine values at onSubmit callback.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;-- &lt;a href='https://legacy.react-hook-form.com/v6/api#useForm'&gt;React Hook Form docs for &lt;code&gt;useForm&lt;/code&gt;, specifically under &lt;code&gt;defaultValues&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This little tidbit is what tipped me off to this situation.&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;There's also a clue in the FAQs for v7 in the answer for the question, "How to work with modal or tab forms?"&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;It's important to understand React Hook Form embraces native form behavior by storing input state inside each input (except custom &lt;code&gt;register&lt;/code&gt; at &lt;code&gt;useEffect&lt;/code&gt;). One of the common misconceptions is that when working with modal or tab forms, by mounting and unmounting form/inputs that inputs state will remain. That is incorrect. Instead, the correct solution would be to build a new form for your form inside each modal or tab and capture your submission data in local or global state and then do something with the combined data.&lt;/p&gt;
+&lt;p&gt;-- &lt;a href='https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms'&gt;React Hook Form FAQs, "How to work with modal or tab forms?"&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;These bits of information, pieced together, answer the question of why every piece of data in a React Hook Form-based form must have an input associated with it, even if it's a hidden input.&lt;/p&gt;
+&lt;h2 id=a-leaky-abstraction&gt;A Leaky Abstraction&lt;/h2&gt;&lt;p&gt;I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.&lt;/p&gt;
+&lt;h3 id=the-abstraction&gt;The Abstraction&lt;/h3&gt;&lt;p&gt;I'm using React Hook Form to reduce the boilerplate of form state management.  I could write my own state management for any given form using only React built-ins like &lt;code&gt;useReducer&lt;/code&gt; or I guess a dozen or so &lt;code&gt;useState&lt;/code&gt; instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;I would assume when I'm using a form state management library, it's doing this same stuff for me behind the scenes. It's just handling all of that tedious boilerplate code for me, but I assume the semantics, like a separation between data and view, would remain the same.&lt;/p&gt;
+&lt;h3 id=the-leak&gt;The Leak&lt;/h3&gt;&lt;p&gt;As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.&lt;/p&gt;
+&lt;p&gt;I'm willing to believe that my form is the edge case here. Most forms on the web can be built using React Hook Form and you'll never need to know about these implementation details. Most forms probably show all inputs every render. But we were improving UX so that users don't need to care about a required dropdown input if there's only one option to select from.&lt;/p&gt;
+&lt;p&gt;I want to make it clear here that I'm not calling React Hook Form a leaky abstraction as an insult. I still mostly like the library, even if it's not built the same way I would choose to build it. I'm going to continue using it. I still prefer it to Formik. But this is an implementation detail, or perhaps a consequential design philosophy, that users should be aware of.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;Because I regularly confuse the name as &lt;code&gt;react-form-hook&lt;/code&gt;, I've given up and lovingly refer to it as &lt;code&gt;react-man-door-hand-hook-car-door&lt;/code&gt; instead. I'm sure my coworkers have become tired of this joke.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;This is the second shout out to Emily on my blog! ❤️&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;Note the docs' mention of combining the default data at the time of submission of the form. I did consider this approach after I'd already implemented an input component that intelligently used a hidden input when it made sense. But this approach wouldn't have worked in my case because I'm using schema validation to validate the form. Before I even got the chance to inject my default value, the validation would have failed and my submit function wouldn't have been called. I could have moved validation into my submit function, but then I'd lose the convenience of React Hook Form's built-in error messages. I guess I could make two versions of the schema, but who knows what unexpected gotchas that would uncover? It's a house of cards situation, and using a hidden input was the best choice.&lt;a href="#fnref-3" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-4"&gt;&lt;p&gt;It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.&lt;a href="#fnref-4" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</content>
+    <link href="https://jaysherby.com/react-hook-form-a-leaky-abstraction/" rel="alternate"/>
+    <published>2023-06-10T15:33:11.241294+00:00</published>
+  </entry>
+  <entry>
+    <id>https://jaysherby.com/a-formal-letter-of-apology-to-batman/</id>
+    <title>A formal letter of apology to Batman</title>
+    <updated>2023-05-18T19:35:52.209065+00:00</updated>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;Dear Batman,&lt;/p&gt;
+&lt;p&gt;I hope this letter finds you well. It is with deep remorse and a heavy heart that I pen this formal apology to you. Recently, a rather unpleasant incident occurred within the confines of the sacred Bat Cave, an incident for which I must take full responsibility. I am truly sorry to inform you that I, Robin, was the culprit behind the unfortunate emission of flatulence in our esteemed headquarters.&lt;/p&gt;
+&lt;p&gt;As a trusted member of the Dynamic Duo and your loyal crime-fighting companion, I understand the solemnity and sanctity of our crime-fighting operations. The Bat Cave serves as the epicenter of our collaborative efforts, where we strategize, analyze, and prepare for the challenges that await us in the perilous streets of Gotham City. It is a place of utmost professionalism, focus, and, of course, fresh air.&lt;/p&gt;
+&lt;p&gt;The events leading up to the aforementioned mishap were rather innocuous. In hindsight, I admit to having consumed a hearty meal of beans, onions, and broccoli before our mission. My intentions were pure, as I sought to replenish my energy reserves for the arduous night of crime-fighting that lay ahead. Alas, the subsequent effects were unforeseen and regrettable.&lt;/p&gt;
+&lt;p&gt;During our pursuit of the nefarious Joker, my attempt to stifle a brewing gaseous release proved futile. In a moment of weakness, a quiet but noxious emission escaped, infiltrating the air within the Bat Cave with an unsavory odor that cannot be easily forgotten. I apologize for subjecting you to such an unseemly and unbecoming spectacle, especially given the seriousness of our line of work.&lt;/p&gt;
+&lt;p&gt;Batman, please understand that this occurrence was an unfortunate accident, an unintended consequence of my bodily functions. It was never my intention to compromise the solemnity and atmosphere of our hallowed sanctuary. I humbly request your forgiveness for this momentary lapse in decorum, as I hold the utmost respect for you, our partnership, and the significance of our mission.&lt;/p&gt;
+&lt;p&gt;Moving forward, I assure you that I will exercise greater caution regarding my dietary choices and their potential consequences. I will make a conscious effort to avoid any food items that could contribute to a recurrence of such regrettable incidents. Your trust and faith in my abilities are of utmost importance to me, and I am committed to upholding the professionalism and dignity befitting the role of Robin.&lt;/p&gt;
+&lt;p&gt;Once again, Batman, I extend my sincere apologies for defiling the sanctity of the Bat Cave with my untimely flatulence. I hope you can find it in your heart to forgive me, and that our partnership may continue with the same unwavering strength and camaraderie as before.&lt;/p&gt;
+&lt;p&gt;With the sincerest apologies and the utmost respect,&lt;/p&gt;
+&lt;p&gt;Robin&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/a-formal-letter-of-apology-to-batman/" rel="alternate"/>
+    <published>2023-05-18T19:35:52.206921+00:00</published>
+  </entry>
+  <entry>
+    <id>https://jaysherby.com/block-users-in-auth0-from-the-command-line/</id>
+    <title>Block Users In Auth0 From The Command Line</title>
+    <updated>2023-04-22T18:37:26.638061+00:00</updated>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png" alt="Original art, one of the Blockheads from Gumby" /&gt;&lt;/p&gt;
+&lt;p&gt;As &lt;a href='https://jaysherby.com/terraform-cloud-cdktf-auth0/'&gt;previously established&lt;/a&gt;, I use Auth0 at work. Whenever a client decides not to renew their contract, which I'm thankful is an uncommon event&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, I have to collect each user's email address from our application, search for their account in the Auth0 web app, and block each user.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; It's a tedious process.&lt;/p&gt;
+&lt;p&gt;I've only had to do this process once so far. But being a developer, I immediately wanted to automate this process with a shell script. With Auth0's web app, it takes a copy/paste and 4 clicks &lt;em&gt;per user&lt;/em&gt; I'm blocking. That's unacceptable. After the first half-dozen users, my eyes lose focus and my mind starts to wander. And that's when the odds I'll make a mistake spike.&lt;/p&gt;
+&lt;p&gt;This was the push I needed to finally install Auth0's command line tool, &lt;a href='https://github.com/auth0/auth0-cli'&gt;auth0-cli&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;After authenticating with &lt;code&gt;auth0 login&lt;/code&gt;, the first step will be finding the user's ID based on their email address.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;auth0&lt;span class="w"&gt; &lt;/span&gt;users&lt;span class="w"&gt; &lt;/span&gt;search&lt;span class="w"&gt; &lt;/span&gt;-q&lt;span class="w"&gt; &lt;/span&gt;email:&lt;span class="s2"&gt;&amp;quot;user1@example.com&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Most commands in auth0-cli have a &lt;code&gt;--json&lt;/code&gt; option to print their output in JSON format, which will make it easy to grab what I need by piping the output to &lt;a href='https://stedolan.github.io/jq/'&gt;jq&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;With some error handling in case I receive anything besides exactly one result from my query, I'll have the user's ID. Using that, I should be able to block the user by... uh....&lt;/p&gt;
+&lt;p&gt;Let's see.... I can delete users using &lt;code&gt;auth0 users delete&lt;/code&gt;, but as I mentioned before, that's not application in my case. I can "view" blocks&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; on particular users via &lt;code&gt;auth0 users blocks list&lt;/code&gt;, and I can unblock users with &lt;code&gt;auth0 users blocks unblock&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Wait, what!? There doesn't seem to be any way to block a user via auth0-cli. How can that be? Isn't this one of the most common use cases for the tool?&lt;/p&gt;
+&lt;p&gt;If auth0-cli isn't up to the task, what are my options? I could script my browser, but that's awfully heavy-handed for a service that has an API. I could use the official Auth0 management API either via &lt;a href='https://curl.se/'&gt;curl&lt;/a&gt; or a package in my favorite programming language. But this is actually really inconvenient compared to using auth0-cli, specifically because of authentication.&lt;/p&gt;
+&lt;p&gt;With auth0-cli, I'm authenticated via my personal Auth0 management user account. It's no harder and no different from signing into the Auth0 management web app. If I wanted to use the Auth0 management API via other means, I'd have to use an ID/secret pair from an "application" (in Auth0's parlance). I &lt;em&gt;could&lt;/em&gt; use the production creds our app uses, but that would be horrendous opsec.&lt;/p&gt;
+&lt;p&gt;I could create a temporary "application" to run this script and then delete it when I'm done. That's pretty inconvenient, though. If my shell script turns out well, I'd like to be able to share it with my coworkers in case they ever need to perform this kind of task.&lt;/p&gt;
+&lt;p&gt;If I felt like building a Rube Goldberg machine, maybe I could script the creation of a temporary "application" using auth0-cli and delete it when the script is done....&lt;/p&gt;
+&lt;p&gt;Ugh. Feels Bad, Man™. I ended up just doing the task manually. It was going to take more time to automate this than to do it by hand.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;Afterwards, I made &lt;a href='https://github.com/auth0/auth0-cli/issues/683'&gt;a feature request&lt;/a&gt; for the ability to block users using the command line tool. &lt;a href='https://github.com/ewanharris'&gt;Ewan Harris&lt;/a&gt;, a developer at Auth0, left &lt;a href='https://github.com/auth0/auth0-cli/issues/683#issuecomment-1491734214'&gt;a very helpful reply&lt;/a&gt; that pointed out a feature of the command line tool that I completely overlooked: &lt;code&gt;auth0 api&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;auth0 api&lt;/code&gt; command is essentially a passthrough that lets you call the management REST API directly using the credentials auth0-cli already has, contrasting the limited porcelain the tool provides. In other words, it's exactly what I was looking for! According to Ewan Harris, this would do the trick: &lt;code&gt;auth0 api patch &amp;quot;users/&amp;lt;user_id&amp;gt;&amp;quot; --data &amp;quot;{\&amp;quot;blocked\&amp;quot;:true}&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This is usually where I'd share a neat little shell script you can use to do this task. However, I haven't had occasion to need it. If that day comes, I'll write a shell script that takes a list of email addresses and blocks their user accounts. I'll try to share it here. In the meantime, you should have all the tools you need to do it yourself using auth0-cli and jq.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;Hi, HR! Thanks for reading! ✌️😜&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;This is for the "why don't you just..." crowd. This is about a proprietary application owned by my employer, so I can't go into detail. But trust me that I can't delete the Auth0 accounts, and there's no in-application flag I can set to block a user at the moment.&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;TIL there's more to blocking users in Auth0 than blocking them by hand like I'm doing. Apparently there are Auth0 features for automatically blocking new users who exhibit bot-like behavior. This was news to me as my employer's application is a fairly niche web app for medical clinics. We're not seeing nearly enough traffic to be subject to scripted sign-ups.&lt;a href="#fnref-3" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-4"&gt;&lt;p&gt;&lt;a href='https://xkcd.com/1205/'&gt;https://xkcd.com/1205/&lt;/a&gt;&lt;a href="#fnref-4" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</content>
+    <link href="https://jaysherby.com/block-users-in-auth0-from-the-command-line/" rel="alternate"/>
+    <published>2023-04-22T00:00:00+00:00</published>
   </entry>
 </feed>
