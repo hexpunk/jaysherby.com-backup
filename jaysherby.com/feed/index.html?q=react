@@ -2,7 +2,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T22:31:46.425836+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +19,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/react-hook-form-a-leaky-abstraction/</id>
     <title>React Hook Form: A Leaky Abstraction</title>
-    <updated>2023-06-21T19:28:50.398016+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>

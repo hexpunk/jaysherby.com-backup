@@ -2,7 +2,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T22:31:37.431119+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +19,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/</id>
     <title>Randomizing My MAC Address With NetworkManager</title>
-    <updated>2023-03-16T05:12:04.667848+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>
@@ -86,7 +84,6 @@ wifi.cloned-mac-address=random
   <entry>
     <id>https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/</id>
     <title>HP Dev One, low disk space on /boot/efi</title>
-    <updated>2023-03-15T00:48:49.222453+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>

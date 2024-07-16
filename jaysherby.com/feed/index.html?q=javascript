@@ -2,7 +2,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T22:31:19.690070+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +19,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/use-promiseall-with-caution/</id>
     <title>Use Promise.all With Caution</title>
-    <updated>2024-02-19T23:15:09.037232+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>

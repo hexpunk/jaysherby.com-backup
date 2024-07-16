@@ -2,7 +2,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T22:32:13.192478+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +19,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/use-promiseall-with-caution/</id>
     <title>Use Promise.all With Caution</title>
-    <updated>2024-02-19T23:15:09.037232+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>
@@ -115,7 +113,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/typescript-show-me-the-whole-error/</id>
     <title>Typescript, Show Me The Whole Error!</title>
-    <updated>2023-06-21T19:28:27.748683+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>
@@ -131,7 +128,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/the-two-most-popular-missing-typescript-features/</id>
     <title>The Two Most Popular Missing Typescript Features</title>
-    <updated>2023-04-03T23:14:19.984628+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>
