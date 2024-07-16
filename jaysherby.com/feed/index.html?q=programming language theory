@@ -2,7 +2,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T22:31:41.809748+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +19,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/the-two-most-popular-missing-typescript-features/</id>
     <title>The Two Most Popular Missing Typescript Features</title>
-    <updated>2023-04-03T23:14:19.984628+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>

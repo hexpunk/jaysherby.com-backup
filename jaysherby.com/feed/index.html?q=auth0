@@ -2,7 +2,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T22:30:57.376276+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +19,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/block-users-in-auth0-from-the-command-line/</id>
     <title>Block Users In Auth0 From The Command Line</title>
-    <updated>2023-04-22T18:37:26.638061+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>
@@ -60,7 +58,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/terraform-cloud-cdktf-auth0/</id>
     <title>Terraform Cloud + CDKTF + Auth0</title>
-    <updated>2023-04-15T20:38:55.499079+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>

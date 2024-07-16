@@ -2,7 +2,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
-  <updated>2024-07-16T22:31:10.996514+00:00</updated>
   <author>
     <name>jaysherby</name>
     <email>hidden</email>
@@ -20,7 +19,6 @@ Hiring? Check  to see...</subtitle>
   <entry>
     <id>https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/</id>
     <title>How I Fixed Laggy Wifi In Debian 12</title>
-    <updated>2024-02-21T04:21:55.841614+00:00</updated>
     <author>
       <name>jaysherby</name>
       <email>hidden</email>
