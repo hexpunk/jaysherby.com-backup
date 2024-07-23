@@ -435,8 +435,14 @@ dd > ul {
   padding: 0px;
 }
 
-.columns-5 {
-  columns: 5;
+.columns {
+  columns: 2;
+}
+
+@media (min-width: 700px) {
+  .columns {
+    columns: 5;
+  }
 }
 
 .grow {
@@ -541,7 +547,7 @@ dd > ul {
   <dd></dd>
 </dl>
 <h3>Skills</h3>
-<ul class="columns-5">
+<ul class="columns">
   <li>Docker</li>
   <li>Elixir</li>
   <li>JavaScript</li>
