@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Nullable Parameters in SQL Queries | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+    
+
+    <meta name="jaysherby" content="look-for-the-bear-necessities">
+
+    <!-- Primary Meta Tags -->
+<meta name="title" content="Nullable Parameters in SQL Queries">
+<meta name="description" content="A common beginners&#x27; trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called  with a nullable column called .
+
+
+
+That ...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Nullable Parameters in SQL Queries">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/nullable-parameters-in-sql-queries/">
+<meta property="og:description" content="A common beginners&#x27; trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called  with a nullable column called .
+
+
+
+That ...">
+<meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/nullable-parameters-in-sql-queries/">
+<meta property="twitter:title" content="Nullable Parameters in SQL Queries">
+<meta property="twitter:description" content="A common beginners&#x27; trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called  with a nullable column called .
+
+
+
+That ...">
+<meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Nullable Parameters in SQL Queries",
+    "url": "https://jaysherby.com/nullable-parameters-in-sql-queries/",
+    "description": "A common beginners&#x27; trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called  with a nullable column called .
+
+
+
+That ...",
+    "about": {
+      "@type": "Nullable Parameters in SQL Queries",
+      "description": "A common beginners&#x27; trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called  with a nullable column called .
+
+
+
+That ..."
+    }
+  }
+</script>
+
+  
+    
+    
+    
+
+    
+    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+  
+  
+  
+
+<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+
+
+
+  <style>
+      
+      
+:root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+/* Blockquote styles for conversations with AI */
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+/* Make embedded images centered and interrupt content */
+main img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give hint that <details> are clickable to reveal more */
+details > summary {
+  cursor: pointer;
+}
+
+/* Make "Made with Bear" footer always at the bottom of the page */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+
+/* Hide upvote UI on pages */
+body.page #upvote-form {
+  display: none !important;
+}
+.upvote-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upvote-button.upvoted {
+    color: salmon;
+}
+.upvote-count {
+    margin-top: -3px;
+}
+
+      
+  </style>
+
+  
+
+<style>
+    body:hover {
+        border-image: url("https://jaysherby.com/hit/VRjeAuYimSrdDFGIIJdK/");
+        border-width: 0;
+    }
+</style>
+
+
+</head>
+
+<body class="post ">
+  
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+
+
+
+
+<h1>
+    Nullable Parameters in SQL Queries
+</h1>
+
+<p>
+    <i>
+        <time datetime="2024-07-29T22:01Z">
+            29 Jul, 2024
+        </time>
+    </i>
+</p>
+
+
+    <p>A common beginners' trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called <code>foo</code> with a nullable column called <code>bar</code>.</p>
+<div class="highlight"><pre><span></span><span class="c1">-- THIS IS A BROKEN QUERY!</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</pre></div>
+<p>That query shouldn't return any results because comparing any value to NULL will evaluate as false. To find rows in <code>foo</code> where <code>bar</code> is NULL will require, well, <code>IS NULL</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</pre></div>
+<p>That's all well and good when you're writing custom queries by hand. Just remember to use <code>IS NULL</code>. But what about when you're writing a parameterized query and one of the parameters <em>may</em> be NULL, or it may be a value?</p>
+<p>I've seen some tricks out there that use <code>COALESCE</code>. But if you're using PostgreSQL, you're in luck. There's a very nice, clean solution available: <a href='https://wiki.postgresql.org/wiki/Is_distinct_from'><code>IS NOT DISTINCT FROM</code></a>.</p>
+<div class="highlight"><pre><span></span><span class="k">PREPARE</span><span class="w"> </span><span class="n">my_query</span><span class="w"> </span><span class="p">(</span><span class="nb">integer</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="err">$</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="k">EXECUTE</span><span class="w"> </span><span class="n">my_query</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">EXECUTE</span><span class="w"> </span><span class="n">my_query</span><span class="p">(</span><span class="k">NULL</span><span class="p">);</span>
+</pre></div>
+<p>If you've never heard of the <code>IS NOT DISTINCT FROM</code> operator, neither had I until today. I'm glad it exists, but using the word "distinct" makes this handy operator very difficult to search for online.</p>
+<p>For the sake of readability, I'd recommend only using this operator in this particular situation. In other words, don't rush to go change every usage of <code>=</code> and <code>IS NULL</code> in queries that don't need this special consideration. This is a special tool that deserves a spot in your tool belt for just the right occasion.</p>
+
+
+
+
+
+    
+    <p class="tags">
+        
+        <a href="../blog/index.html%3Fq=postgres.html">#postgres</a>
+        
+        <a href="../blog/index.html%3Fq=sql.html">#sql</a>
+        
+        <a href="../blog/index.html%3Fq=til.html">#til</a>
+        
+    </p>
+    
+
+    
+    <form id="upvote-form" action="https://jaysherby.com/upvote/VRjeAuYimSrdDFGIIJdK/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="VRjeAuYimSrdDFGIIJdK" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+    
+
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+
+<span>
+    Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+</span>
+
+  </footer>
+</body>
+</html>

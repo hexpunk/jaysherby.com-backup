@@ -13,6 +13,32 @@ Hiring? Check  to see...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Nullable Parameters in SQL Queries</title>
+      <link>https://jaysherby.com/nullable-parameters-in-sql-queries/</link>
+      <description>&lt;p&gt;A common beginners' trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called &lt;code&gt;foo&lt;/code&gt; with a nullable column called &lt;code&gt;bar&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;-- THIS IS A BROKEN QUERY!&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That query shouldn't return any results because comparing any value to NULL will evaluate as false. To find rows in &lt;code&gt;foo&lt;/code&gt; where &lt;code&gt;bar&lt;/code&gt; is NULL will require, well, &lt;code&gt;IS NULL&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;IS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That's all well and good when you're writing custom queries by hand. Just remember to use &lt;code&gt;IS NULL&lt;/code&gt;. But what about when you're writing a parameterized query and one of the parameters &lt;em&gt;may&lt;/em&gt; be NULL, or it may be a value?&lt;/p&gt;
+&lt;p&gt;I've seen some tricks out there that use &lt;code&gt;COALESCE&lt;/code&gt;. But if you're using PostgreSQL, you're in luck. There's a very nice, clean solution available: &lt;a href='https://wiki.postgresql.org/wiki/Is_distinct_from'&gt;&lt;code&gt;IS NOT DISTINCT FROM&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;PREPARE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;integer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;IS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NOT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;DISTINCT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;EXECUTE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="k"&gt;EXECUTE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you've never heard of the &lt;code&gt;IS NOT DISTINCT FROM&lt;/code&gt; operator, neither had I until today. I'm glad it exists, but using the word "distinct" makes this handy operator very difficult to search for online.&lt;/p&gt;
+&lt;p&gt;For the sake of readability, I'd recommend only using this operator in this particular situation. In other words, don't rush to go change every usage of &lt;code&gt;=&lt;/code&gt; and &lt;code&gt;IS NULL&lt;/code&gt; in queries that don't need this special consideration. This is a special tool that deserves a spot in your tool belt for just the right occasion.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/nullable-parameters-in-sql-queries/</guid>
+      <pubDate>Mon, 29 Jul 2024 22:01:00 +0000</pubDate>
+    </item>
+    <item>
       <title>Express's "finish" Event</title>
       <link>https://jaysherby.com/expresss-finish-event/</link>
       <description>&lt;p&gt;Let's say you want to write some middleware for &lt;a href='https://expressjs.com/'&gt;Express&lt;/a&gt; that does something after the request is complete. The standard advice on the web is to add an event listener to the response object listening for the "finish" event.&lt;/p&gt;
@@ -490,42 +516,6 @@ Hiring? Check  to see...</description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/a-formal-letter-of-apology-to-batman/</guid>
       <pubDate>Thu, 18 May 2023 19:35:52 +0000</pubDate>
-    </item>
-    <item>
-      <title>Block Users In Auth0 From The Command Line</title>
-      <link>https://jaysherby.com/block-users-in-auth0-from-the-command-line/</link>
-      <description>&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png" alt="Original art, one of the Blockheads from Gumby" /&gt;&lt;/p&gt;
-&lt;p&gt;As &lt;a href='https://jaysherby.com/terraform-cloud-cdktf-auth0/'&gt;previously established&lt;/a&gt;, I use Auth0 at work. Whenever a client decides not to renew their contract, which I'm thankful is an uncommon event&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, I have to collect each user's email address from our application, search for their account in the Auth0 web app, and block each user.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; It's a tedious process.&lt;/p&gt;
-&lt;p&gt;I've only had to do this process once so far. But being a developer, I immediately wanted to automate this process with a shell script. With Auth0's web app, it takes a copy/paste and 4 clicks &lt;em&gt;per user&lt;/em&gt; I'm blocking. That's unacceptable. After the first half-dozen users, my eyes lose focus and my mind starts to wander. And that's when the odds I'll make a mistake spike.&lt;/p&gt;
-&lt;p&gt;This was the push I needed to finally install Auth0's command line tool, &lt;a href='https://github.com/auth0/auth0-cli'&gt;auth0-cli&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;After authenticating with &lt;code&gt;auth0 login&lt;/code&gt;, the first step will be finding the user's ID based on their email address.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;auth0&lt;span class="w"&gt; &lt;/span&gt;users&lt;span class="w"&gt; &lt;/span&gt;search&lt;span class="w"&gt; &lt;/span&gt;-q&lt;span class="w"&gt; &lt;/span&gt;email:&lt;span class="s2"&gt;&amp;quot;user1@example.com&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Most commands in auth0-cli have a &lt;code&gt;--json&lt;/code&gt; option to print their output in JSON format, which will make it easy to grab what I need by piping the output to &lt;a href='https://stedolan.github.io/jq/'&gt;jq&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;With some error handling in case I receive anything besides exactly one result from my query, I'll have the user's ID. Using that, I should be able to block the user by... uh....&lt;/p&gt;
-&lt;p&gt;Let's see.... I can delete users using &lt;code&gt;auth0 users delete&lt;/code&gt;, but as I mentioned before, that's not application in my case. I can "view" blocks&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; on particular users via &lt;code&gt;auth0 users blocks list&lt;/code&gt;, and I can unblock users with &lt;code&gt;auth0 users blocks unblock&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Wait, what!? There doesn't seem to be any way to block a user via auth0-cli. How can that be? Isn't this one of the most common use cases for the tool?&lt;/p&gt;
-&lt;p&gt;If auth0-cli isn't up to the task, what are my options? I could script my browser, but that's awfully heavy-handed for a service that has an API. I could use the official Auth0 management API either via &lt;a href='https://curl.se/'&gt;curl&lt;/a&gt; or a package in my favorite programming language. But this is actually really inconvenient compared to using auth0-cli, specifically because of authentication.&lt;/p&gt;
-&lt;p&gt;With auth0-cli, I'm authenticated via my personal Auth0 management user account. It's no harder and no different from signing into the Auth0 management web app. If I wanted to use the Auth0 management API via other means, I'd have to use an ID/secret pair from an "application" (in Auth0's parlance). I &lt;em&gt;could&lt;/em&gt; use the production creds our app uses, but that would be horrendous opsec.&lt;/p&gt;
-&lt;p&gt;I could create a temporary "application" to run this script and then delete it when I'm done. That's pretty inconvenient, though. If my shell script turns out well, I'd like to be able to share it with my coworkers in case they ever need to perform this kind of task.&lt;/p&gt;
-&lt;p&gt;If I felt like building a Rube Goldberg machine, maybe I could script the creation of a temporary "application" using auth0-cli and delete it when the script is done....&lt;/p&gt;
-&lt;p&gt;Ugh. Feels Bad, Man™. I ended up just doing the task manually. It was going to take more time to automate this than to do it by hand.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;Afterwards, I made &lt;a href='https://github.com/auth0/auth0-cli/issues/683'&gt;a feature request&lt;/a&gt; for the ability to block users using the command line tool. &lt;a href='https://github.com/ewanharris'&gt;Ewan Harris&lt;/a&gt;, a developer at Auth0, left &lt;a href='https://github.com/auth0/auth0-cli/issues/683#issuecomment-1491734214'&gt;a very helpful reply&lt;/a&gt; that pointed out a feature of the command line tool that I completely overlooked: &lt;code&gt;auth0 api&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;auth0 api&lt;/code&gt; command is essentially a passthrough that lets you call the management REST API directly using the credentials auth0-cli already has, contrasting the limited porcelain the tool provides. In other words, it's exactly what I was looking for! According to Ewan Harris, this would do the trick: &lt;code&gt;auth0 api patch &amp;quot;users/&amp;lt;user_id&amp;gt;&amp;quot; --data &amp;quot;{\&amp;quot;blocked\&amp;quot;:true}&amp;quot;&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;This is usually where I'd share a neat little shell script you can use to do this task. However, I haven't had occasion to need it. If that day comes, I'll write a shell script that takes a list of email addresses and blocks their user accounts. I'll try to share it here. In the meantime, you should have all the tools you need to do it yourself using auth0-cli and jq.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;Hi, HR! Thanks for reading! ✌️😜&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;This is for the "why don't you just..." crowd. This is about a proprietary application owned by my employer, so I can't go into detail. But trust me that I can't delete the Auth0 accounts, and there's no in-application flag I can set to block a user at the moment.&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;TIL there's more to blocking users in Auth0 than blocking them by hand like I'm doing. Apparently there are Auth0 features for automatically blocking new users who exhibit bot-like behavior. This was news to me as my employer's application is a fairly niche web app for medical clinics. We're not seeing nearly enough traffic to be subject to scripted sign-ups.&lt;a href="#fnref-3" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-4"&gt;&lt;p&gt;&lt;a href='https://xkcd.com/1205/'&gt;https://xkcd.com/1205/&lt;/a&gt;&lt;a href="#fnref-4" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/block-users-in-auth0-from-the-command-line/</guid>
-      <pubDate>Sat, 22 Apr 2023 00:00:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
