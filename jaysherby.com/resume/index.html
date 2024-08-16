@@ -394,7 +394,7 @@ body.page #upvote-form {
 
 </head>
 
-<body class="page ">
+<body class="page " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
   
   <header>
     <a class="title" href="../index.html">
