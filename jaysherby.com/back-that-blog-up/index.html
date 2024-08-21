@@ -382,7 +382,7 @@ body.page #upvote-form {
 <p>Herman is doing a fantastic job, but he's only one person, and shit happens sometimes. I decided build a little safety net by using GitHub Actions to automatically back up my blog.</p>
 <h2 id=a-shell-script>A shell script</h2><details>
   <summary>View the complete shell script</summary>
-<h3 id=code-github-workflows-backup-sh-code><code>.github/workflows/backup.sh</code></h3><div class="highlight"><pre><span></span><span class="ch">#! /bin/sh</span>
+<h3 id=codegithubworkflowsbackupshcode><code>.github/workflows/backup.sh</code></h3><div class="highlight"><pre><span></span><span class="ch">#! /bin/sh</span>
 
 <span class="nb">set</span><span class="w"> </span>-e
 <span class="nb">set</span><span class="w"> </span>-u
@@ -471,7 +471,7 @@ find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> <
 <p>I find this particularly unfortunate because it means having to download my blog's images on every backup attempt despite Wget's automatic <code>If-Modified-Since</code> header support and Digital Ocean Spaces' <code>304 Not Modified</code> support. Bear Blog itself doesn't appear to support <code>If-Modified-Since</code> request headers at this time. Although that doesn't really matter since I can't leverage it anyway.</p>
 <h2 id=a-github-actions-workflow>A GitHub Actions workflow</h2><details>
   <summary>View the complete YAML file</summary>
-<h3 id=code-github-workflows-backup-yml-code><code>.github/workflows/backup.yml</code></h3><div class="highlight"><pre><span></span>name: Back Up Website
+<h3 id=codegithubworkflowsbackupymlcode><code>.github/workflows/backup.yml</code></h3><div class="highlight"><pre><span></span>name: Back Up Website
 
 on:
   schedule:
