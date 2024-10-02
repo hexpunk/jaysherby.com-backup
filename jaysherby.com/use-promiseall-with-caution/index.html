@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
-  
-  <title>Use Promise.all With Caution | Jay&#x27;s blog</title>
-  <link rel="canonical" href="index.html">
-  
-    
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+<title>Use Promise.all With Caution | Jay&#x27;s blog</title>
+<link rel="canonical" href="index.html">
+<meta name="jaysherby" content="look-for-the-bear-necessities">
 
-    <meta name="jaysherby" content="look-for-the-bear-necessities">
-
-    <!-- Primary Meta Tags -->
 <meta name="title" content="Use Promise.all With Caution">
 <meta name="description" content="A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of .
 
 First, let&#x27;s briefly review how promises behave ...">
 
-<!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
 <meta property="og:title" content="Use Promise.all With Caution">
 <meta property="og:type" content="article">
@@ -30,8 +21,6 @@ First, let&#x27;s briefly review how promises behave ...">
 First, let&#x27;s briefly review how promises behave ...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
-
-<!-- Twitter -->
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/use-promiseall-with-caution/">
 <meta property="twitter:title" content="Use Promise.all With Caution">
@@ -40,9 +29,6 @@ First, let&#x27;s briefly review how promises behave ...">
 First, let&#x27;s briefly review how promises behave ...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
-
-
-<!-- Microdata -->
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -60,26 +46,9 @@ First, let&#x27;s briefly review how promises behave ..."
     }
   }
 </script>
-
-  
-    
-    
-    
-
-    
-    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
-  
-  
-  
-
-    
-        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
-    
-
-
-
-
-  <style>
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+<style>
       
       
 :root {
@@ -331,53 +300,36 @@ body.page #upvote-form {
 
       
   </style>
-
-  
-
 <style>
     body:hover {
         border-image: url("https://jaysherby.com/hit/ApQZBkdaoUUjQXmaXHje/");
         border-width: 0;
     }
 </style>
-
-
 </head>
-
 <body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
-  
-  <header>
-    <a class="title" href="../index.html">
-      <h1>
-        Jay&#x27;s blog
-      </h1>
-    </a>
-    <nav>
-      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
-
-    </nav>
-  </header>
-  <main>
-    
-
-
-
-
-
+<header>
+<a class="title" href="../index.html">
 <h1>
-    Use Promise.all With Caution
+Jay&#x27;s blog
 </h1>
-
+</a>
+<nav>
+<p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+</nav>
+</header>
+<main>
+<h1>
+Use Promise.all With Caution
+</h1>
 <p>
-    <i>
-        <time datetime="2024-02-19T22:25Z">
-            19 Feb, 2024
-        </time>
-    </i>
+<i>
+<time datetime="2024-02-19T22:25Z">
+19 Feb, 2024
+</time>
+</i>
 </p>
-
-
-    <p>A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all'><code>Promise.all</code></a>.</p>
+<p>A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"><code>Promise.all</code></a>.</p>
 <p>First, let's briefly review how promises behave when <code>Promise.all</code> is not used. For our scenario, let's imagine we need to make multiple network calls.</p>
 <div class="highlight"><pre><span></span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/1&#39;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.com/2&#39;</span><span class="p">))</span>
@@ -410,11 +362,11 @@ body.page #upvote-form {
 <span class="w">  </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">checked</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">})</span>
 <span class="p">);</span>
 </pre></div>
-<p>At first glance, this seems like a reasonable thing to do. Updating all the items simultaneously will speed this up, right?  In actuality, this resulted in an error.</p>
+<p>At first glance, this seems like a reasonable thing to do. Updating all the items simultaneously will speed this up, right? In actuality, this resulted in an error.</p>
 <p>The first warning sign is that there is no limit on the number of items that belong to this particular user. Most of the time this will probably be fine. But what if a user has an idiosyncratic number of unchecked items? What if it's hundreds or thousands? Your server is going to attempt to run an unhealthy number of promises at once.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup></p>
-<p>In the real code, this was using the ORM <a href='https://sequelize.org/'>Sequelize</a>. Sequelize keeps a pool of database connections. Whenever you make a call to the database, a connection from the pool is used. Most of the time, only one connection is used per request. If you're doing something fancy with <code>Promise.all</code>, maybe more than one connection is used simultaneously per request. In this case, if the number of items exceeds the maximum number of connections allowed in the pool, you'll receive an error, which is exactly what happened.</p>
+<p>In the real code, this was using the ORM <a href="https://sequelize.org/">Sequelize</a>. Sequelize keeps a pool of database connections. Whenever you make a call to the database, a connection from the pool is used. Most of the time, only one connection is used per request. If you're doing something fancy with <code>Promise.all</code>, maybe more than one connection is used simultaneously per request. In this case, if the number of items exceeds the maximum number of connections allowed in the pool, you'll receive an error, which is exactly what happened.</p>
 <p>To fix this, you could increase the maximum number of connections allowed in the pool. But how many is enough? Because items are created by users, there is no realistic maximum number. I chose to make the promises run serially instead.</p>
-<p>I had run into similar issues regarding simultaneous database calls in the past and I had already added the <a href='http://bluebirdjs.com'>Bluebird</a> library to this particular project. It includes a function called <a href='http://bluebirdjs.com/docs/api/promise.mapseries.html'><code>mapSeries</code></a> which does exactly what I need.</p>
+<p>I had run into similar issues regarding simultaneous database calls in the past and I had already added the <a href="http://bluebirdjs.com">Bluebird</a> library to this particular project. It includes a function called <a href="http://bluebirdjs.com/docs/api/promise.mapseries.html"><code>mapSeries</code></a> which does exactly what I need.</p>
 <div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">P</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;bluebird&#39;</span><span class="p">;</span>
 
 <span class="c1">// ...snip...</span>
@@ -422,7 +374,7 @@ body.page #upvote-form {
 <span class="nx">P</span><span class="p">.</span><span class="nx">mapSeries</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">checked</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">});</span>
 </pre></div>
 <p>If you don't like Bluebird, there are other libraries available to control the level of concurrency when <code>Promise.all</code> is used. Some of them even include the ability to specify concurrency limits higher than 1. I encourage the reader to experiment and see if they can roll their own function that takes an array of promises and awaits them serially.</p>
-<p>The other bug I encountered was in a different project, but was once again a misapplication of <code>Promise.all</code>. In this case, it was in a database migration for use with the <a href='https://knexjs.org/'>Knex</a> ORM.</p>
+<p>The other bug I encountered was in a different project, but was once again a misapplication of <code>Promise.all</code>. In this case, it was in a database migration for use with the <a href="https://knexjs.org/">Knex</a> ORM.</p>
 <div class="highlight"><pre><span></span><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">up</span><span class="p">(</span><span class="nx">knex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
 <span class="w">    </span><span class="nx">knex</span><span class="p">.</span><span class="nx">schema</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="s1">&#39;table_a&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -453,48 +405,30 @@ body.page #upvote-form {
 <li>Don't use <code>Promise.all</code> if your promises all depend on a shared, limited resource.</li>
 <li>Don't use <code>Promise.all</code> if the order in which the promises resolve matters.</li>
 </ul>
-<hr />
+<hr/>
 <section class="footnotes">
 <ol>
 <li id="fn-1"><p>I say "may" because it depends on what the promises are doing.<a href="index.html#fnref-1" class="footnote">&#8617;</a></p></li>
 <li id="fn-2"><p>My understanding is that most JavaScript runtimes have an upper limit to how many promises they'll execute in parallel when <code>Promise.all</code> is used, but I don't think any particular number is specified in the ECMAScript specification.<a href="index.html#fnref-2" class="footnote">&#8617;</a></p></li>
 </ol>
 </section>
-
-
-
-
-
-    
-    <p class="tags">
-        
-        <a href="../blog/index.html%3Fq=javascript.html">#javascript</a>
-        
-        <a href="../blog/index.html%3Fq=typescript.html">#typescript</a>
-        
-    </p>
-    
-
-    
-    <form id="upvote-form" action="https://jaysherby.com/upvote/ApQZBkdaoUUjQXmaXHje/" method="post" style="display: inline">
-    <small>
-        <input hidden name="uid" value="ApQZBkdaoUUjQXmaXHje" style="display:none">
-        <input hidden name="title" style="display:none">
-        
-        <button
-            class="upvote-button"
-            title="Toast this post"
-        >
-        
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polyline points="17 11 12 6 7 11"></polyline>
-                <polyline points="17 18 12 13 7 18"></polyline>
-            </svg>
-            <small class="upvote-count">2</small>
-        </button>
-    </small>        
+<p class="tags">
+<a href="../blog/index.html%3Fq=javascript.html">#javascript</a>
+<a href="../blog/index.html%3Fq=typescript.html">#typescript</a>
+</p>
+<form id="upvote-form" action="https://jaysherby.com/upvote/ApQZBkdaoUUjQXmaXHje/" method="post" style="display: inline">
+<small>
+<input hidden name="uid" value="ApQZBkdaoUUjQXmaXHje" style="display:none">
+<input hidden name="title" style="display:none">
+<button class="upvote-button" title="Toast this post">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+<polyline points="17 11 12 6 7 11"></polyline>
+<polyline points="17 18 12 13 7 18"></polyline>
+</svg>
+<small class="upvote-count">2</small>
+</button>
+</small>
 </form>
-
 <script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -510,18 +444,11 @@ body.page #upvote-form {
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
     });
 </script>
-    
-
-
-
-  </main>
-  <footer style="padding:25px 0;">
-    
-
+</main>
+<footer style="padding:25px 0;">
 <span>
-    Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
 </span>
-
-  </footer>
+</footer>
 </body>
 </html>

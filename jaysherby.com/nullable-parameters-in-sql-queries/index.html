@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
-  
-  <title>Nullable Parameters in SQL Queries | Jay&#x27;s blog</title>
-  <link rel="canonical" href="index.html">
-  
-    
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+<title>Nullable Parameters in SQL Queries | Jay&#x27;s blog</title>
+<link rel="canonical" href="index.html">
+<meta name="jaysherby" content="look-for-the-bear-necessities">
 
-    <meta name="jaysherby" content="look-for-the-bear-necessities">
-
-    <!-- Primary Meta Tags -->
 <meta name="title" content="Nullable Parameters in SQL Queries">
 <meta name="description" content="A common beginners&#x27; trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called  with a nullable column called .
 
@@ -22,7 +14,6 @@
 
 That ...">
 
-<!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
 <meta property="og:title" content="Nullable Parameters in SQL Queries">
 <meta property="og:type" content="article">
@@ -34,8 +25,6 @@ That ...">
 That ...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
-
-<!-- Twitter -->
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/nullable-parameters-in-sql-queries/">
 <meta property="twitter:title" content="Nullable Parameters in SQL Queries">
@@ -46,9 +35,6 @@ That ...">
 That ...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
-
-
-<!-- Microdata -->
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -70,26 +56,9 @@ That ..."
     }
   }
 </script>
-
-  
-    
-    
-    
-
-    
-    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
-  
-  
-  
-
-    
-        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
-    
-
-
-
-
-  <style>
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+<style>
       
       
 :root {
@@ -341,53 +310,36 @@ body.page #upvote-form {
 
       
   </style>
-
-  
-
 <style>
     body:hover {
         border-image: url("https://jaysherby.com/hit/VRjeAuYimSrdDFGIIJdK/");
         border-width: 0;
     }
 </style>
-
-
 </head>
-
 <body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
-  
-  <header>
-    <a class="title" href="../index.html">
-      <h1>
-        Jay&#x27;s blog
-      </h1>
-    </a>
-    <nav>
-      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
-
-    </nav>
-  </header>
-  <main>
-    
-
-
-
-
-
+<header>
+<a class="title" href="../index.html">
 <h1>
-    Nullable Parameters in SQL Queries
+Jay&#x27;s blog
 </h1>
-
+</a>
+<nav>
+<p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+</nav>
+</header>
+<main>
+<h1>
+Nullable Parameters in SQL Queries
+</h1>
 <p>
-    <i>
-        <time datetime="2024-07-29T22:01Z">
-            29 Jul, 2024
-        </time>
-    </i>
+<i>
+<time datetime="2024-07-29T22:01Z">
+29 Jul, 2024
+</time>
+</i>
 </p>
-
-
-    <p>A common beginners' trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called <code>foo</code> with a nullable column called <code>bar</code>.</p>
+<p>A common beginners' trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called <code>foo</code> with a nullable column called <code>bar</code>.</p>
 <div class="highlight"><pre><span></span><span class="c1">-- THIS IS A BROKEN QUERY!</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
 </pre></div>
@@ -395,7 +347,7 @@ body.page #upvote-form {
 <div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
 </pre></div>
 <p>That's all well and good when you're writing custom queries by hand. Just remember to use <code>IS NULL</code>. But what about when you're writing a parameterized query and one of the parameters <em>may</em> be NULL, or it may be a value?</p>
-<p>I've seen some tricks out there that use <code>COALESCE</code>. But if you're using PostgreSQL, you're in luck. There's a very nice, clean solution available: <a href='https://wiki.postgresql.org/wiki/Is_distinct_from'><code>IS NOT DISTINCT FROM</code></a>.</p>
+<p>I've seen some tricks out there that use <code>COALESCE</code>. But if you're using PostgreSQL, you're in luck. There's a very nice, clean solution available: <a href="https://wiki.postgresql.org/wiki/Is_distinct_from"><code>IS NOT DISTINCT FROM</code></a>.</p>
 <div class="highlight"><pre><span></span><span class="k">PREPARE</span><span class="w"> </span><span class="n">my_query</span><span class="w"> </span><span class="p">(</span><span class="nb">integer</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="err">$</span><span class="mi">1</span><span class="p">;</span>
 
@@ -405,43 +357,24 @@ body.page #upvote-form {
 </pre></div>
 <p>If you've never heard of the <code>IS NOT DISTINCT FROM</code> operator, neither had I until today. I'm glad it exists, but using the word "distinct" makes this handy operator very difficult to search for online.</p>
 <p>For the sake of readability, I'd recommend only using this operator in this particular situation. In other words, don't rush to go change every usage of <code>=</code> and <code>IS NULL</code> in queries that don't need this special consideration. This is a special tool that deserves a spot in your tool belt for just the right occasion.</p>
-
-
-
-
-
-    
-    <p class="tags">
-        
-        <a href="../blog/index.html%3Fq=postgres.html">#postgres</a>
-        
-        <a href="../blog/index.html%3Fq=sql.html">#sql</a>
-        
-        <a href="../blog/index.html%3Fq=til.html">#til</a>
-        
-    </p>
-    
-
-    
-    <form id="upvote-form" action="https://jaysherby.com/upvote/VRjeAuYimSrdDFGIIJdK/" method="post" style="display: inline">
-    <small>
-        <input hidden name="uid" value="VRjeAuYimSrdDFGIIJdK" style="display:none">
-        <input hidden name="title" style="display:none">
-        
-        <button
-            class="upvote-button"
-            title="Toast this post"
-        >
-        
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polyline points="17 11 12 6 7 11"></polyline>
-                <polyline points="17 18 12 13 7 18"></polyline>
-            </svg>
-            <small class="upvote-count">2</small>
-        </button>
-    </small>        
+<p class="tags">
+<a href="../blog/index.html%3Fq=postgres.html">#postgres</a>
+<a href="../blog/index.html%3Fq=sql.html">#sql</a>
+<a href="../blog/index.html%3Fq=til.html">#til</a>
+</p>
+<form id="upvote-form" action="https://jaysherby.com/upvote/VRjeAuYimSrdDFGIIJdK/" method="post" style="display: inline">
+<small>
+<input hidden name="uid" value="VRjeAuYimSrdDFGIIJdK" style="display:none">
+<input hidden name="title" style="display:none">
+<button class="upvote-button" title="Toast this post">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+<polyline points="17 11 12 6 7 11"></polyline>
+<polyline points="17 18 12 13 7 18"></polyline>
+</svg>
+<small class="upvote-count">2</small>
+</button>
+</small>
 </form>
-
 <script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -457,18 +390,11 @@ body.page #upvote-form {
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
     });
 </script>
-    
-
-
-
-  </main>
-  <footer style="padding:25px 0;">
-    
-
+</main>
+<footer style="padding:25px 0;">
 <span>
-    Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
 </span>
-
-  </footer>
+</footer>
 </body>
 </html>

@@ -1,24 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
-  
-  <title>React Hook Form: A Leaky Abstraction | Jay&#x27;s blog</title>
-  <link rel="canonical" href="index.html">
-  
-    
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+<title>React Hook Form: A Leaky Abstraction | Jay&#x27;s blog</title>
+<link rel="canonical" href="index.html">
+<meta name="jaysherby" content="look-for-the-bear-necessities">
 
-    <meta name="jaysherby" content="look-for-the-bear-necessities">
-
-    <!-- Primary Meta Tags -->
 <meta name="title" content="React Hook Form: A Leaky Abstraction">
 <meta name="description" content="I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form[^1],...">
 
-<!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
 <meta property="og:title" content="React Hook Form: A Leaky Abstraction">
 <meta property="og:type" content="article">
@@ -26,17 +17,12 @@
 <meta property="og:description" content="I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form[^1],...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
-
-<!-- Twitter -->
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/react-hook-form-a-leaky-abstraction/">
 <meta property="twitter:title" content="React Hook Form: A Leaky Abstraction">
 <meta property="twitter:description" content="I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we&#x27;re using React Hook Form[^1],...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
-
-
-<!-- Microdata -->
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -50,26 +36,9 @@
     }
   }
 </script>
-
-  
-    
-    
-    
-
-    
-    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
-  
-  
-  
-
-    
-        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
-    
-
-
-
-
-  <style>
+<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+<style>
       
       
 :root {
@@ -321,53 +290,36 @@ body.page #upvote-form {
 
       
   </style>
-
-  
-
 <style>
     body:hover {
         border-image: url("https://jaysherby.com/hit/LLySDMrwKuhCNitfrJRf/");
         border-width: 0;
     }
 </style>
-
-
 </head>
-
 <body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
-  
-  <header>
-    <a class="title" href="../index.html">
-      <h1>
-        Jay&#x27;s blog
-      </h1>
-    </a>
-    <nav>
-      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
-
-    </nav>
-  </header>
-  <main>
-    
-
-
-
-
-
+<header>
+<a class="title" href="../index.html">
 <h1>
-    React Hook Form: A Leaky Abstraction
+Jay&#x27;s blog
 </h1>
-
+</a>
+<nav>
+<p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
+</nav>
+</header>
+<main>
+<h1>
+React Hook Form: A Leaky Abstraction
+</h1>
 <p>
-    <i>
-        <time datetime="2023-06-10T15:33Z">
-            10 Jun, 2023
-        </time>
-    </i>
+<i>
+<time datetime="2023-06-10T15:33Z">
+10 Jun, 2023
+</time>
+</i>
 </p>
-
-
-    <p>I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.</p>
+<p>I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.</p>
 <p>However, this past week I ran into a weird edge case. To set the stage, a friend and colleague<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a <code>&lt;select&gt;</code> style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.</p>
 <p>Here's a tiny example:</p>
 <div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">groups</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useUser</span><span class="p">();</span>
@@ -425,22 +377,22 @@ body.page #upvote-form {
 </ol>
 </li>
 </ul>
-<p>-- <a href='https://legacy.react-hook-form.com/v6/api#useForm'>React Hook Form docs for <code>useForm</code>, specifically under <code>defaultValues</code></a></p>
+<p>-- <a href="https://legacy.react-hook-form.com/v6/api#useForm">React Hook Form docs for <code>useForm</code>, specifically under <code>defaultValues</code></a></p>
 </blockquote>
 <p>This little tidbit is what tipped me off to this situation.<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup></p>
 <p>There's also a clue in the FAQs for v7 in the answer for the question, "How to work with modal or tab forms?"</p>
 <blockquote>
 <p>It's important to understand React Hook Form embraces native form behavior by storing input state inside each input (except custom <code>register</code> at <code>useEffect</code>). One of the common misconceptions is that when working with modal or tab forms, by mounting and unmounting form/inputs that inputs state will remain. That is incorrect. Instead, the correct solution would be to build a new form for your form inside each modal or tab and capture your submission data in local or global state and then do something with the combined data.</p>
-<p>-- <a href='https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms'>React Hook Form FAQs, "How to work with modal or tab forms?"</a></p>
+<p>-- <a href="https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms">React Hook Form FAQs, "How to work with modal or tab forms?"</a></p>
 </blockquote>
 <p>These bits of information, pieced together, answer the question of why every piece of data in a React Hook Form-based form must have an input associated with it, even if it's a hidden input.</p>
-<h2 id=a-leaky-abstraction>A Leaky Abstraction</h2><p>I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.</p>
-<h3 id=the-abstraction>The Abstraction</h3><p>I'm using React Hook Form to reduce the boilerplate of form state management.  I could write my own state management for any given form using only React built-ins like <code>useReducer</code> or I guess a dozen or so <code>useState</code> instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup></p>
+<h2 id="a-leaky-abstraction">A Leaky Abstraction</h2><p>I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.</p>
+<h3 id="the-abstraction">The Abstraction</h3><p>I'm using React Hook Form to reduce the boilerplate of form state management. I could write my own state management for any given form using only React built-ins like <code>useReducer</code> or I guess a dozen or so <code>useState</code> instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup></p>
 <p>I would assume when I'm using a form state management library, it's doing this same stuff for me behind the scenes. It's just handling all of that tedious boilerplate code for me, but I assume the semantics, like a separation between data and view, would remain the same.</p>
-<h3 id=the-leak>The Leak</h3><p>As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.</p>
+<h3 id="the-leak">The Leak</h3><p>As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.</p>
 <p>I'm willing to believe that my form is the edge case here. Most forms on the web can be built using React Hook Form and you'll never need to know about these implementation details. Most forms probably show all inputs every render. But we were improving UX so that users don't need to care about a required dropdown input if there's only one option to select from.</p>
 <p>I want to make it clear here that I'm not calling React Hook Form a leaky abstraction as an insult. I still mostly like the library, even if it's not built the same way I would choose to build it. I'm going to continue using it. I still prefer it to Formik. But this is an implementation detail, or perhaps a consequential design philosophy, that users should be aware of.</p>
-<hr />
+<hr/>
 <section class="footnotes">
 <ol>
 <li id="fn-1"><p>Because I regularly confuse the name as <code>react-form-hook</code>, I've given up and lovingly refer to it as <code>react-man-door-hand-hook-car-door</code> instead. I'm sure my coworkers have become tired of this joke.<a href="index.html#fnref-1" class="footnote">&#8617;</a></p></li>
@@ -449,39 +401,22 @@ body.page #upvote-form {
 <li id="fn-4"><p>It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.<a href="index.html#fnref-4" class="footnote">&#8617;</a></p></li>
 </ol>
 </section>
-
-
-
-
-
-    
-    <p class="tags">
-        
-        <a href="../blog/index.html%3Fq=react.html">#react</a>
-        
-    </p>
-    
-
-    
-    <form id="upvote-form" action="https://jaysherby.com/upvote/LLySDMrwKuhCNitfrJRf/" method="post" style="display: inline">
-    <small>
-        <input hidden name="uid" value="LLySDMrwKuhCNitfrJRf" style="display:none">
-        <input hidden name="title" style="display:none">
-        
-        <button
-            class="upvote-button"
-            title="Toast this post"
-        >
-        
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polyline points="17 11 12 6 7 11"></polyline>
-                <polyline points="17 18 12 13 7 18"></polyline>
-            </svg>
-            <small class="upvote-count">4</small>
-        </button>
-    </small>        
+<p class="tags">
+<a href="../blog/index.html%3Fq=react.html">#react</a>
+</p>
+<form id="upvote-form" action="https://jaysherby.com/upvote/LLySDMrwKuhCNitfrJRf/" method="post" style="display: inline">
+<small>
+<input hidden name="uid" value="LLySDMrwKuhCNitfrJRf" style="display:none">
+<input hidden name="title" style="display:none">
+<button class="upvote-button" title="Toast this post">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+<polyline points="17 11 12 6 7 11"></polyline>
+<polyline points="17 18 12 13 7 18"></polyline>
+</svg>
+<small class="upvote-count">4</small>
+</button>
+</small>
 </form>
-
 <script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -497,18 +432,11 @@ body.page #upvote-form {
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
     });
 </script>
-    
-
-
-
-  </main>
-  <footer style="padding:25px 0;">
-    
-
+</main>
+<footer style="padding:25px 0;">
 <span>
-    Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
 </span>
-
-  </footer>
+</footer>
 </body>
 </html>
