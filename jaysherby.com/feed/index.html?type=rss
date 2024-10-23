@@ -402,12 +402,12 @@ Hiring? Check  to see...</description>
       <link>https://jaysherby.com/typescript-show-me-the-whole-error/</link>
       <description>&lt;p&gt;Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the error!&lt;/p&gt;
 &lt;p&gt;This is the default behavior for some reason. I'm not a fan. I know long error messages scare a lot of developers, but I'd rather have a long and helpful error message than a short and useless one.&lt;/p&gt;
-&lt;p&gt;Good news! Error message salvation is one &lt;code&gt;tsconfig.json&lt;/code&gt; setting away. Set &lt;a href='https://www.typescriptlang.org/tsconfig#noErrorTruncation'&gt;&lt;code&gt;noErrorTruncation&lt;/code&gt;&lt;/a&gt; to &lt;code&gt;false&lt;/code&gt; and you'll be all set.&lt;/p&gt;
+&lt;p&gt;Good news! Error message salvation is one &lt;code&gt;tsconfig.json&lt;/code&gt; setting away. Set &lt;a href='https://www.typescriptlang.org/tsconfig#noErrorTruncation'&gt;&lt;code&gt;noErrorTruncation&lt;/code&gt;&lt;/a&gt; to &lt;code&gt;true&lt;/code&gt; and you'll be all set.&lt;/p&gt;
 &lt;p&gt;Personally, I'd rather opt in to truncation than opt out, but at least it's an easy fix.&lt;/p&gt;
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/typescript-show-me-the-whole-error/</guid>
-      <pubDate>Wed, 21 Jun 2023 19:26:47 +0000</pubDate>
+      <pubDate>Wed, 21 Jun 2023 19:26:00 +0000</pubDate>
     </item>
     <item>
       <title>React Hook Form: A Leaky Abstraction</title>
