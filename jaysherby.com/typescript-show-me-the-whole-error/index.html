@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
-<title>Typescript, Show Me The Whole Error! | Jay&#x27;s blog</title>
-<link rel="canonical" href="index.html">
-<meta name="jaysherby" content="look-for-the-bear-necessities">
 
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Typescript, Show Me The Whole Error! | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+    
+
+    <meta name="jaysherby" content="look-for-the-bear-necessities">
+
+    <!-- Primary Meta Tags -->
 <meta name="title" content="Typescript, Show Me The Whole Error!">
 <meta name="description" content="Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the erro...">
 
+<!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
 <meta property="og:title" content="Typescript, Show Me The Whole Error!">
 <meta property="og:type" content="article">
@@ -17,12 +26,17 @@
 <meta property="og:description" content="Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the erro...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
+
+<!-- Twitter -->
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/typescript-show-me-the-whole-error/">
 <meta property="twitter:title" content="Typescript, Show Me The Whole Error!">
 <meta property="twitter:description" content="Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the erro...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
+
+
+<!-- Microdata -->
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -36,8 +50,22 @@
     }
   }
 </script>
-<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
-<style>
+
+  
+    
+
+    
+    
+  
+  
+  
+    
+        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+    
+
+
+
+  <style>
       
       
     :root {
@@ -289,53 +317,88 @@ body.page #upvote-form {
 
       
   </style>
-<style>
+
+  
+    
+    <style>
         body:hover {
             border-image: url("https://jaysherby.com/hit/gZHGGTokFAQSYkVocUJs/");
             border-width: 0;
         }
     </style>
+    
+
 </head>
+
 <body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
-<header>
-<a class="title" href="../index.html">
-<h1>
-Jay&#x27;s blog
-</h1>
-</a>
-<nav>
-<p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
-</nav>
-</header>
-<main>
-<h1>Typescript, Show Me The Whole Error!</h1>
-<p>
-<i>
-<time datetime="2023-06-21T19:26Z">
-21 Jun, 2023
-</time>
-</i>
-</p>
-<p>Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the error!</p>
+  
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+    
+        
+    
+
+    
+        <h1>Typescript, Show Me The Whole Error!</h1>
+
+        <p>
+            <i>
+                <time datetime="2023-06-21T19:26Z">
+                    21 Jun, 2023
+                </time>
+            </i>
+        </p>
+    
+
+    <p>Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the error!</p>
 <p>This is the default behavior for some reason. I'm not a fan. I know long error messages scare a lot of developers, but I'd rather have a long and helpful error message than a short and useless one.</p>
-<p>Good news! Error message salvation is one <code>tsconfig.json</code> setting away. Set <a href="https://www.typescriptlang.org/tsconfig#noErrorTruncation"><code>noErrorTruncation</code></a> to <code>true</code> and you'll be all set.</p>
+<p>Good news! Error message salvation is one <code>tsconfig.json</code> setting away. Set <a href='https://www.typescriptlang.org/tsconfig#noErrorTruncation'><code>noErrorTruncation</code></a> to <code>true</code> and you'll be all set.</p>
 <p>Personally, I'd rather opt in to truncation than opt out, but at least it's an easy fix.</p>
-<p class="tags">
-<a href="../blog/index.html%3Fq=typescript.html">#typescript</a>
-</p>
-<form id="upvote-form" action="https://jaysherby.com/upvote/gZHGGTokFAQSYkVocUJs/" method="post" style="display: inline">
-<small>
-<input hidden name="uid" value="gZHGGTokFAQSYkVocUJs" style="display:none">
-<input hidden name="title" style="display:none">
-<button class="upvote-button" title="Toast this post">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-<polyline points="17 11 12 6 7 11"></polyline>
-<polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-<small class="upvote-count">3</small>
-</button>
-</small>
+
+
+    
+
+    
+        
+            <p class="tags">
+                
+                    <a href="../blog/index.html%3Fq=typescript.html">#typescript</a>
+                
+            </p>
+        
+
+        
+            <form id="upvote-form" action="https://jaysherby.com/upvote/gZHGGTokFAQSYkVocUJs/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="gZHGGTokFAQSYkVocUJs" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">3</small>
+        </button>
+    </small>        
 </form>
+
 <script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -351,11 +414,18 @@ Jay&#x27;s blog
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
     });
 </script>
-</main>
-<footer style="padding:25px 0;">
-<span>
-Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
-</span>
-</footer>
+        
+    
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+    
+    <span>
+        Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+    </span>
+
+  </footer>
 </body>
 </html>

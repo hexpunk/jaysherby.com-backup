@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
-<title>Block Users In Auth0 From The Command Line | Jay&#x27;s blog</title>
-<link rel="canonical" href="index.html">
-<meta name="jaysherby" content="look-for-the-bear-necessities">
 
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Block Users In Auth0 From The Command Line | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+    
+
+    <meta name="jaysherby" content="look-for-the-bear-necessities">
+
+    <!-- Primary Meta Tags -->
 <meta name="title" content="Block Users In Auth0 From The Command Line">
 <meta name="description" content="
 
 As , I use Auth0 at work. Whenever a client decides not to renew their contract, which I&#x27;m thankful is an uncommon event[^1], I have to collect each user...">
 
+<!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
 <meta property="og:title" content="Block Users In Auth0 From The Command Line">
 <meta property="og:type" content="article">
@@ -21,6 +30,8 @@ As , I use Auth0 at work. Whenever a client decides not to renew their contract,
 As , I use Auth0 at work. Whenever a client decides not to renew their contract, which I&#x27;m thankful is an uncommon event[^1], I have to collect each user...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png">
 
+
+<!-- Twitter -->
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/block-users-in-auth0-from-the-command-line/">
 <meta property="twitter:title" content="Block Users In Auth0 From The Command Line">
@@ -29,6 +40,9 @@ As , I use Auth0 at work. Whenever a client decides not to renew their contract,
 As , I use Auth0 at work. Whenever a client decides not to renew their contract, which I&#x27;m thankful is an uncommon event[^1], I have to collect each user...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png">
 
+
+
+<!-- Microdata -->
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -46,9 +60,22 @@ As , I use Auth0 at work. Whenever a client decides not to renew their contract,
     }
   }
 </script>
-<link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
-<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
-<style>
+
+  
+    
+
+    
+    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+  
+  
+  
+    
+        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+    
+
+
+
+  <style>
       
       
     :root {
@@ -300,77 +327,112 @@ body.page #upvote-form {
 
       
   </style>
-<style>
+
+  
+    
+    <style>
         body:hover {
             border-image: url("https://jaysherby.com/hit/kshUFDDUigddPSdTMWmC/");
             border-width: 0;
         }
     </style>
+    
+
 </head>
+
 <body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
-<header>
-<a class="title" href="../index.html">
-<h1>
-Jay&#x27;s blog
-</h1>
-</a>
-<nav>
-<p><a href="../index.html">Home</a> <a href="../resume/index.html">Résumé</a> <a href="../blog/index.html">Blog</a></p>
-</nav>
-</header>
-<main>
-<h1>Block Users In Auth0 From The Command Line</h1>
-<p>
-<i>
-<time datetime="2023-04-22T00:00Z">
-22 Apr, 2023
-</time>
-</i>
-</p>
-<p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png" alt="Original art, one of the Blockheads from Gumby" /></p>
-<p>As <a href="../terraform-cloud-cdktf-auth0/index.html">previously established</a>, I use Auth0 at work. Whenever a client decides not to renew their contract, which I'm thankful is an uncommon event<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, I have to collect each user's email address from our application, search for their account in the Auth0 web app, and block each user.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> It's a tedious process.</p>
+  
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+    
+        
+    
+
+    
+        <h1>Block Users In Auth0 From The Command Line</h1>
+
+        <p>
+            <i>
+                <time datetime="2023-04-22T00:00Z">
+                    22 Apr, 2023
+                </time>
+            </i>
+        </p>
+    
+
+    <p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1682188602-0.png" alt="Original art, one of the Blockheads from Gumby" /></p>
+<p>As <a href='../terraform-cloud-cdktf-auth0/index.html'>previously established</a>, I use Auth0 at work. Whenever a client decides not to renew their contract, which I'm thankful is an uncommon event<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, I have to collect each user's email address from our application, search for their account in the Auth0 web app, and block each user.<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> It's a tedious process.</p>
 <p>I've only had to do this process once so far. But being a developer, I immediately wanted to automate this process with a shell script. With Auth0's web app, it takes a copy/paste and 4 clicks <em>per user</em> I'm blocking. That's unacceptable. After the first half-dozen users, my eyes lose focus and my mind starts to wander. And that's when the odds I'll make a mistake spike.</p>
-<p>This was the push I needed to finally install Auth0's command line tool, <a href="https://github.com/auth0/auth0-cli">auth0-cli</a>.</p>
+<p>This was the push I needed to finally install Auth0's command line tool, <a href='https://github.com/auth0/auth0-cli'>auth0-cli</a>.</p>
 <p>After authenticating with <code>auth0 login</code>, the first step will be finding the user's ID based on their email address.</p>
 <div class="highlight"><pre><span></span>auth0<span class="w"> </span>users<span class="w"> </span>search<span class="w"> </span>-q<span class="w"> </span>email:<span class="s2">&quot;user1@example.com&quot;</span>
 </pre></div>
-<p>Most commands in auth0-cli have a <code>--json</code> option to print their output in JSON format, which will make it easy to grab what I need by piping the output to <a href="https://stedolan.github.io/jq/">jq</a>.</p>
+<p>Most commands in auth0-cli have a <code>--json</code> option to print their output in JSON format, which will make it easy to grab what I need by piping the output to <a href='https://stedolan.github.io/jq/'>jq</a>.</p>
 <p>With some error handling in case I receive anything besides exactly one result from my query, I'll have the user's ID. Using that, I should be able to block the user by... uh....</p>
 <p>Let's see.... I can delete users using <code>auth0 users delete</code>, but as I mentioned before, that's not application in my case. I can "view" blocks<sup class="footnote-ref" id="fnref-3"><a href="index.html#fn-3">3</a></sup> on particular users via <code>auth0 users blocks list</code>, and I can unblock users with <code>auth0 users blocks unblock</code>.</p>
 <p>Wait, what!? There doesn't seem to be any way to block a user via auth0-cli. How can that be? Isn't this one of the most common use cases for the tool?</p>
-<p>If auth0-cli isn't up to the task, what are my options? I could script my browser, but that's awfully heavy-handed for a service that has an API. I could use the official Auth0 management API either via <a href="https://curl.se/">curl</a> or a package in my favorite programming language. But this is actually really inconvenient compared to using auth0-cli, specifically because of authentication.</p>
+<p>If auth0-cli isn't up to the task, what are my options? I could script my browser, but that's awfully heavy-handed for a service that has an API. I could use the official Auth0 management API either via <a href='https://curl.se/'>curl</a> or a package in my favorite programming language. But this is actually really inconvenient compared to using auth0-cli, specifically because of authentication.</p>
 <p>With auth0-cli, I'm authenticated via my personal Auth0 management user account. It's no harder and no different from signing into the Auth0 management web app. If I wanted to use the Auth0 management API via other means, I'd have to use an ID/secret pair from an "application" (in Auth0's parlance). I <em>could</em> use the production creds our app uses, but that would be horrendous opsec.</p>
 <p>I could create a temporary "application" to run this script and then delete it when I'm done. That's pretty inconvenient, though. If my shell script turns out well, I'd like to be able to share it with my coworkers in case they ever need to perform this kind of task.</p>
 <p>If I felt like building a Rube Goldberg machine, maybe I could script the creation of a temporary "application" using auth0-cli and delete it when the script is done....</p>
 <p>Ugh. Feels Bad, Man™. I ended up just doing the task manually. It was going to take more time to automate this than to do it by hand.<sup class="footnote-ref" id="fnref-4"><a href="index.html#fn-4">4</a></sup></p>
-<p>Afterwards, I made <a href="https://github.com/auth0/auth0-cli/issues/683">a feature request</a> for the ability to block users using the command line tool. <a href="https://github.com/ewanharris">Ewan Harris</a>, a developer at Auth0, left <a href="https://github.com/auth0/auth0-cli/issues/683#issuecomment-1491734214">a very helpful reply</a> that pointed out a feature of the command line tool that I completely overlooked: <code>auth0 api</code>.</p>
+<p>Afterwards, I made <a href='https://github.com/auth0/auth0-cli/issues/683'>a feature request</a> for the ability to block users using the command line tool. <a href='https://github.com/ewanharris'>Ewan Harris</a>, a developer at Auth0, left <a href='https://github.com/auth0/auth0-cli/issues/683#issuecomment-1491734214'>a very helpful reply</a> that pointed out a feature of the command line tool that I completely overlooked: <code>auth0 api</code>.</p>
 <p>The <code>auth0 api</code> command is essentially a passthrough that lets you call the management REST API directly using the credentials auth0-cli already has, contrasting the limited porcelain the tool provides. In other words, it's exactly what I was looking for! According to Ewan Harris, this would do the trick: <code>auth0 api patch &quot;users/&lt;user_id&gt;&quot; --data &quot;{\&quot;blocked\&quot;:true}&quot;</code>.</p>
 <p>This is usually where I'd share a neat little shell script you can use to do this task. However, I haven't had occasion to need it. If that day comes, I'll write a shell script that takes a list of email addresses and blocks their user accounts. I'll try to share it here. In the meantime, you should have all the tools you need to do it yourself using auth0-cli and jq.</p>
-<hr/>
+<hr />
 <section class="footnotes">
 <ol>
 <li id="fn-1"><p>Hi, HR! Thanks for reading! ✌️😜<a href="index.html#fnref-1" class="footnote">&#8617;</a></p></li>
 <li id="fn-2"><p>This is for the "why don't you just..." crowd. This is about a proprietary application owned by my employer, so I can't go into detail. But trust me that I can't delete the Auth0 accounts, and there's no in-application flag I can set to block a user at the moment.<a href="index.html#fnref-2" class="footnote">&#8617;</a></p></li>
 <li id="fn-3"><p>TIL there's more to blocking users in Auth0 than blocking them by hand like I'm doing. Apparently there are Auth0 features for automatically blocking new users who exhibit bot-like behavior. This was news to me as my employer's application is a fairly niche web app for medical clinics. We're not seeing nearly enough traffic to be subject to scripted sign-ups.<a href="index.html#fnref-3" class="footnote">&#8617;</a></p></li>
-<li id="fn-4"><p><a href="https://xkcd.com/1205/">https://xkcd.com/1205/</a><a href="index.html#fnref-4" class="footnote">&#8617;</a></p></li>
+<li id="fn-4"><p><a href='https://xkcd.com/1205/'>https://xkcd.com/1205/</a><a href="index.html#fnref-4" class="footnote">&#8617;</a></p></li>
 </ol>
 </section>
-<p class="tags">
-<a href="../blog/index.html%3Fq=auth0.html">#auth0</a>
-</p>
-<form id="upvote-form" action="https://jaysherby.com/upvote/kshUFDDUigddPSdTMWmC/" method="post" style="display: inline">
-<small>
-<input hidden name="uid" value="kshUFDDUigddPSdTMWmC" style="display:none">
-<input hidden name="title" style="display:none">
-<button class="upvote-button" title="Toast this post">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-<polyline points="17 11 12 6 7 11"></polyline>
-<polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-<small class="upvote-count">6</small>
-</button>
-</small>
+
+
+    
+
+    
+        
+            <p class="tags">
+                
+                    <a href="../blog/index.html%3Fq=auth0.html">#auth0</a>
+                
+            </p>
+        
+
+        
+            <form id="upvote-form" action="https://jaysherby.com/upvote/kshUFDDUigddPSdTMWmC/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="kshUFDDUigddPSdTMWmC" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">6</small>
+        </button>
+    </small>        
 </form>
+
 <script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -386,11 +448,18 @@ Jay&#x27;s blog
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
     });
 </script>
-</main>
-<footer style="padding:25px 0;">
-<span>
-Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
-</span>
-</footer>
+        
+    
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+    
+    <span>
+        Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+    </span>
+
+  </footer>
 </body>
 </html>
