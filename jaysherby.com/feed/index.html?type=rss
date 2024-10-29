@@ -2,7 +2,7 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
   <channel>
     <title>Jay's blog</title>
-    <link>https://jaysherby.com/</link>
+    <link>https://jaysherby.com/rss/</link>
     <description>&lt;h1 style="font-weight: normal"&gt;&#13;
   Hi! I'm &lt;strong&gt;Jay Sherby&lt;/strong&gt;!&#13;
 &lt;/h1&gt;&#13;
@@ -10,6 +10,7 @@
 I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check  to see...</description>
+    <atom:link href="https://jaysherby.com/rss/" rel="self"/>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>

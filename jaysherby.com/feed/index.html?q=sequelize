@@ -7,7 +7,7 @@
     <email>hidden</email>
   </author>
   <link href="https://jaysherby.com/" rel="alternate"/>
-  <link href="https://jaysherby.com/feed/" rel="self"/>
+  <link href="https://jaysherby.com/atom/" rel="self"/>
   <generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator>
   <subtitle>&lt;h1 style="font-weight: normal"&gt;&#13;
   Hi! I'm &lt;strong&gt;Jay Sherby&lt;/strong&gt;!&#13;
