@@ -2,7 +2,7 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
   <channel>
     <title>Jay's blog</title>
-    <link>https://jaysherby.com/</link>
+    <link>https://jaysherby.com/rss/</link>
     <description>&lt;h1 style="font-weight: normal"&gt;&#13;
   Hi! I'm &lt;strong&gt;Jay Sherby&lt;/strong&gt;!&#13;
 &lt;/h1&gt;&#13;
@@ -10,187 +10,513 @@
 I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check  to see...</description>
+    <atom:link href="https://jaysherby.com/rss/" rel="self"/>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
-      <title>The Two Most Popular Missing Typescript Features</title>
-      <link>https://jaysherby.com/the-two-most-popular-missing-typescript-features/</link>
-      <description>&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png" alt="Original art, the suspense is terrible, I hope it'll last" /&gt;&lt;/p&gt;
-&lt;p&gt;There are two features I think should be in Typescript that are currently missing. It's not just &lt;em&gt;my&lt;/em&gt; opinion, either. When I was researching this blog post, I discovered that the tickets requesting these two features are the most discussed tickets with the "suggestion" tag still open. If I could wave a magic wand to change Typescript in any way, I'd add these two features.&lt;/p&gt;
-&lt;h2 id=a-hrefhttpsgithubcommicrosofttypescriptissues1321913219a-codethrowscode-clause-and-typed-catch-clause&gt;&lt;a href='https://github.com/microsoft/TypeScript/issues/13219'&gt;#13219&lt;/a&gt; &lt;code&gt;throws&lt;/code&gt; clause and typed catch clause&lt;/h2&gt;&lt;p&gt;This missing feature came up in discussion on a pull request of mine at work this week. A particular function had a return type of &lt;code&gt;Promise&amp;lt;boolean&amp;gt;&lt;/code&gt; and included a &lt;code&gt;try...catch&lt;/code&gt; statement in its body. A friend and colleague&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; left a comment asking why the possible error types weren't represented in the return type of the function. Maybe something like &lt;code&gt;Promise&amp;lt;boolean, AppException&amp;gt;&lt;/code&gt;?&lt;/p&gt;
-&lt;p&gt;The answer is that the &lt;code&gt;Promise&lt;/code&gt; type doesn't support a second type variable to describe the value returned on rejection of a promise.&lt;/p&gt;
-&lt;p&gt;As I suspected, the lack of a rejection type mirrors how caught error types are handled. (Or should I say, not handled?)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;// Code that might throw&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;catch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;e&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;// What is the type of `e`?&lt;/span&gt;
+      <title>Nullable Parameters in SQL Queries</title>
+      <link>https://jaysherby.com/nullable-parameters-in-sql-queries/</link>
+      <description>&lt;p&gt;A common beginners' trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called &lt;code&gt;foo&lt;/code&gt; with a nullable column called &lt;code&gt;bar&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;-- THIS IS A BROKEN QUERY!&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That query shouldn't return any results because comparing any value to NULL will evaluate as false. To find rows in &lt;code&gt;foo&lt;/code&gt; where &lt;code&gt;bar&lt;/code&gt; is NULL will require, well, &lt;code&gt;IS NULL&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;IS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That's all well and good when you're writing custom queries by hand. Just remember to use &lt;code&gt;IS NULL&lt;/code&gt;. But what about when you're writing a parameterized query and one of the parameters &lt;em&gt;may&lt;/em&gt; be NULL, or it may be a value?&lt;/p&gt;
+&lt;p&gt;I've seen some tricks out there that use &lt;code&gt;COALESCE&lt;/code&gt;. But if you're using PostgreSQL, you're in luck. There's a very nice, clean solution available: &lt;a href='https://wiki.postgresql.org/wiki/Is_distinct_from'&gt;&lt;code&gt;IS NOT DISTINCT FROM&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;PREPARE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;integer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;IS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NOT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;DISTINCT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;EXECUTE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="k"&gt;EXECUTE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you've never heard of the &lt;code&gt;IS NOT DISTINCT FROM&lt;/code&gt; operator, neither had I until today. I'm glad it exists, but using the word "distinct" makes this handy operator very difficult to search for online.&lt;/p&gt;
+&lt;p&gt;For the sake of readability, I'd recommend only using this operator in this particular situation. In other words, don't rush to go change every usage of &lt;code&gt;=&lt;/code&gt; and &lt;code&gt;IS NULL&lt;/code&gt; in queries that don't need this special consideration. This is a special tool that deserves a spot in your tool belt for just the right occasion.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/nullable-parameters-in-sql-queries/</guid>
+      <pubDate>Mon, 29 Jul 2024 22:01:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Express's "finish" Event</title>
+      <link>https://jaysherby.com/expresss-finish-event/</link>
+      <description>&lt;p&gt;Let's say you want to write some middleware for &lt;a href='https://expressjs.com/'&gt;Express&lt;/a&gt; that does something after the request is complete. The standard advice on the web is to add an event listener to the response object listening for the "finish" event.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;use&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;req&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;// DON&amp;#39;T USE THIS!!!&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;finish&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Request finished&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I learned the hard way that the "finish" event doesn't always get fired. There are lots of ways you can screw this up as a programmer.  "finish" may not fire if:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;there's a break in the middleware chain, i.e. not calling &lt;code&gt;next&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;the response isn't completed using &lt;code&gt;res.send&lt;/code&gt; or &lt;code&gt;res.end&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;an error isn't handled somewhere, including uncaught exceptions in promises&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But even if you're the best, most diligent programmer on Earth, if the client closes the connection before the request has been completed, that's enough to cause the "finish" event to never fire for that request.&lt;/p&gt;
+&lt;p&gt;Maybe that's the behavior you want. Maybe you only want your event listener to fire on &lt;em&gt;successful&lt;/em&gt; requests. If so, carry on. But if you're like me and you want your event listener to fire after &lt;em&gt;every&lt;/em&gt; request, you should listen for a different event. I fixed my issue by listening for the "close" event, which is always fired.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;use&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;req&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Request finished&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/expresss-finish-event/</guid>
+      <pubDate>Tue, 11 Jun 2024 16:11:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>How I Fixed Laggy Wifi In Debian 12</title>
+      <link>https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/</link>
+      <description>&lt;p&gt;The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It's been dutifully chugging along for more than 4 years, but my needs finally exceed its capabilities.&lt;/p&gt;
+&lt;p&gt;I got a good deal on a Lenovo ThinkCentre M910q from &lt;a href='https://www.backmarket.com/'&gt;Back Market&lt;/a&gt;. When I went to install Debian 12 Bookworm, I found that Debian's non-free firmware packages don't include the necessary drivers for the cheap USB wifi adapter the seller included. Rather than faff about trying to compile and install the kernel module, I bought an Intel 8265 M.2 wifi adapter from Amazon. Its drivers are included in Debian's non-free firmware, and according to Lenovo's service manuals, this was the model they would have included in my machine had that option been chosen during configuration.&lt;/p&gt;
+&lt;p&gt;Installation of Debian worked without any issues. However, once the system was running, I noticed SSH sessions were very laggy. Pings to the new machine were averaging around 150 milliseconds, which is ten times longer than pings to the Raspberry Pi it was set to replace.&lt;/p&gt;
+&lt;p&gt;After a little searching online, I found the culprit to be the power management on the wifi adapter. I think the wifi adapter goes into a low-power state after a lull in network traffic, but the lull is so short that the time between key presses in a SSH session is enough to trigger it. Because this device is not running on a battery, I feel comfortable turning the wifi adapter's power management off. This appears the solve the issue, and my SSH sessions are properly peppy afterwards.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;server-user@m910q:~$ sudo iw dev wlp1s0 set power_save off
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, there's still a problem. If the system reboots, the power management for the wifi adapter returns to its default state of being turned on.&lt;/p&gt;
+&lt;p&gt;Systemd to the rescue. After debugging some examples online that are very close to correct but ultimately out of date, here's the unit file I ended up with and the commands I used to set it up for my wifi adapter.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo systemctl --full --force edit wlan_always_on@.service
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Keep wireless device %i from sleeping.&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/sbin/iw dev %i set power_save off&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo systemctl enable --now wlan_always_on@wlp1s0.service
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This setup may not be perfect. I'm no systemd expect. This is cobbled and cargo culted together. But it works on my machine™.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/</guid>
+      <pubDate>Wed, 21 Feb 2024 04:21:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>Use Promise.all With Caution</title>
+      <link>https://jaysherby.com/use-promiseall-with-caution/</link>
+      <description>&lt;p&gt;A few weeks ago, I found two bugs in two different projects whose root causes were both careless use of &lt;a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all'&gt;&lt;code&gt;Promise.all&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;First, let's briefly review how promises behave when &lt;code&gt;Promise.all&lt;/code&gt; is not used. For our scenario, let's imagine we need to make multiple network calls.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Or using async/await...&lt;/span&gt;
+
+&lt;span class="k"&gt;async&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;example&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Depending on the version of Typescript you're using and how you have configured it, the type of &lt;code&gt;e&lt;/code&gt; in the code above is either &lt;code&gt;any&lt;/code&gt; or &lt;code&gt;unknown&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;That's pretty unsatisfying to me, and it leads to a lot of boilerplate in every &lt;code&gt;catch&lt;/code&gt; block where I have to write a bunch of &lt;code&gt;if&lt;/code&gt; blocks to detect the type of &lt;code&gt;e&lt;/code&gt; and handle it appropriately. And I still have to cover my ass in case I missed a type. I have no way of being absolutely sure I covered everything that might have been thrown.&lt;/p&gt;
-&lt;p&gt;JavaScript is particularly annoying when it comes to &lt;code&gt;throw&lt;/code&gt;-ing things because almost any value can be thrown, not just sub-types of &lt;code&gt;Error&lt;/code&gt;. You can throw strings, numbers, null. Almost anything your heart desires.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;I'd prefer it if Typescript could tell me all the possible types that might be thrown by a particular function or block of code. And I'm not alone. 1,349 people have given the 👍 reaction to &lt;a href='https://github.com/microsoft/TypeScript/issues/13219'&gt;microsoft/Typescript#13219&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The syntax suggested mirrors a feature already present in crusty, old Java.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;fetchFile&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;throws&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;IOException&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NullPointerException&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// code that can throw IOException&lt;/span&gt;
-
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// code that can throw NullPointerException&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;p&gt;In this example, a network call is made to &lt;code&gt;http://example.com/1&lt;/code&gt;. The code waits until that call is complete. Then it makes a call to &lt;code&gt;http://example.com/2&lt;/code&gt; and waits for that call to complete. Finally, a call is made to &lt;code&gt;http://example.com/3&lt;/code&gt;. It's important to note that only one network call is made at a time.&lt;/p&gt;
+&lt;p&gt;Don't get too caught up on the fact that we're making network calls. I used this as an example because most JavaScript developers will be familiar with &lt;code&gt;fetch&lt;/code&gt; as a function that returns a promise. You can substitute any type of promise.&lt;/p&gt;
+&lt;p&gt;These promises, while asynchronous, are being run serially. &lt;code&gt;Promise.all&lt;/code&gt; can be a performance super power that &lt;em&gt;may&lt;/em&gt; allow multiple promises to run in parallel.&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt; It finally returns when either all of the promises passed to it resolve, or when any one promise is rejected.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;Promise&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://example.com/3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;]);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The big upshot of this feature in Java, besides your tools being able to warn you when you're not handling something your code might throw, is it enables the following type of &lt;code&gt;try...catch&lt;/code&gt; syntax.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;fetchFile&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;catch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;IOException&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;ex1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// handle IOException appropriately&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;catch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NullPointerException&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;ex2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// handle NullPointerException appropriately&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;p&gt;In the typical case, this version should run faster than the serial example because all three promises can run simultaneously.&lt;/p&gt;
+&lt;p&gt;However, it's very important to think critically before applying &lt;code&gt;Promise.all&lt;/code&gt;. Here's a simplified version of the first bug I encountered.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;items&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Item&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;findAll&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;where&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;user_id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;checked&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;false&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nb"&gt;Promise&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;all&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;items&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;checked&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;true&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I vastly prefer this syntax over a single &lt;code&gt;catch&lt;/code&gt; block containing repeated &lt;code&gt;if...else&lt;/code&gt; blocks with &lt;code&gt;e instanceof AppError&lt;/code&gt; conditions to detect each type. It's important to note that &lt;a href='https://github.com/microsoft/TypeScript/issues/13219'&gt;microsoft/Typescript#13219&lt;/a&gt; &lt;em&gt;does not&lt;/em&gt; include this new &lt;code&gt;try...catch&lt;/code&gt; syntax. I couldn't find a ticket requesting such a feature. But adding the &lt;code&gt;throws&lt;/code&gt; annotation to function signatures might set the stage for it.&lt;/p&gt;
-&lt;p&gt;When might we see the &lt;code&gt;throws&lt;/code&gt; clause in Typescript? I wouldn't hold my breath. This ticket has been open for 7 years! But a boy can dream, can't he?&lt;/p&gt;
-&lt;h2 id=a-hrefhttpsgithubcommicrosofttypescriptissues202202a-nominal-types&gt;&lt;a href='https://github.com/microsoft/TypeScript/issues/202'&gt;#202&lt;/a&gt; Nominal types&lt;/h2&gt;&lt;p&gt;Typescript has a structural type system. What does this mean?&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;interface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Car&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;age&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;p&gt;At first glance, this seems like a reasonable thing to do. Updating all the items simultaneously will speed this up, right?  In actuality, this resulted in an error.&lt;/p&gt;
+&lt;p&gt;The first warning sign is that there is no limit on the number of items that belong to this particular user. Most of the time this will probably be fine. But what if a user has an idiosyncratic number of unchecked items? What if it's hundreds or thousands? Your server is going to attempt to run an unhealthy number of promises at once.&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;In the real code, this was using the ORM &lt;a href='https://sequelize.org/'&gt;Sequelize&lt;/a&gt;. Sequelize keeps a pool of database connections. Whenever you make a call to the database, a connection from the pool is used. Most of the time, only one connection is used per request. If you're doing something fancy with &lt;code&gt;Promise.all&lt;/code&gt;, maybe more than one connection is used simultaneously per request. In this case, if the number of items exceeds the maximum number of connections allowed in the pool, you'll receive an error, which is exactly what happened.&lt;/p&gt;
+&lt;p&gt;To fix this, you could increase the maximum number of connections allowed in the pool. But how many is enough? Because items are created by users, there is no realistic maximum number. I chose to make the promises run serially instead.&lt;/p&gt;
+&lt;p&gt;I had run into similar issues regarding simultaneous database calls in the past and I had already added the &lt;a href='http://bluebirdjs.com'&gt;Bluebird&lt;/a&gt; library to this particular project. It includes a function called &lt;a href='http://bluebirdjs.com/docs/api/promise.mapseries.html'&gt;&lt;code&gt;mapSeries&lt;/code&gt;&lt;/a&gt; which does exactly what I need.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;P&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bluebird&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="kd"&gt;interface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Dog&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;age&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;breed&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="c1"&gt;// ...snip...&lt;/span&gt;
 
-&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;announceCar&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;car&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Car&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sb"&gt;`The &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;car&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt; is a &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;car&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;age&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt; year old car.`&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;dodgeViper&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Car&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Dodge Viper&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;age&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;31&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="nx"&gt;P&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;mapSeries&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;items&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;checked&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;true&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you don't like Bluebird, there are other libraries available to control the level of concurrency when &lt;code&gt;Promise.all&lt;/code&gt; is used. Some of them even include the ability to specify concurrency limits higher than 1. I encourage the reader to experiment and see if they can roll their own function that takes an array of promises and awaits them serially.&lt;/p&gt;
+&lt;p&gt;The other bug I encountered was in a different project, but was once again a misapplication of &lt;code&gt;Promise.all&lt;/code&gt;. In this case, it was in a database migration for use with the &lt;a href='https://knexjs.org/'&gt;Knex&lt;/a&gt; ORM.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;up&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;Promise&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;table_a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;column_a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}),&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;table_b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;column_a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}),&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="nx"&gt;announceCar&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;dodgeViper&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="c1"&gt;// The Dodge Viper is a 31 year old car.&lt;/span&gt;
-
-&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;brunoTheDog&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Dog&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Bruno&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;age&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;breed&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;terrier&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I didn't dive too deeply into the root cause of this migration failing because I'd already been primed to be suspicious of unnecessary use of &lt;code&gt;Promise.all&lt;/code&gt; by the previous bug from earlier in the week. My best guess is that because &lt;code&gt;table_b&lt;/code&gt; has a foreign key that points to &lt;code&gt;table_a&lt;/code&gt;, the database threw an error when this migration attempted to alter &lt;code&gt;table_b&lt;/code&gt; while &lt;code&gt;table_a&lt;/code&gt; was still in the process of being altered.&lt;/p&gt;
+&lt;p&gt;In any case, the solution was very straightforward. Use Knex's promise chaining as it was designed to be used.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;up&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;knex&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;table_a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;column_a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;table_b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nx"&gt;table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;column_a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="nx"&gt;announceCar&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;brunoTheDog&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;// &amp;lt;- Typescript is a-okay with this.&lt;/span&gt;
-&lt;span class="c1"&gt;// The Bruno is a 5 year old car.&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;So, uh... that was weird. I passed a &lt;code&gt;Dog&lt;/code&gt; value to the &lt;code&gt;announceCar&lt;/code&gt; function, which says it accepts a &lt;code&gt;Car&lt;/code&gt; value. And Typescript was fine with it.&lt;/p&gt;
-&lt;p&gt;That's because &lt;code&gt;Dog&lt;/code&gt; is structurally compatible with &lt;code&gt;Car&lt;/code&gt;. &lt;code&gt;Dog&lt;/code&gt; has the same structural properties as &lt;code&gt;Car&lt;/code&gt;, plus a &lt;code&gt;breed&lt;/code&gt; key. Anything that expects a &lt;code&gt;Car&lt;/code&gt; can also accept a &lt;code&gt;Dog&lt;/code&gt;. A &lt;code&gt;Car&lt;/code&gt; can't pass as a &lt;code&gt;Dog&lt;/code&gt;, though, because &lt;code&gt;Car&lt;/code&gt; is missing the &lt;code&gt;breed&lt;/code&gt; key.&lt;/p&gt;
-&lt;p&gt;Compare that to C, which has a nominal type system.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;
-
-&lt;span class="k"&gt;typedef&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Car&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="k"&gt;typedef&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Dog&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;announce_car&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Car&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;car&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;The %s is a %d year old car.&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;car&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;car&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;Car&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;dodge_viper&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Dodge Viper&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;31&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;announce_car&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;dodge_viper&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;// The Dodge Viper is a 31 year old car.&lt;/span&gt;
-
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;Dog&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bruno&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Bruno&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;announce_car&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;bruno&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="cm"&gt;/*&lt;/span&gt;
-&lt;span class="cm"&gt;   * main.c:31:16: error: incompatible pointer types passing &amp;#39;Dog *&amp;#39; to parameter of type &amp;#39;Car *&amp;#39; [-Werror,-Wincompatible-pointer-types]&lt;/span&gt;
-&lt;span class="cm"&gt;   *   announce_car(&amp;amp;bruno);&lt;/span&gt;
-&lt;span class="cm"&gt;   *                ^~~~~~&lt;/span&gt;
-&lt;span class="cm"&gt;   * main.c:13:24: note: passing argument to parameter &amp;#39;car&amp;#39; here&lt;/span&gt;
-&lt;span class="cm"&gt;   * void announce_car(Car *car) {&lt;/span&gt;
-&lt;span class="cm"&gt;   *                        ^&lt;/span&gt;
-&lt;span class="cm"&gt;   */&lt;/span&gt;
-
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This C program is almost identical to the Typescript code, except that I've made the &lt;code&gt;Car&lt;/code&gt; and &lt;code&gt;Dog&lt;/code&gt; types structurally identical to one another. C does not let me pass a &lt;code&gt;Dog&lt;/code&gt; to the &lt;code&gt;announce_car&lt;/code&gt; function.&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt; If I really wanted to pass a &lt;code&gt;Dog&lt;/code&gt; to &lt;code&gt;announce_car&lt;/code&gt; in a nominally typed language, I'd have to cast it to a &lt;code&gt;Car&lt;/code&gt; or manually create a new &lt;code&gt;Car&lt;/code&gt; with the values from my &lt;code&gt;Dog&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;IMHO, unless you already understand the difference between structural typing and nominal typing, &lt;a href='https://github.com/microsoft/TypeScript/issues/202'&gt;microsoft/Typescript#202&lt;/a&gt; doesn't do a very good job explaining it. But the feature being requested is the ability to opt into nominal typing for a given type. If I could specify that &lt;code&gt;Car&lt;/code&gt; is a nominal type and a function expects a &lt;code&gt;Car&lt;/code&gt;, you'd need to either give it a &lt;code&gt;Car&lt;/code&gt; or cast the value you're passing into a &lt;code&gt;Car&lt;/code&gt; first.&lt;/p&gt;
-&lt;p&gt;But... why? Why do people want this feature so badly?&lt;/p&gt;
-&lt;p&gt;Let me give you the most concrete example I've seen for why nominal typing could be so helpful.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;CarID&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="kd"&gt;interface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Car&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;CarID&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;age&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kr"&gt;type&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;DogID&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="kd"&gt;interface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Dog&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;DogID&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;age&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;loadCar&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;CarID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Car&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// Loads a Car from the database&lt;/span&gt;
-
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Car&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;// Pretend this actually works&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;updateCarName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;CarID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Car&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// Sets a Car&amp;#39;s name in the database&lt;/span&gt;
-
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Car&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;// Pretend this actually works&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;loadDog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;DogID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Dog&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// Loads a Dog from the database&lt;/span&gt;
-
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Dog&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;// Pretend this actually works&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kd"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;bruno&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;loadDog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-&lt;span class="nx"&gt;updateCarName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;bruno&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Chevy Bel Air&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The problem is in the last line. I'm passing a &lt;code&gt;DogID&lt;/code&gt; to a function that expects a &lt;code&gt;CarID&lt;/code&gt;. This is incorrect and can cause serious data corruption in my database. Typescript doesn't flag this as incorrect currently. Because Typescript's type system is structural, &lt;code&gt;type CarID = number;&lt;/code&gt; causes &lt;code&gt;CarID&lt;/code&gt; to be nothing more than a synonym for &lt;code&gt;number&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Although &lt;code&gt;CarID&lt;/code&gt; and &lt;code&gt;DogID&lt;/code&gt; are technically both numbers, they are &lt;em&gt;not&lt;/em&gt; semantically identical. If they could be declared as nominal types, Typescript would flag my attempt to pass &lt;code&gt;bruno.id&lt;/code&gt; to &lt;code&gt;updateCarName&lt;/code&gt; as a type error.&lt;/p&gt;
-&lt;p&gt;If I was really, &lt;em&gt;really&lt;/em&gt; sure that I was doing the right thing, I could make Typescript accept it by casting, like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;updateCarName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;bruno&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;CarID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Chevy Bel Air&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This may seem like an odd concept, having explicit nominal types in an otherwise structural type system. I tried searching for prior art, but I didn't really find anything that works quite like what's being proposed in &lt;a href='https://github.com/microsoft/TypeScript/issues/202'&gt;microsoft/Typescript#202&lt;/a&gt;. In Elm, you can achieve a similar effect using algebraic data types. Typescript doesn't support algebraic data types and it likely never will as that's a whole different beast.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt; Flow treats classes as nominal types, but that's all. It's not something you can opt into for basic types like numbers.&lt;/p&gt;
-&lt;p&gt;If you read through the &lt;a href='https://github.com/microsoft/TypeScript/issues/202'&gt;microsoft/Typescript#202&lt;/a&gt; ticket, you'll see plenty of people's attempts to achieve the desired effect using Typescript as it exists today. There are also plenty of options available on NPM. The general technique goes by many names: opaque types, branded types, tagged types, flavored types, etc. There are multiple variations on the theme that have their own advantages and drawbacks. While the more mainstream implementations are serviceable, I'd wager the concept would be easier to work with as a first-class feature of the language.&lt;sup class="footnote-ref" id="fnref-5"&gt;&lt;a href="#fn-5"&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;How does this feature request compare to the &lt;code&gt;throws&lt;/code&gt; feature request from the first half of this blog post? It has fewer 👍 reactions, but more discussion. As the issue number implies, it's been around longer. A whole 9 years! Looking at the request honestly, I think nominal types would be less impactful for the average developer than the &lt;code&gt;throws&lt;/code&gt; feature. But it would still be a nice addition because it could help eliminate an entire class of bugs if used diligently.&lt;/p&gt;
+&lt;p&gt;This version of the migration worked without issue.&lt;/p&gt;
+&lt;p&gt;These examples show the need to think critically whenever you reach for &lt;code&gt;Promise.all&lt;/code&gt; or any other promise utility that results in parallelism in your code.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Don't use &lt;code&gt;Promise.all&lt;/code&gt; if you don't know how many promises you may be passing in ahead of time.&lt;/li&gt;
+&lt;li&gt;Don't use &lt;code&gt;Promise.all&lt;/code&gt; if your promises all depend on a shared, limited resource.&lt;/li&gt;
+&lt;li&gt;Don't use &lt;code&gt;Promise.all&lt;/code&gt; if the order in which the promises resolve matters.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr /&gt;
 &lt;section class="footnotes"&gt;
 &lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;Shout out to Emily! Thanks for the great question and the inspiration for this blog post. ❤️&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;Interestingly, you can't throw &lt;code&gt;void&lt;/code&gt;. Thank goodness for small favors, I guess.&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;Well, it would let me pass a &lt;code&gt;Dog&lt;/code&gt; to &lt;code&gt;announce_car&lt;/code&gt; if I hadn't compiled it with the &lt;code&gt;-Werror&lt;/code&gt; flag. In that case, the compiler emits the same message as a warning and lets me do it anyway, which does work. But it only works because the types are literally the same. If I add a &lt;code&gt;breed&lt;/code&gt; field to &lt;code&gt;Dog&lt;/code&gt; after &lt;code&gt;name&lt;/code&gt; but before &lt;code&gt;age&lt;/code&gt; and set &lt;code&gt;breed&lt;/code&gt; to "terrier", &lt;code&gt;announce_car&lt;/code&gt; will emit "The Bruno is a 4195924 year old car." But that's beyond the scope of the point I'm trying to make here.&lt;a href="#fnref-3" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-4"&gt;&lt;p&gt;FWIW, I love algebraic data types. I think they're more expressive than what Typescript currently has. But I don't think ADTs can map cleanly onto JavaScript's type system, meaning it's incompatible with Typescript's design goals.&lt;a href="#fnref-4" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-5"&gt;&lt;p&gt;The way most opaque type implementations work amounts to lying to the type system. Take &lt;a href='https://github.com/ts-essentials/ts-essentials/tree/master/lib/opaque'&gt;the implementation from ts-essentials&lt;/a&gt; for example. The implementation is only 9 lines long. It's got some interesting conditional types in there. I'm not exactly sure what bug it's trying to protect against. At the end of the day, the actual, literal type of &lt;code&gt;Opaque&amp;lt;number, 'CarID'&amp;gt;&lt;/code&gt; would be &lt;code&gt;number &amp;amp; { [__OPAQUE_TYPE__]: 'CarID' }&lt;/code&gt;. But that's a lie. Numeric literals are "turned into" the opaque type via assertion: &lt;code&gt;5 as CarID&lt;/code&gt;. There is no &lt;code&gt;__OPAQUE_TYPE__&lt;/code&gt; on the value. &lt;code&gt;(1 as UserID)[__OPAQUE_TYPE__]&lt;/code&gt; is valid according to the compiler. The ts-essentials implementation prevents us from being able to call its bluff by declaring &lt;code&gt;__OPAQUE_TYPE__&lt;/code&gt; as a unique symbol that's never actually created or given a value, much less exported, so it's impossible to actually access that value since there's no way to access it. &lt;a href='https://www.typescriptlang.org/play?#code/C4TwDgpgBAysBOBLAdgcwDKOBeBDANgDwAq4EAfFALxSmRQQAe2yAJgM5TsIqpQD8UABTckaBswhtOdaIOQQAbjigAuWmQCUaqAuXwA3ACgjrCAGN8ueNHMB7ZNygB9ZwHkACgEEAigFUAUWdiAE0PIOd1AFdkRABHKOh2EABbACM7fGMjUHoAdSwACzcwXASIEjsAaykJFg4uHjRKGgBvIygoG1xWB3wQKABtV09fQOCwiIBddWJqqWMAX2zc6BKyxJIyABpaeeQ6qQbRXha9moOmes44MQwsHAJKi8pBWSgAMigC4GLS8ueUko6j0OBWZCgAGFrABJAAi1Cg6wByCi6RwuwA5ND4PDMeRsvgIMAoIhWABGdQ4+GI8lQXCcalw7L2RyZCAAOnwdlQQjJ5OG7m8-iCoXCrimmgMQA'&gt;Try it in the playground&lt;/a&gt; to see what I mean. I've copied and pasted the code from ts-essentials. It compiles fine but throws an error at runtime.&lt;a href="#fnref-5" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;I say "may" because it depends on what the promises are doing.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;My understanding is that most JavaScript runtimes have an upper limit to how many promises they'll execute in parallel when &lt;code&gt;Promise.all&lt;/code&gt; is used, but I don't think any particular number is specified in the ECMAScript specification.&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
 </description>
       <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/the-two-most-popular-missing-typescript-features/</guid>
-      <pubDate>Tue, 28 Mar 2023 18:43:44 +0000</pubDate>
+      <guid isPermaLink="false">https://jaysherby.com/use-promiseall-with-caution/</guid>
+      <pubDate>Mon, 19 Feb 2024 22:25:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>Sequelize And The Disappearing ID Column</title>
+      <link>https://jaysherby.com/sequelize-and-the-disappearing-id-column/</link>
+      <description>&lt;p&gt;I recently fixed a bug in some code that uses Sequelize. Let me set the scene and let's see if you can figure out what happened.&lt;/p&gt;
+&lt;p&gt;Here's some example models that are sufficient to illustrate the situation I faced. I'll use a typical example domain. There is a table for books, a table for authors, and a join table to associate them since books can have multiple authors at once.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Book.model.ts&lt;/span&gt;
+
+&lt;span class="kd"&gt;class&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;extends&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Model&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;BookAuthors&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;HasMany&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;init&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;DataTypes.TEXT&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;sequelize&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;modelName&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Book&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;BookAuthors&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;hasMany&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Author.model.ts&lt;/span&gt;
+
+&lt;span class="kd"&gt;class&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;extends&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Model&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{}&lt;/span&gt;
+
+&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;init&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;DataTypes.TEXT&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;sequelize&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;modelName&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Author&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// BookAuthor.model.ts&lt;/span&gt;
+
+&lt;span class="kd"&gt;class&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;extends&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Model&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;BelongsTo&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;BelongsTo&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;init&lt;/span&gt;&lt;span class="p"&gt;({},&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;sequelize&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;modelName&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;BookAuthor&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;belongsTo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;belongsTo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You may have already noticed something a little non-idiomatic. The Book model is using &lt;code&gt;hasMany&lt;/code&gt; instead of &lt;code&gt;belongsToMany&lt;/code&gt;. That's how this was set up in the actual code I was working in.&lt;/p&gt;
+&lt;p&gt;Let's do a simple query to see what the data structure looks like.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stringify&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;findOne&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nx"&gt;where&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nx"&gt;include&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;model&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;include&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;model&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Author&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}],&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;toJSON&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="mf"&gt;2&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;The Hobbit&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;BookAuthors&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;BookId&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;AuthorId&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;Author&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;J. R. R. Tolkien&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Fantastic.  No surprises there.&lt;/p&gt;
+&lt;p&gt;Fast forward a couple of months and a bug was reported. An error was occurring because of a missing ID field in the results of that same query.&lt;/p&gt;
+&lt;p&gt;Let's run the query again and see what we get.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gd"&gt;--- before.json 2023-12-23 20:50:56.638119488 +0000&lt;/span&gt;
+&lt;span class="gi"&gt;+++ after.json  2023-12-23 20:50:59.674119628 +0000&lt;/span&gt;
+&lt;span class="gu"&gt;@@ -1,15 +1,14 @@&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;{
+&lt;span class="w"&gt; &lt;/span&gt;  &amp;quot;id&amp;quot;: 1,
+&lt;span class="w"&gt; &lt;/span&gt;  &amp;quot;name&amp;quot;: &amp;quot;The Hobbit&amp;quot;,
+&lt;span class="w"&gt; &lt;/span&gt;  &amp;quot;BookAuthors&amp;quot;: [
+&lt;span class="w"&gt; &lt;/span&gt;    {
+&lt;span class="gd"&gt;-      &amp;quot;id&amp;quot;: 1,&lt;/span&gt;
+&lt;span class="w"&gt; &lt;/span&gt;      &amp;quot;BookId&amp;quot;: 1,
+&lt;span class="w"&gt; &lt;/span&gt;      &amp;quot;AuthorId&amp;quot;: 1,
+&lt;span class="w"&gt; &lt;/span&gt;      &amp;quot;Author&amp;quot;: {
+&lt;span class="w"&gt; &lt;/span&gt;        &amp;quot;id&amp;quot;: 1,
+&lt;span class="w"&gt; &lt;/span&gt;        &amp;quot;name&amp;quot;: &amp;quot;J. R. R. Tolkien&amp;quot;
+&lt;span class="w"&gt; &lt;/span&gt;      }
+&lt;span class="w"&gt; &lt;/span&gt;    }
+&lt;span class="w"&gt; &lt;/span&gt;  ]
+&lt;span class="w"&gt; &lt;/span&gt;}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Sure enough, the &lt;code&gt;id&lt;/code&gt; of the join table is missing. The &lt;code&gt;id&lt;/code&gt; column of the table still existed. This was an active project, so many files had been changed between the previous release, which I could confirm still returned the &lt;code&gt;id&lt;/code&gt; of the join table, and the current version of the code. But the &lt;code&gt;BookAuthor.model.ts&lt;/code&gt; file &lt;em&gt;had not changed&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;I could work around the issue by adding &lt;code&gt;attributes: { include: [&amp;quot;id&amp;quot;] }&lt;/code&gt; like so:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stringify&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;await&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;findOne&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nx"&gt;where&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nx"&gt;include&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nx"&gt;model&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;BookAuthor&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nx"&gt;attributes&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;include&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nx"&gt;include&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;model&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;Author&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}],&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;toJSON&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="mf"&gt;2&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But that didn't explain &lt;em&gt;why&lt;/em&gt; the &lt;code&gt;id&lt;/code&gt; was suddenly missing. It took a &lt;a href='https://git-scm.com/docs/git-bisect'&gt;git bisect&lt;/a&gt; script for me to figure it out. Git's bisect command is a very powerful tool and I recommend you add it to your tool belt if you haven't already.&lt;/p&gt;
+&lt;p&gt;If you want to try to figure it out for yourself, stop here.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;After running git bisect, the culprit was a seemingly innocent change to the &lt;code&gt;Author.model.ts&lt;/code&gt; file. A developer had added &lt;code&gt;belongsToMany&lt;/code&gt; to the Author model to make it easier to traverse the relationship between Author and Book.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Author.model.ts&lt;/span&gt;
+
+&lt;span class="kd"&gt;class&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;extends&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Model&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Books&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;BelongsToMany&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;DataTypes.TEXT&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;sequelize&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;modelName&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Author&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Books&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;belongsToMany&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;through&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;BookAuthor&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using the &lt;code&gt;belongsToMany&lt;/code&gt; function to mark the BookAuthor model definitively as a join table in the eyes of Sequelize causes Sequelize to hide the &lt;code&gt;id&lt;/code&gt; column. Sequelize uses the foreign keys of join tables as a complex unique primary key.&lt;/p&gt;
+&lt;p&gt;When you look at it from the point of view of Sequelize's happy path, this makes complete sense. This is how Sequelize thinks join tables should be defined. When you look at it through a historical lens, it's surprising behavior that a change to some other model should cause a column to disappear from the results of a query.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/sequelize-and-the-disappearing-id-column/</guid>
+      <pubDate>Sat, 23 Dec 2023 21:14:31 +0000</pubDate>
+    </item>
+    <item>
+      <title>Ode To A Desoldering Pump</title>
+      <link>https://jaysherby.com/ode-to-a-desoldering-pump/</link>
+      <description>&lt;p&gt;Sometimes I solder electronics. I take no joy in it. I do it as a means to an end. I consider myself an experienced beginner and hobbyist. &lt;em&gt;I am not an expert.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The most personally frustrating part of soldering for me is correcting a mistake. I've soldered the wrong resistor into a spot on a really cramped board. I've already snipped the leads. Now what?&lt;/p&gt;
+&lt;p&gt;Previously, I'd curse myself a few times, break out the desoldering braid, and pray. Desoldering braid, in my experience, is &lt;em&gt;terrible&lt;/em&gt;. I can count on one hand the number of occasions it worked without issue.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351068-0.jpg" alt="Desoldering Pump" /&gt;&lt;/p&gt;
+&lt;p&gt;During my most recent solder session, I got the chance to finally break out my &lt;strong&gt;Hakko FR301-03/P Portable Desoldering Tool with Precise Temperature Control&lt;/strong&gt;. I'm going to warn you, it's eye-wateringly expensive, but it's worth every penny! I corrected my mistake in less than a minute.&lt;/p&gt;
+&lt;p&gt;I don't blame you if you want to look around for cheaper alternatives. But I will never go back to braid or those cheap, spring-loaded solder suckers that never really work again. A heated tip with a vacuum pump is just too convenient.&lt;/p&gt;
+&lt;p&gt;While the desoldering pump is the biggest game-changing tool I've added to my hobby electronics arsenal, I want to share some other recommendations that have vastly improved my experience.&lt;/p&gt;
+&lt;p&gt;Most people know about "helping hands" tools that hold boards and components for you while you solder. The most common variations are a heavy chunk of metal with a bunch of ball joints with wing nuts to loosen and tighten the joint. They typically have two alligator clip "hands" and a magnifying glass. And they're &lt;em&gt;garbage&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351083-0.jpg" alt="Omnifixo Helping Hands" /&gt;&lt;/p&gt;
+&lt;p&gt;Check out &lt;strong&gt;&lt;a href='https://omnifixo.com/'&gt;Omnifixo&lt;/a&gt;&lt;/strong&gt; instead. It's designed by a guy from Sweden, and it's amazing. Go check out the website to see its genius design and all of the clever little features. I can attest that it exceeds all expectations I had for a helping hands tool. If you're used to paying under $10 for the cheap versions of this tool, you might experience a bit of sticker shock. But this is another tool that's well worth the price.&lt;/p&gt;
+&lt;p&gt;Finally, what the hell is &lt;em&gt;that&lt;/em&gt; component? I can't read the label on it. It's got a number printed on it. I searched it on the web and figured it out, but that took like 10 minutes. Now that I know what it is, how can I be sure it's even working?&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1696351116-0.jpg" alt="T7 Multi-function Component Tester" /&gt;&lt;/p&gt;
+&lt;p&gt;There's a tool for that. Search your favorite marketplace that drop-ships cheap knock-offs from China (i.e. Amazon, eBay, AliExpress, etc.) for "&lt;strong&gt;LCR-T7&lt;/strong&gt;" or "&lt;strong&gt;T7 Tester&lt;/strong&gt;". You should be able to find a small device with a screen, a teal zero insertion force socket, and a single yellow button for around $20.&lt;/p&gt;
+&lt;p&gt;This thing is amazing! Plug in almost any passive component and it'll tell you what it is. It'll tell you the resistance of resistors, the capacitance of capacitors, and the direction of diodes. It'll identify the pins of transistors. And it does it all in mere seconds.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;In case it wasn't obvious, I'm not making any commissions, kickbacks, or money of any kind by recommending these tools. The only one I linked to was the Omniflexo because you can only buy it from its website right now. There are no affiliate links or anything like that.&lt;/em&gt;&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/ode-to-a-desoldering-pump/</guid>
+      <pubDate>Tue, 03 Oct 2023 16:19:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>Vintage Computer Festival Midwest 18</title>
+      <link>https://jaysherby.com/vintage-computer-festival-midwest-18/</link>
+      <description>&lt;p&gt;I visited &lt;a href='https://www.vcfmw.org/'&gt;Vintage Computer Festival Midwest&lt;/a&gt; today. This is my second year attending.&lt;/p&gt;
+&lt;h1 id=last-year&gt;Last year&lt;/h1&gt;&lt;p&gt;When I visited last year, the theme was Commodore 64 as it was the 40th anniversary of the popular micro's release. It was thrilling and a little overwhelming. I spent a fair amount of money on a C64 with all the modern bells and whistles. It needs a little love to strengthen the video signal, but it's in great condition otherwise.&lt;/p&gt;
+&lt;p&gt;I'm embarrassed to say I haven't found the time to do the necessary repair, so the machine has been sitting atop my printer since I brought it home.&lt;/p&gt;
+&lt;h1 id=this-year&gt;This year&lt;/h1&gt;&lt;p&gt;I was a bit more disciplined with my spending this year and managed to only walk out with a commemorative t-shirt. That's not to say I didn't have a ton of fun though. Let me share some of my favorite experiences from this year's festival.&lt;/p&gt;
+&lt;h2 id=flipper-slipper-on-a-spectravideo-sv-328&gt;Flipper Slipper on a Spectravideo SV-328&lt;/h2&gt;&lt;p&gt;I'd never heard of &lt;a href='https://en.wikipedia.org/wiki/Spectravideo'&gt;Spectravideo&lt;/a&gt;, nor Flipper Slipper before today. It was found, appropriately, at the "Obscure Computers" exhibit. Flipper Slipper is a Breakout-like game with an aquatic motif. Although the theme and elements were bizarre, the game controlled well and the twist of adding half circle paddles that can cause interesting ball physics was satisfying.&lt;/p&gt;
+&lt;p&gt;Flipper Slipper was also released for the ColecoVision. Although I can't attest that the ColecoVision version has the same fluent controls, it's probably an easier platform to emulate if you want to give the game a try.&lt;/p&gt;
+&lt;h2 id=the-emergency-alert-system&gt;The Emergency Alert System&lt;/h2&gt;&lt;p&gt;The "Behind The Screens" table, returning from last year, caters to a niche but interesting subject. Featured were the hardware systems that generate automated cable channels like The Weather Channel and the Prevue Guide Channel, known as the TV Guide Channel on the cable package my parents had while I was growing up.&lt;/p&gt;
+&lt;p&gt;The part of the exhibit that I had the most fun with was the Emergency Alert System hardware. A camera was pointed at the attendees. It fed into a vintage character generator you could use to overlay text. That was then output on a CRT TV. It's a clever gimmick for people who want to write a custom message on a selfie of themselves on TV.&lt;/p&gt;
+&lt;p&gt;But within the loop was the EAS hardware. Next to the EAS box was a red telephone and an instruction card. By dialing a particular number, you were would choose a number corresponding to the type of emergency message you'd like to send, and record a voice message to be played during it. I chose "fire warning" and mumbled something about this being a test, just in case. Sure enough, those loud, familiar tone patterns played and an appropriate warning message appeared on the TV. I couldn't hear my message, but I'm sure it played and I just hadn't spoken loudly enough when I recorded it.&lt;/p&gt;
+&lt;p&gt;It was a thrilling experience to trigger an emergency alert, even if it was just on a single television. In retrospect, I wish I had chosen a different type of message. A storm or tornado warning would be the most relatable. I did spot a choice in the list for a nuclear power plant warning. That sounds dramatic. I didn't get a chance to read the list of types completely, so maybe I missed some interesting options.&lt;/p&gt;
+&lt;h2 id=os2&gt;OS/2&lt;/h2&gt;&lt;p&gt;Although I didn't linger at the OS/2 exhibit, I was glad to see it return from last year. The first computer my family owned ran OS/2, so it's a real blast of nostalgia for me. I've independently collected a few different OS/2 installation media and other memorabilia including a beautiful enamel pin. Any acknowledgement of OS/2 is enough to put a smile on my face.&lt;/p&gt;
+&lt;h2 id=a-step-switch-demonstration&gt;A step switch demonstration&lt;/h2&gt;&lt;p&gt;You may be surprised to find there's a significant number of telephony wonks at VCF Midwest. Apparently it's tradition to wire up a PBX private phone network that anyone can connect to if they bring a compatible device. Some machines are connected to host BBSes. Some connect automated phone systems, like the phone that was connected to the EAS I talked about earlier. Some people set up little Easter egg systems to encourage attendees to use wardialers to find them. It's a fascinating vintage computing subculture.&lt;/p&gt;
+&lt;p&gt;The exhibit that hosts the PBX hardware to power the phone system is "Shadytel MidWest Telephone CO", also returning from last year. The PBX system they employ is a vintage system from the 1970s, but it's already completely digital. However, the exhibit includes a two-phone demonstration of an older electro-mechanical step switch telephone exchange system. Here's &lt;a href='https://www.youtube.com/watch?v=bvPH-tsD9ZM'&gt;a video&lt;/a&gt; with a very similar demonstration. It's impressively large with satisfying little movements and clicks. It feels very logical and elegant, given the technology available at the time of its creation. Chef's kiss, no notes.&lt;/p&gt;
+&lt;h2 id=stuff-for-sale&gt;Stuff for sale&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;I got to see the &lt;a href='https://www.core64.io/'&gt;Core64&lt;/a&gt; in person. It's very cool. The ferrite beads are even smaller than you think they are.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Altair 8800s! They're not cheap, so this is for the Serious Collector™. They were plentiful this year. But if you want in one the fun without the hefty price tag, there were also much cheaper clones built from new designs.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;More Commodore 64 SX units in one place than I've ever seen! And that includes last year's C64 celebration. They were surprisingly affordable, and in very good condition. I'm used to seeing them for eye-watering prices in rough condition on eBay.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=next-year&gt;Next year&lt;/h1&gt;&lt;p&gt;I think VCF Midwest has outgrown its venue. It was a record attendance for the second year in a row. Things were awfully cramped.&lt;/p&gt;
+&lt;p&gt;I had an idea for more attendee engagement that I'd love if someone stole for next year. I was following the #vcfmw hashtag on Mastodon to see other people's pictures of cool stuff. Why not encourage attendees to use the hashtag with a little signage and hook up a vintage computer to a large monitor or a projector and display people's messages?&lt;/p&gt;
+&lt;p&gt;&lt;a href='https://github.com/SuperIlu/DOStodon'&gt;DOStodon&lt;/a&gt; on a Pentium would be a good choice since it has some image support. There's also a &lt;a href='https://github.com/FujiNetWIFI/fujinet-apps/tree/master/mastodon'&gt;FujiNet Mastodon app&lt;/a&gt; that works on the big 3 micros: Apple ][, C64, and Atari 8-bits.&lt;/p&gt;
+&lt;p&gt;I hope to see you there next year!&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/vintage-computer-festival-midwest-18/</guid>
+      <pubDate>Sun, 10 Sep 2023 01:42:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>Typescript, Show Me The Whole Error!</title>
+      <link>https://jaysherby.com/typescript-show-me-the-whole-error/</link>
+      <description>&lt;p&gt;Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the error!&lt;/p&gt;
+&lt;p&gt;This is the default behavior for some reason. I'm not a fan. I know long error messages scare a lot of developers, but I'd rather have a long and helpful error message than a short and useless one.&lt;/p&gt;
+&lt;p&gt;Good news! Error message salvation is one &lt;code&gt;tsconfig.json&lt;/code&gt; setting away. Set &lt;a href='https://www.typescriptlang.org/tsconfig#noErrorTruncation'&gt;&lt;code&gt;noErrorTruncation&lt;/code&gt;&lt;/a&gt; to &lt;code&gt;true&lt;/code&gt; and you'll be all set.&lt;/p&gt;
+&lt;p&gt;Personally, I'd rather opt in to truncation than opt out, but at least it's an easy fix.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/typescript-show-me-the-whole-error/</guid>
+      <pubDate>Wed, 21 Jun 2023 19:26:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>React Hook Form: A Leaky Abstraction</title>
+      <link>https://jaysherby.com/react-hook-form-a-leaky-abstraction/</link>
+      <description>&lt;p&gt;I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.&lt;/p&gt;
+&lt;p&gt;However, this past week I ran into a weird edge case. To set the stage, a friend and colleague&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a &lt;code&gt;&amp;lt;select&amp;gt;&lt;/code&gt; style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.&lt;/p&gt;
+&lt;p&gt;Here's a tiny example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useUser&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;group&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;handleSubmit&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;formState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;errors&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useForm&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;resolver&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;yupResolver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="c1"&gt;// ...snip...&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;TextInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;/&amp;gt;&lt;/span&gt;
+
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;SelectInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;group&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let me break this down in words briefly to make sure we're on the same page.&lt;/p&gt;
+&lt;p&gt;This component checks a user's groups, which is provided by a custom hook called &lt;code&gt;useUser&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The form's default value for &lt;code&gt;group&lt;/code&gt; is a blank string if the given user has multiple groups available to them. If the user has just one group, which is the most common case, their group's value is automatically the default value for that form input.&lt;/p&gt;
+&lt;p&gt;Later, we choose to only render the &lt;code&gt;group&lt;/code&gt; field if there are multiple choices to choose from.&lt;/p&gt;
+&lt;p&gt;In practice, &lt;em&gt;this won't work&lt;/em&gt;. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the &lt;code&gt;&amp;quot;group&amp;quot;&lt;/code&gt; field.&lt;/p&gt;
+&lt;p&gt;What gives? We set the default value for that field! Making things even more confusing, if we add a logging statement like &lt;code&gt;console.log(getValues())&lt;/code&gt;, it will log an empty object until we start interacting with the form. It's like the default values aren't being used at all.&lt;/p&gt;
+&lt;p&gt;After futzing around for a couple of hours and getting nowhere, here's the result.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;getValues()&lt;/code&gt; doesn't know anything about &lt;code&gt;defaultValues&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The values in &lt;code&gt;defaultValues&lt;/code&gt; won't propagate into the form's values unless the form &lt;em&gt;actually renders an input&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Similarly, using &lt;code&gt;setValue()&lt;/code&gt; in a &lt;code&gt;useEffect&lt;/code&gt; hook, for example, won't work for any field in the form that doesn't have an actual input rendered on the page.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is actually mentioned in the documentation, but it's not exactly front and center.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Its not default state for the form, to include additional form values:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Register hidden input: &lt;code&gt;&amp;lt;input type=&amp;quot;hidden&amp;quot; ref={register} name=&amp;quot;test&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Combine values at onSubmit callback.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;-- &lt;a href='https://legacy.react-hook-form.com/v6/api#useForm'&gt;React Hook Form docs for &lt;code&gt;useForm&lt;/code&gt;, specifically under &lt;code&gt;defaultValues&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This little tidbit is what tipped me off to this situation.&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;There's also a clue in the FAQs for v7 in the answer for the question, "How to work with modal or tab forms?"&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;It's important to understand React Hook Form embraces native form behavior by storing input state inside each input (except custom &lt;code&gt;register&lt;/code&gt; at &lt;code&gt;useEffect&lt;/code&gt;). One of the common misconceptions is that when working with modal or tab forms, by mounting and unmounting form/inputs that inputs state will remain. That is incorrect. Instead, the correct solution would be to build a new form for your form inside each modal or tab and capture your submission data in local or global state and then do something with the combined data.&lt;/p&gt;
+&lt;p&gt;-- &lt;a href='https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms'&gt;React Hook Form FAQs, "How to work with modal or tab forms?"&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;These bits of information, pieced together, answer the question of why every piece of data in a React Hook Form-based form must have an input associated with it, even if it's a hidden input.&lt;/p&gt;
+&lt;h2 id=a-leaky-abstraction&gt;A Leaky Abstraction&lt;/h2&gt;&lt;p&gt;I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.&lt;/p&gt;
+&lt;h3 id=the-abstraction&gt;The Abstraction&lt;/h3&gt;&lt;p&gt;I'm using React Hook Form to reduce the boilerplate of form state management.  I could write my own state management for any given form using only React built-ins like &lt;code&gt;useReducer&lt;/code&gt; or I guess a dozen or so &lt;code&gt;useState&lt;/code&gt; instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;I would assume when I'm using a form state management library, it's doing this same stuff for me behind the scenes. It's just handling all of that tedious boilerplate code for me, but I assume the semantics, like a separation between data and view, would remain the same.&lt;/p&gt;
+&lt;h3 id=the-leak&gt;The Leak&lt;/h3&gt;&lt;p&gt;As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.&lt;/p&gt;
+&lt;p&gt;I'm willing to believe that my form is the edge case here. Most forms on the web can be built using React Hook Form and you'll never need to know about these implementation details. Most forms probably show all inputs every render. But we were improving UX so that users don't need to care about a required dropdown input if there's only one option to select from.&lt;/p&gt;
+&lt;p&gt;I want to make it clear here that I'm not calling React Hook Form a leaky abstraction as an insult. I still mostly like the library, even if it's not built the same way I would choose to build it. I'm going to continue using it. I still prefer it to Formik. But this is an implementation detail, or perhaps a consequential design philosophy, that users should be aware of.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;section class="footnotes"&gt;
+&lt;ol&gt;
+&lt;li id="fn-1"&gt;&lt;p&gt;Because I regularly confuse the name as &lt;code&gt;react-form-hook&lt;/code&gt;, I've given up and lovingly refer to it as &lt;code&gt;react-man-door-hand-hook-car-door&lt;/code&gt; instead. I'm sure my coworkers have become tired of this joke.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-2"&gt;&lt;p&gt;This is the second shout out to Emily on my blog! ❤️&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-3"&gt;&lt;p&gt;Note the docs' mention of combining the default data at the time of submission of the form. I did consider this approach after I'd already implemented an input component that intelligently used a hidden input when it made sense. But this approach wouldn't have worked in my case because I'm using schema validation to validate the form. Before I even got the chance to inject my default value, the validation would have failed and my submit function wouldn't have been called. I could have moved validation into my submit function, but then I'd lose the convenience of React Hook Form's built-in error messages. I guess I could make two versions of the schema, but who knows what unexpected gotchas that would uncover? It's a house of cards situation, and using a hidden input was the best choice.&lt;a href="#fnref-3" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id="fn-4"&gt;&lt;p&gt;It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.&lt;a href="#fnref-4" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/react-hook-form-a-leaky-abstraction/</guid>
+      <pubDate>Sat, 10 Jun 2023 15:33:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>A formal letter of apology to Batman</title>
+      <link>https://jaysherby.com/a-formal-letter-of-apology-to-batman/</link>
+      <description>&lt;p&gt;Dear Batman,&lt;/p&gt;
+&lt;p&gt;I hope this letter finds you well. It is with deep remorse and a heavy heart that I pen this formal apology to you. Recently, a rather unpleasant incident occurred within the confines of the sacred Bat Cave, an incident for which I must take full responsibility. I am truly sorry to inform you that I, Robin, was the culprit behind the unfortunate emission of flatulence in our esteemed headquarters.&lt;/p&gt;
+&lt;p&gt;As a trusted member of the Dynamic Duo and your loyal crime-fighting companion, I understand the solemnity and sanctity of our crime-fighting operations. The Bat Cave serves as the epicenter of our collaborative efforts, where we strategize, analyze, and prepare for the challenges that await us in the perilous streets of Gotham City. It is a place of utmost professionalism, focus, and, of course, fresh air.&lt;/p&gt;
+&lt;p&gt;The events leading up to the aforementioned mishap were rather innocuous. In hindsight, I admit to having consumed a hearty meal of beans, onions, and broccoli before our mission. My intentions were pure, as I sought to replenish my energy reserves for the arduous night of crime-fighting that lay ahead. Alas, the subsequent effects were unforeseen and regrettable.&lt;/p&gt;
+&lt;p&gt;During our pursuit of the nefarious Joker, my attempt to stifle a brewing gaseous release proved futile. In a moment of weakness, a quiet but noxious emission escaped, infiltrating the air within the Bat Cave with an unsavory odor that cannot be easily forgotten. I apologize for subjecting you to such an unseemly and unbecoming spectacle, especially given the seriousness of our line of work.&lt;/p&gt;
+&lt;p&gt;Batman, please understand that this occurrence was an unfortunate accident, an unintended consequence of my bodily functions. It was never my intention to compromise the solemnity and atmosphere of our hallowed sanctuary. I humbly request your forgiveness for this momentary lapse in decorum, as I hold the utmost respect for you, our partnership, and the significance of our mission.&lt;/p&gt;
+&lt;p&gt;Moving forward, I assure you that I will exercise greater caution regarding my dietary choices and their potential consequences. I will make a conscious effort to avoid any food items that could contribute to a recurrence of such regrettable incidents. Your trust and faith in my abilities are of utmost importance to me, and I am committed to upholding the professionalism and dignity befitting the role of Robin.&lt;/p&gt;
+&lt;p&gt;Once again, Batman, I extend my sincere apologies for defiling the sanctity of the Bat Cave with my untimely flatulence. I hope you can find it in your heart to forgive me, and that our partnership may continue with the same unwavering strength and camaraderie as before.&lt;/p&gt;
+&lt;p&gt;With the sincerest apologies and the utmost respect,&lt;/p&gt;
+&lt;p&gt;Robin&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/a-formal-letter-of-apology-to-batman/</guid>
+      <pubDate>Thu, 18 May 2023 19:35:52 +0000</pubDate>
     </item>
   </channel>
 </rss>
