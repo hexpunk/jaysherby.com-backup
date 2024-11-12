@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>https://jaysherby.com</id>
+  <title>Jay's blog</title>
+  <author>
+    <name>jaysherby</name>
+    <email>hidden</email>
+  </author>
+  <link href="https://jaysherby.com/" rel="alternate"/>
+  <link href="https://jaysherby.com/atom/" rel="self"/>
+  <generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator>
+  <subtitle>&lt;h1 style="font-weight: normal"&gt;&#13;
+  Hi! I'm &lt;strong&gt;Jay Sherby&lt;/strong&gt;!&#13;
+&lt;/h1&gt;&#13;
+&#13;
+I'm an experienced software developer in Chicago.&#13;
+&#13;
+Hiring? Check  to see...</subtitle>
+</feed>
