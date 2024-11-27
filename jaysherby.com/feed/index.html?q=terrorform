@@ -68,6 +68,8 @@ Hiring? Check  to see...</subtitle>
 &lt;/section&gt;
 </content>
     <link href="https://jaysherby.com/terraform-cloud-cdktf-auth0/" rel="alternate"/>
+    <category term="auth0"/>
+    <category term="terrorform"/>
     <published>2023-03-09T00:00:00+00:00</published>
   </entry>
 </feed>

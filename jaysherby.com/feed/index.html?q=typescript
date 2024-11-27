@@ -108,6 +108,8 @@ Hiring? Check  to see...</subtitle>
 &lt;/section&gt;
 </content>
     <link href="https://jaysherby.com/use-promiseall-with-caution/" rel="alternate"/>
+    <category term="javascript"/>
+    <category term="typescript"/>
     <published>2024-02-19T22:25:30.607894+00:00</published>
   </entry>
   <entry>
@@ -123,6 +125,7 @@ Hiring? Check  to see...</subtitle>
 &lt;p&gt;Personally, I'd rather opt in to truncation than opt out, but at least it's an easy fix.&lt;/p&gt;
 </content>
     <link href="https://jaysherby.com/typescript-show-me-the-whole-error/" rel="alternate"/>
+    <category term="typescript"/>
     <published>2023-06-21T19:26:00+00:00</published>
   </entry>
   <entry>
@@ -306,6 +309,8 @@ Hiring? Check  to see...</subtitle>
 &lt;/section&gt;
 </content>
     <link href="https://jaysherby.com/the-two-most-popular-missing-typescript-features/" rel="alternate"/>
+    <category term="programming language theory"/>
+    <category term="typescript"/>
     <published>2023-03-28T18:43:44.783753+00:00</published>
   </entry>
 </feed>

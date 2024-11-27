@@ -37,6 +37,9 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/nullable-parameters-in-sql-queries/</guid>
+      <category>postgres</category>
+      <category>sql</category>
+      <category>til</category>
       <pubDate>Mon, 29 Jul 2024 22:01:00 +0000</pubDate>
     </item>
     <item>
@@ -69,6 +72,7 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/expresss-finish-event/</guid>
+      <category>nodejs</category>
       <pubDate>Tue, 11 Jun 2024 16:11:00 +0000</pubDate>
     </item>
     <item>
@@ -100,6 +104,9 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/</guid>
+      <category>home server</category>
+      <category>linux</category>
+      <category>systemd</category>
       <pubDate>Wed, 21 Feb 2024 04:21:55 +0000</pubDate>
     </item>
     <item>
@@ -191,6 +198,8 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/use-promiseall-with-caution/</guid>
+      <category>javascript</category>
+      <category>typescript</category>
       <pubDate>Mon, 19 Feb 2024 22:25:30 +0000</pubDate>
     </item>
     <item>
@@ -340,6 +349,7 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/sequelize-and-the-disappearing-id-column/</guid>
+      <category>sequelize</category>
       <pubDate>Sat, 23 Dec 2023 21:14:31 +0000</pubDate>
     </item>
     <item>
@@ -363,6 +373,9 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/ode-to-a-desoldering-pump/</guid>
+      <category>electronics</category>
+      <category>soldering</category>
+      <category>tools</category>
       <pubDate>Tue, 03 Oct 2023 16:19:55 +0000</pubDate>
     </item>
     <item>
@@ -408,6 +421,7 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/typescript-show-me-the-whole-error/</guid>
+      <category>typescript</category>
       <pubDate>Wed, 21 Jun 2023 19:26:00 +0000</pubDate>
     </item>
     <item>
@@ -498,6 +512,7 @@ Hiring? Check  to see...</description>
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/react-hook-form-a-leaky-abstraction/</guid>
+      <category>react</category>
       <pubDate>Sat, 10 Jun 2023 15:33:11 +0000</pubDate>
     </item>
     <item>

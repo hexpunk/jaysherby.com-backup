@@ -43,6 +43,9 @@ Hiring? Check  to see...</subtitle>
 &lt;p&gt;For the sake of readability, I'd recommend only using this operator in this particular situation. In other words, don't rush to go change every usage of &lt;code&gt;=&lt;/code&gt; and &lt;code&gt;IS NULL&lt;/code&gt; in queries that don't need this special consideration. This is a special tool that deserves a spot in your tool belt for just the right occasion.&lt;/p&gt;
 </content>
     <link href="https://jaysherby.com/nullable-parameters-in-sql-queries/" rel="alternate"/>
+    <category term="postgres"/>
+    <category term="sql"/>
+    <category term="til"/>
     <published>2024-07-29T22:01:00+00:00</published>
   </entry>
 </feed>

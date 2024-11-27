@@ -166,6 +166,7 @@ Hiring? Check  to see...</subtitle>
 &lt;p&gt;When you look at it from the point of view of Sequelize's happy path, this makes complete sense. This is how Sequelize thinks join tables should be defined. When you look at it through a historical lens, it's surprising behavior that a change to some other model should cause a column to disappear from the results of a query.&lt;/p&gt;
 </content>
     <link href="https://jaysherby.com/sequelize-and-the-disappearing-id-column/" rel="alternate"/>
+    <category term="sequelize"/>
     <published>2023-12-23T21:14:31.191699+00:00</published>
   </entry>
 </feed>

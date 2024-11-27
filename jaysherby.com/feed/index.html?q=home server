@@ -48,6 +48,9 @@ Hiring? Check  to see...</subtitle>
 &lt;p&gt;This setup may not be perfect. I'm no systemd expect. This is cobbled and cargo culted together. But it works on my machine™.&lt;/p&gt;
 </content>
     <link href="https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/" rel="alternate"/>
+    <category term="home server"/>
+    <category term="linux"/>
+    <category term="systemd"/>
     <published>2024-02-21T04:21:55.841290+00:00</published>
   </entry>
 </feed>

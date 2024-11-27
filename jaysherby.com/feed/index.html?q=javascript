@@ -108,6 +108,8 @@ Hiring? Check  to see...</subtitle>
 &lt;/section&gt;
 </content>
     <link href="https://jaysherby.com/use-promiseall-with-caution/" rel="alternate"/>
+    <category term="javascript"/>
+    <category term="typescript"/>
     <published>2024-02-19T22:25:30.607894+00:00</published>
   </entry>
 </feed>
