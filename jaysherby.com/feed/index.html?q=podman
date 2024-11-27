@@ -81,6 +81,8 @@ ignore_chown_errors = &amp;quot;true&amp;quot;
 &lt;/section&gt;
 </content>
     <link href="https://jaysherby.com/tips-for-becoming-a-pod-person/" rel="alternate"/>
+    <category term="docker"/>
+    <category term="podman"/>
     <published>2023-03-16T00:36:53.263724+00:00</published>
   </entry>
 </feed>

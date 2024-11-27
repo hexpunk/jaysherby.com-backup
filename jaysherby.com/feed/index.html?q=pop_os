@@ -79,6 +79,7 @@ wifi.cloned-mac-address=random
 &lt;/section&gt;
 </content>
     <link href="https://jaysherby.com/randomizing-mac-addresses-with-networkmanager/" rel="alternate"/>
+    <category term="pop_os"/>
     <published>2023-03-14T23:31:40.536036+00:00</published>
   </entry>
   <entry>
@@ -98,6 +99,7 @@ wifi.cloned-mac-address=random
 &lt;p&gt;After deleting those directories, my boot partition is now down to a relatively safe 82% usage.&lt;/p&gt;
 </content>
     <link href="https://jaysherby.com/hp-dev-one-low-disk-space-on-bootefi/" rel="alternate"/>
+    <category term="pop_os"/>
     <published>2023-03-12T20:44:25.636571+00:00</published>
   </entry>
 </feed>
