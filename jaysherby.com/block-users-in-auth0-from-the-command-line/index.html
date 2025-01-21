@@ -377,7 +377,7 @@ body.page #upvote-form {
 <p>I've only had to do this process once so far. But being a developer, I immediately wanted to automate this process with a shell script. With Auth0's web app, it takes a copy/paste and 4 clicks <em>per user</em> I'm blocking. That's unacceptable. After the first half-dozen users, my eyes lose focus and my mind starts to wander. And that's when the odds I'll make a mistake spike.</p>
 <p>This was the push I needed to finally install Auth0's command line tool, <a href='https://github.com/auth0/auth0-cli'>auth0-cli</a>.</p>
 <p>After authenticating with <code>auth0 login</code>, the first step will be finding the user's ID based on their email address.</p>
-<div class="highlight"><pre><span></span>auth0<span class="w"> </span>users<span class="w"> </span>search<span class="w"> </span>-q<span class="w"> </span>email:<span class="s2">&quot;user1@example.com&quot;</span>
+<div class="highlight"><pre><span></span>auth0<span class="w"> </span>users<span class="w"> </span>search<span class="w"> </span>-q<span class="w"> </span>email:<span class="s2">&quot;<a href="../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="4d383e283f7c0d28352c203d2128632e2220">[email&#160;protected]</a>&quot;</span>
 </pre></div>
 <p>Most commands in auth0-cli have a <code>--json</code> option to print their output in JSON format, which will make it easy to grab what I need by piping the output to <a href='https://stedolan.github.io/jq/'>jq</a>.</p>
 <p>With some error handling in case I receive anything besides exactly one result from my query, I'll have the user's ID. Using that, I should be able to block the user by... uh....</p>
@@ -433,7 +433,7 @@ body.page #upvote-form {
     </small>        
 </form>
 
-<script>
+<script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const form = e.target;

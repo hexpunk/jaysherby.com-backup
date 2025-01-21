@@ -370,7 +370,7 @@ body.page #upvote-form {
 </pre></div>
 <p>However, there's still a problem. If the system reboots, the power management for the wifi adapter returns to its default state of being turned on.</p>
 <p>Systemd to the rescue. After debugging some examples online that are very close to correct but ultimately out of date, here's the unit file I ended up with and the commands I used to set it up for my wifi adapter.</p>
-<div class="highlight"><pre><span></span>sudo systemctl --full --force edit wlan_always_on@.service
+<div class="highlight"><pre><span></span>sudo systemctl --full --force edit <a href="../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="1f68737e71407e73687e666c4070715f316c7a6d69767c7a">[email&#160;protected]</a>
 </pre></div>
 <div class="highlight"><pre><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Keep wireless device %i from sleeping.</span>
@@ -382,7 +382,7 @@ body.page #upvote-form {
 <span class="k">[Install]</span>
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
 </pre></div>
-<div class="highlight"><pre><span></span>sudo systemctl enable --now wlan_always_on@wlp1s0.service
+<div class="highlight"><pre><span></span>sudo systemctl enable --now <a href="../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="42352e232c1d232e35233b311d2d2c02352e327331726c312730342b2127">[email&#160;protected]</a>
 </pre></div>
 <p>This setup may not be perfect. I'm no systemd expect. This is cobbled and cargo culted together. But it works on my machine™.</p>
 
@@ -422,7 +422,7 @@ body.page #upvote-form {
     </small>        
 </form>
 
-<script>
+<script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const form = e.target;

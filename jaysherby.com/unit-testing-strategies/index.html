@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Unit Testing Strategies | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+    
+
+    <meta name="jaysherby" content="look-for-the-bear-necessities">
+
+    <!-- Primary Meta Tags -->
+<meta name="title" content="Unit Testing Strategies">
+<meta name="description" content="I might be dating myself, but I&#x27;ve been around since unit testing generally meant using  or . Unit testing has come a long way, and it&#x27;s worth the time to ke...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Unit Testing Strategies">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/unit-testing-strategies/">
+<meta property="og:description" content="I might be dating myself, but I&#x27;ve been around since unit testing generally meant using  or . Unit testing has come a long way, and it&#x27;s worth the time to ke...">
+<meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/unit-testing-strategies/">
+<meta property="twitter:title" content="Unit Testing Strategies">
+<meta property="twitter:description" content="I might be dating myself, but I&#x27;ve been around since unit testing generally meant using  or . Unit testing has come a long way, and it&#x27;s worth the time to ke...">
+<meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Unit Testing Strategies",
+    "url": "https://jaysherby.com/unit-testing-strategies/",
+    "description": "I might be dating myself, but I&#x27;ve been around since unit testing generally meant using  or . Unit testing has come a long way, and it&#x27;s worth the time to ke...",
+    "about": {
+      "@type": "Unit Testing Strategies",
+      "description": "I might be dating myself, but I&#x27;ve been around since unit testing generally meant using  or . Unit testing has come a long way, and it&#x27;s worth the time to ke..."
+    }
+  }
+</script>
+
+  
+    
+
+    
+    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+  
+  
+  
+    
+        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+    
+
+
+
+  <style>
+      
+      
+    :root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+/* Blockquote styles for conversations with AI */
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+/* Make embedded images centered and interrupt content */
+main img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give hint that <details> are clickable to reveal more */
+details > summary {
+  cursor: pointer;
+}
+
+/* Make "Made with Bear" footer always at the bottom of the page */
+/*
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+*/
+
+/* Hide upvote UI on pages */
+body.page #upvote-form {
+  display: none !important;
+}
+    .upvote-button {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background-color: inherit;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .upvote-button.upvoted {
+        color: salmon;
+    }
+    .upvote-count {
+        margin-top: -3px;
+    }
+
+      
+  </style>
+
+  
+    
+    <style>
+        body:hover {
+            border-image: url("https://jaysherby.com/hit/LcapBnutCEZWbbowbrMZ/");
+            border-width: 0;
+        }
+    </style>
+    
+
+</head>
+
+<body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
+  
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+    
+        
+    
+
+    
+        <h1>Unit Testing Strategies</h1>
+
+        <p>
+            <i>
+                <time datetime="2025-01-20T23:55Z">
+                    20 Jan, 2025
+                </time>
+            </i>
+        </p>
+    
+
+    <p>I might be dating myself, but I've been around since unit testing generally meant using <a href='https://en.wikipedia.org/wiki/XUnit'><em>x</em>Unit</a> or <a href='https://testanything.org/'>Test Anything Protocol</a>. Unit testing has come a long way, and it's worth the time to keep up with it because new features reduce the pain associated with writing unit tests. In my experience, it's this pain that disincentivizes developers to write good, high-coverage unit tests, even though we know we really should.</p>
+<p>I've been using <a href='https://vitest.dev/'>Vitest</a> lately for testing my Typescript projects. Vitest is a test runner that piggybacks off of <a href='https://vite.dev/'>Vite</a> while offering most of the functionality present in <a href='https://jestjs.io/'>Jest</a>. The examples I share will be based on Vitest's features and API, but most of the techniques are widely available. Check your preferred test runner's documentation to see how it exposes these features.</p>
+<h2 id=table-driven-tests>Table-Driven Tests</h2><p>Table-driven tests have a long history, but my first exposure to the concept was via Go's built-in unit test functionality.</p>
+<p>The basic idea is, if you're planning to test a function with a given set of inputs and an expected output, rather than repeat the tedious boilerplate for each test case, create a 2D array of values (the titular table) and iterate over it.</p>
+<p>Here's how it looks in Vitest and Jest:</p>
+<div class="highlight"><pre><span></span><span class="nx">test</span><span class="p">.</span><span class="nx">each</span><span class="p">([</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<span class="p">])(</span><span class="s1">&#39;add(%i, %i) -&gt; %i&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">expected</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">expected</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+<p>Notice the <code>printf</code>-like syntax allowing you to produce a name for each individual test that incorporates its unique values.</p>
+<p>If your test runner doesn't have such functionality built-in, you can try to recreate it by hand.</p>
+<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">testCases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<span class="p">];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">expected</span><span class="p">]</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">testCases</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">test</span><span class="p">(</span><span class="sb">`add(</span><span class="si">${</span><span class="nx">a</span><span class="si">}</span><span class="sb">, </span><span class="si">${</span><span class="nx">b</span><span class="si">}</span><span class="sb">) -&gt; </span><span class="si">${</span><span class="nx">expected</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">expected</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+<p>Your mileage may vary. I seem to recall the past experience of some test runner choking on runtime-generated tests, but I just tested this approach in Vitest, Jest, and <a href='https://mochajs.org/'>Mocha</a>, and they all handled it properly.</p>
+<p>If you do happen to find your test runner of choice doesn't handle this properly, you can fall back to a monolithic test case that runs all rows in your table.</p>
+<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">testCases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<span class="w">  </span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<span class="p">];</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="sb">`add()`</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">expected</span><span class="p">]</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">testCases</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">expected</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+<p>The disadvantage to this approach is that a single row will cause the entire test case to fail, and the row at fault may not be readily apparent depending on your reporter configuration.</p>
+<p>In any case, either through ignorance of the approach, or stubborn test runners, I've both seen and written test files with orders of magnitude more lines of code than what they're testing due to hundreds of lines of boilerplate copypasta. Unnecessarily verbose tests are hard to read and maintain. Use table-driven tests to cut the noise.</p>
+<h2 id=snapshots>Snapshots</h2><p>My first exposure to snapshot tests was via Jest. The idea was introduced within the framework of testing React-based UI components. At its core, a snapshot is a string containing a serialized representation of data. At test time, the value generated by the function under test is serialized and compared to the previously stored version. In the case of UI components, the snapshot is usually HTML or something very similar.</p>
+<p>The hidden power of snapshots is that they needn't be restricted to UI tests. Jest's and Vitest's snapshot implementations work on practically all values. Try reaching for snapshots whenever you expect a large, deep object or array that's static.</p>
+<p>Snapshots are overkill if you're testing for simpler objects or scalar values. They're inappropriate when the object you're testing against has values that may change per run, like IDs and timestamps.</p>
+<p>Why should you use snapshots for non-UI tests instead of writing out your expected match values by hand? It's all about the tooling!</p>
+<p>Your test runner will do the copypasta for you. But remember to manually review the snapshot to make sure it's correct.</p>
+<p>Snapshots should be checked into your repository and should be code-reviewed just like everything else.</p>
+<p>If the snapshot is small and you don't like having to flip between your test file and the snapshot file, use the in-line equivalent: <code>expect(result).toMatchInlineSnapshot()</code>. Your test runner will generate a snapshot that lives in the test code instead of a separate file.</p>
+<p>When the day comes that the snapshot test fails not because of a bug but because a change has led to an out-of-date snapshot, updating the snapshot is made easy by your test runner. Making the update usually involves running your test runner with a particular argument. Or your test runner may prompt you if you're running in an interactive mode.</p>
+<h2 id=in-source-testing>In-Source Testing</h2><p>In-source testing describes when your unit tests live in the same file as the code they test. Go and Rust users have enjoyed this option since the early days. This seems to be a rarity in the JavaScript world, however. In fact, Vitest is the only test runner I've come across that supports it! Here's why it matters.</p>
+<p>While not a replacement for traditional documentation, types, and code comments, unit tests can serve as a form of supplemental documentation about how a programmer expects code to behave and how they expect it to be used. When the tests live literally right next to the code they test, it makes it easier to see the bigger picture.</p>
+<p>More practically, placing tests within modules allows you to test private functions without having to jump through hoops.</p>
+<p>JavaScript modules are file-based. Anything that is exported from the module can be thought of as that module's public API. Minimizing the breadth of a module's API is important. I've seen modules in the wild that export every function within them. This can lead to difficulties when it comes time to make changes, because if every line of code of a module is public, every behavior, even buggy behaviors, can be depended upon by some other module somewhere.</p>
+<p>JavaScript tests have traditionally lived in separate files from the code they test. This means if you don't export a function, you can't test it directly. You can only test its behavior in the context of the publicly exported functions that call it.</p>
+<p>This issue has caused friction since modules were introduced. I've seen several solutions that usually fall under the category of dependency injection, but I typically find them awkward and brittle.</p>
+<p>That's not to say <a href='https://vitest.dev/guide/in-source.html'>Vitest's solution</a> is perfect. It does involve depending upon a relatively new feature of the module system. Getting it to work correctly in Typescript involves setting up your <code>tsconfig.json</code> file <em>just so</em>. But it's the sanest solution to this problem I've encountered so far.</p>
+<p>Here's the <code>tsconfig.json</code> settings that got it working seamlessly for me:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="nv">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;es2022&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">&quot;moduleResolution&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;node10&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nv">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vitest/importMeta&quot;</span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+<p>When your unit tests live within the module under test, everything in the module's scope is available to your unit tests: classes, functions, constants, imports, everything! Being able to test private functions has been a revelation and a relief. If your test coverage of your private functions is sufficient enough that you trust them, you typically no longer need to test those aspects of the functions that call them.</p>
+<p>I hope you find these unit test features as helpful as I have. They've been invaluable additions to my programming tool belt.</p>
+
+
+    
+
+    
+        
+            <p class="tags">
+                
+                    <a href="../blog/index.html%3Fq=javascript.html">#javascript</a>
+                
+                    <a href="../blog/index.html%3Fq=typescript.html">#typescript</a>
+                
+                    <a href="../blog/index.html%3Fq=unit&#32;testing.html">#unit testing</a>
+                
+            </p>
+        
+
+        
+            <form id="upvote-form" action="https://jaysherby.com/upvote/LcapBnutCEZWbbowbrMZ/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="LcapBnutCEZWbbowbrMZ" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+        
+    
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+    
+    <span>
+        Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+    </span>
+
+  </footer>
+</body>
+</html>
