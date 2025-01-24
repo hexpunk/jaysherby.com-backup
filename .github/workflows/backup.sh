@@ -7,6 +7,7 @@ set -u
 find . -maxdepth 1 -type d -not -name '.*' -exec rm -r "{}" \;
 
 # Download website and images, ignoring /hit and /upvote paths.
+# Ignore invalid tagquery URLs. https://github.com/HermanMartinus/bearblog/commit/6876c49088b47f8b3e987c6cabf8d5abf8a69957
 wget --wait=2 \
      --mirror \
      --page-requisites \
@@ -16,6 +17,7 @@ wget --wait=2 \
      --span-hosts \
      --domains="jaysherby.com,digitaloceanspaces.com" \
      --exclude-directories="hit,upvote" \
+     --reject-regex="\?tagquery\=" \
      -e robots=off \
      https://jaysherby.com
 
@@ -23,9 +25,10 @@ wget --wait=2 \
 # Delete last build date tag since it will change often.
 # Delete "updated" dates that are always the current timestamp in feed pages.
 find . -type f -name "*.html*" \
-       -exec sed -i '/<input.*name="csrfmiddlewaretoken".*>/d' {} \; \
-       -exec sed -i '/<lastBuildDate>.*<\/lastBuildDate>/d' {} \; \
-       -exec sed -i '/<updated>.*<\/updated>/d' {} \;
+       -exec sed -i.bak '/<input.*name="csrfmiddlewaretoken".*>/d' {} \; \
+       -exec sed -i.bak '/<lastBuildDate>.*<\/lastBuildDate>/d' {} \; \
+       -exec sed -i.bak '/<updated>.*<\/updated>/d' {} \; \
+       -exec rm {}.bak \;
 
 # Detect any added, changed, or deleted files
 if [ -n "$(git ls-files --modified --deleted --others)" ]; then
