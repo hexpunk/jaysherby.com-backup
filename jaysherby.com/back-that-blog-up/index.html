@@ -389,6 +389,7 @@ body.page #upvote-form {
 find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;.*&#39;</span><span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="w"> </span><span class="se">\;</span>
 
 <span class="c1"># Download website and images, ignoring /hit and /upvote paths.</span>
+<span class="c1"># Ignore invalid tagquery URLs. https://github.com/HermanMartinus/bearblog/commit/6876c49088b47f8b3e987c6cabf8d5abf8a69957</span>
 wget<span class="w"> </span>--wait<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--mirror<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--page-requisites<span class="w"> </span><span class="se">\</span>
@@ -398,14 +399,18 @@ wget<span class="w"> </span>--wait<span class="o">=</span><span class="m">2</spa
 <span class="w">     </span>--span-hosts<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--domains<span class="o">=</span><span class="s2">&quot;jaysherby.com,digitaloceanspaces.com&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">&quot;hit,upvote&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--reject-regex<span class="o">=</span><span class="s2">&quot;\?tagquery\=&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-e<span class="w"> </span><span class="nv">robots</span><span class="o">=</span>off<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>https://jaysherby.com
 
 <span class="c1"># Delete CSRF tokens since they&#39;ll change every page load.</span>
 <span class="c1"># Delete last build date tag since it will change often.</span>
+<span class="c1"># Delete &quot;updated&quot; dates that are always the current timestamp in feed pages.</span>
 find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.html*&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;input.*name=&quot;csrfmiddlewaretoken&quot;.*&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i.bak<span class="w"> </span><span class="s1">&#39;/&lt;input.*name=&quot;csrfmiddlewaretoken&quot;.*&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i.bak<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i.bak<span class="w"> </span><span class="s1">&#39;/&lt;updated&gt;.*&lt;\/updated&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>rm<span class="w"> </span><span class="o">{}</span>.bak<span class="w"> </span><span class="se">\;</span>
 
 <span class="c1"># Detect any added, changed, or deleted files</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>git<span class="w"> </span>ls-files<span class="w"> </span>--modified<span class="w"> </span>--deleted<span class="w"> </span>--others<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
@@ -425,6 +430,7 @@ find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </spa
 <span class="w">     </span>--span-hosts<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--domains<span class="o">=</span><span class="s2">&quot;jaysherby.com,digitaloceanspaces.com&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">&quot;hit,upvote&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--reject-regex<span class="o">=</span><span class="s2">&quot;\?tagquery\=&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-e<span class="w"> </span><span class="nv">robots</span><span class="o">=</span>off<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>https://jaysherby.com
 </pre></div>
@@ -436,14 +442,16 @@ find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </spa
 <li>I removed the <code>--limit-rate=20K</code> argument because although I understand the purpose of setting <code>--wait=2</code> to avoid overwhelming the server with a ton of requests all at once, it seems to me like limiting the transfer speed would end up wasting precious time that could be spent serving other clients. It really doesn't matter for the amount of traffic I get anyway.</li>
 <li>I added <code>--span-hosts</code> and <code>--domains=&quot;jaysherby.com,digitaloceanspaces.com&quot;</code> to ensure images are downloaded. Bear Blog is currently hosted on Digital Ocean and images are stored in their Spaces product, which is more or less a clone of AWS S3. This feature is currently configured such that image URLs live in a subdomain of <code>digitaloceanspaces.com</code>.</li>
 <li>I added <code>--exclude-directories=&quot;hit,upvote&quot;</code>. Wget was downloading files from <code>/hit</code> which is how Bear Blog powers its analytics service. It's currently implemented by setting URLs in that path as a border image applied to the page body on hover. Clever! But it currently only returns a response of <a href='https://github.com/HermanMartinus/bearblog/blob/89cff8645af2e7b21d382dc59ed7eacfb7b971d3/blogs/views/analytics.py#L69'>"Logged"</a>, which is useless for my backups and would present as noise in my analytics. The <code>/upvote</code> path is how posts are "toasted". Wget should never follow these by default since they are form actions, but better safe than sorry.</li>
+<li>I added <code>--reject-regex=&quot;\?tagquery\=&quot;</code> to work around <a href='https://github.com/HermanMartinus/bearblog/commit/6876c49088b47f8b3e987c6cabf8d5abf8a69957'>a recent change</a> in how Bear Blog works.</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="c1"># Delete CSRF tokens since they&#39;ll change every page load.</span>
 <span class="c1"># Delete last build date tag since it will change often.</span>
 <span class="c1"># Delete &quot;updated&quot; dates that are always the current timestamp in feed pages.</span>
 find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.html*&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;input.*name=&quot;csrfmiddlewaretoken&quot;.*&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/&lt;updated&gt;.*&lt;\/updated&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i.bak<span class="w"> </span><span class="s1">&#39;/&lt;input.*name=&quot;csrfmiddlewaretoken&quot;.*&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i.bak<span class="w"> </span><span class="s1">&#39;/&lt;lastBuildDate&gt;.*&lt;\/lastBuildDate&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i.bak<span class="w"> </span><span class="s1">&#39;/&lt;updated&gt;.*&lt;\/updated&gt;/d&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span>-exec<span class="w"> </span>rm<span class="w"> </span><span class="o">{}</span>.bak<span class="w"> </span><span class="se">\;</span>
 </pre></div>
 <p>This command looks through the HTML files and removes three patterns from them.</p>
 <p>The first is a hidden input within the "toast" forms that contains a CSRF token. I'm removing this because, as the comment says, the value will be different on every page load. That will make for a lot of unnecessary noise in my backups.</p>
@@ -451,6 +459,7 @@ find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </spa
 <p>The final pattern is an "updated" tag that seems to always contain the timestamp when the page was generated. These are present on pages in the <code>/feed</code> URL path.</p>
 <p>Notice in the second sed command that the slash in the HTML tag is escaped! I originally overlooked this and it bit me. 🤦</p>
 <p>Quick shout out to <a href='https://sed.js.org/'>this website</a> that is like <a href='https://regex101.com/'>Regex 101</a> for sed. It saved me a lot of time testing out my sed commands.</p>
+<p>I've also made sure that these sed commands work on MacOS as well as Linux in case you're running MacOS and you want to run the script locally.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Detect any added, changed, or deleted files</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>git<span class="w"> </span>ls-files<span class="w"> </span>--modified<span class="w"> </span>--deleted<span class="w"> </span>--others<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>git<span class="w"> </span>add<span class="w"> </span>-A
