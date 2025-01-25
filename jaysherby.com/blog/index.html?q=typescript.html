@@ -412,7 +412,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=typescript,javascript">#javascript</a>
+                <a href="index.html%3Fq=typescript,javascript.html">#javascript</a>
             
         
             
@@ -426,7 +426,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=typescript,programming&#32;language&#32;theory">#programming language theory</a>
+                <a href="index.html%3Fq=typescript,programming&#32;language&#32;theory.html">#programming language theory</a>
             
         
             
@@ -448,22 +448,11 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=typescript,unit&#32;testing">#unit testing</a>
+                <a href="index.html%3Fq=typescript,unit&#32;testing.html">#unit testing</a>
             
         
     </div>
 </small>
-
-<script>
-    setTimeout(() => {
-        const tagLinks = document.querySelectorAll('.tags a');
-        tagLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            link.setAttribute('href', href.replace('?tagquery=', '?q='));
-        });
-    }, 500);
-</script>
-
 
 
   </main>

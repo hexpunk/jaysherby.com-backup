@@ -393,7 +393,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=postgres,sql">#sql</a>
+                <a href="index.html%3Fq=postgres,sql.html">#sql</a>
             
         
             
@@ -401,7 +401,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=postgres,til">#til</a>
+                <a href="index.html%3Fq=postgres,til.html">#til</a>
             
         
             
@@ -412,17 +412,6 @@ body.page #upvote-form {
         
     </div>
 </small>
-
-<script>
-    setTimeout(() => {
-        const tagLinks = document.querySelectorAll('.tags a');
-        tagLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            link.setAttribute('href', href.replace('?tagquery=', '?q='));
-        });
-    }, 500);
-</script>
-
 
 
   </main>

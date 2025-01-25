@@ -369,7 +369,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=linux,home&#32;server">#home server</a>
+                <a href="index.html%3Fq=linux,home&#32;server.html">#home server</a>
             
         
             
@@ -397,7 +397,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=linux,systemd">#systemd</a>
+                <a href="index.html%3Fq=linux,systemd.html">#systemd</a>
             
         
             
@@ -412,17 +412,6 @@ body.page #upvote-form {
         
     </div>
 </small>
-
-<script>
-    setTimeout(() => {
-        const tagLinks = document.querySelectorAll('.tags a');
-        tagLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            link.setAttribute('href', href.replace('?tagquery=', '?q='));
-        });
-    }, 500);
-</script>
-
 
 
   </main>

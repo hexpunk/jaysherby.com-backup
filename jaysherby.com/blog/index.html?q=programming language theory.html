@@ -403,24 +403,13 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=programming&#32;language&#32;theory,typescript">#typescript</a>
+                <a href="index.html%3Fq=programming&#32;language&#32;theory,typescript.html">#typescript</a>
             
         
             
         
     </div>
 </small>
-
-<script>
-    setTimeout(() => {
-        const tagLinks = document.querySelectorAll('.tags a');
-        tagLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            link.setAttribute('href', href.replace('?tagquery=', '?q='));
-        });
-    }, 500);
-</script>
-
 
 
   </main>
