@@ -391,7 +391,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=electronics,soldering">#soldering</a>
+                <a href="index.html%3Fq=electronics,soldering.html">#soldering</a>
             
         
             
@@ -403,7 +403,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=electronics,tools">#tools</a>
+                <a href="index.html%3Fq=electronics,tools.html">#tools</a>
             
         
             
@@ -412,17 +412,6 @@ body.page #upvote-form {
         
     </div>
 </small>
-
-<script>
-    setTimeout(() => {
-        const tagLinks = document.querySelectorAll('.tags a');
-        tagLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            link.setAttribute('href', href.replace('?tagquery=', '?q='));
-        });
-    }, 500);
-</script>
-
 
 
   </main>

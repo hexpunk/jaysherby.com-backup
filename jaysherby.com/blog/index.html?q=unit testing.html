@@ -373,7 +373,7 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=unit&#32;testing,javascript">#javascript</a>
+                <a href="index.html%3Fq=unit&#32;testing,javascript.html">#javascript</a>
             
         
             
@@ -405,24 +405,13 @@ body.page #upvote-form {
             
         
             
-                <a href="https://jaysherby.com/blog/?tagquery=unit&#32;testing,typescript">#typescript</a>
+                <a href="index.html%3Fq=unit&#32;testing,typescript.html">#typescript</a>
             
         
             
         
     </div>
 </small>
-
-<script>
-    setTimeout(() => {
-        const tagLinks = document.querySelectorAll('.tags a');
-        tagLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            link.setAttribute('href', href.replace('?tagquery=', '?q='));
-        });
-    }, 500);
-</script>
-
 
 
   </main>
