@@ -389,7 +389,6 @@ body.page #upvote-form {
 find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;.*&#39;</span><span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="w"> </span><span class="se">\;</span>
 
 <span class="c1"># Download website and images, ignoring /hit and /upvote paths.</span>
-<span class="c1"># Ignore invalid tagquery URLs. https://github.com/HermanMartinus/bearblog/commit/6876c49088b47f8b3e987c6cabf8d5abf8a69957</span>
 wget<span class="w"> </span>--wait<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--mirror<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--page-requisites<span class="w"> </span><span class="se">\</span>
@@ -399,7 +398,6 @@ wget<span class="w"> </span>--wait<span class="o">=</span><span class="m">2</spa
 <span class="w">     </span>--span-hosts<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--domains<span class="o">=</span><span class="s2">&quot;jaysherby.com,digitaloceanspaces.com&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">&quot;hit,upvote&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">     </span>--reject-regex<span class="o">=</span><span class="s2">&quot;\?tagquery\=&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-e<span class="w"> </span><span class="nv">robots</span><span class="o">=</span>off<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>https://jaysherby.com
 
@@ -430,7 +428,6 @@ find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </spa
 <span class="w">     </span>--span-hosts<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--domains<span class="o">=</span><span class="s2">&quot;jaysherby.com,digitaloceanspaces.com&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>--exclude-directories<span class="o">=</span><span class="s2">&quot;hit,upvote&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">     </span>--reject-regex<span class="o">=</span><span class="s2">&quot;\?tagquery\=&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-e<span class="w"> </span><span class="nv">robots</span><span class="o">=</span>off<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>https://jaysherby.com
 </pre></div>
@@ -442,7 +439,6 @@ find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </spa
 <li>I removed the <code>--limit-rate=20K</code> argument because although I understand the purpose of setting <code>--wait=2</code> to avoid overwhelming the server with a ton of requests all at once, it seems to me like limiting the transfer speed would end up wasting precious time that could be spent serving other clients. It really doesn't matter for the amount of traffic I get anyway.</li>
 <li>I added <code>--span-hosts</code> and <code>--domains=&quot;jaysherby.com,digitaloceanspaces.com&quot;</code> to ensure images are downloaded. Bear Blog is currently hosted on Digital Ocean and images are stored in their Spaces product, which is more or less a clone of AWS S3. This feature is currently configured such that image URLs live in a subdomain of <code>digitaloceanspaces.com</code>.</li>
 <li>I added <code>--exclude-directories=&quot;hit,upvote&quot;</code>. Wget was downloading files from <code>/hit</code> which is how Bear Blog powers its analytics service. It's currently implemented by setting URLs in that path as a border image applied to the page body on hover. Clever! But it currently only returns a response of <a href='https://github.com/HermanMartinus/bearblog/blob/89cff8645af2e7b21d382dc59ed7eacfb7b971d3/blogs/views/analytics.py#L69'>"Logged"</a>, which is useless for my backups and would present as noise in my analytics. The <code>/upvote</code> path is how posts are "toasted". Wget should never follow these by default since they are form actions, but better safe than sorry.</li>
-<li>I added <code>--reject-regex=&quot;\?tagquery\=&quot;</code> to work around <a href='https://github.com/HermanMartinus/bearblog/commit/6876c49088b47f8b3e987c6cabf8d5abf8a69957'>a recent change</a> in how Bear Blog works.</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="c1"># Delete CSRF tokens since they&#39;ll change every page load.</span>
 <span class="c1"># Delete last build date tag since it will change often.</span>
