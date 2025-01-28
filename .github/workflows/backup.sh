@@ -7,7 +7,6 @@ set -u
 find . -maxdepth 1 -type d -not -name '.*' -exec rm -r "{}" \;
 
 # Download website and images, ignoring /hit and /upvote paths.
-# Ignore invalid tagquery URLs. https://github.com/HermanMartinus/bearblog/commit/6876c49088b47f8b3e987c6cabf8d5abf8a69957
 wget --wait=2 \
      --mirror \
      --page-requisites \
@@ -17,7 +16,6 @@ wget --wait=2 \
      --span-hosts \
      --domains="jaysherby.com,digitaloceanspaces.com" \
      --exclude-directories="hit,upvote" \
-     --reject-regex="\?tagquery\=" \
      -e robots=off \
      https://jaysherby.com
 
