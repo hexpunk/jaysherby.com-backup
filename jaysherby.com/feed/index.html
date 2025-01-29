@@ -17,6 +17,46 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check  to see...</subtitle>
   <entry>
+    <id>https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/</id>
+    <title>How I Fixed Slow Wifi In Debian 12</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href='https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/'&gt;Last time&lt;/a&gt; I blogged about my home server's wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.&lt;/p&gt;
+&lt;p&gt;This time, I was transferring a large quantity of large files from my laptop to my home server, and I noticed the transfer speed was capped at around 3 MB/s. I found that very concerning because although wifi isn't the fastest way to transfer data by a wide margin, it should still be faster than that.&lt;/p&gt;
+&lt;p&gt;After a bunch of inspection of various settings using &lt;code&gt;iw list&lt;/code&gt; and &lt;code&gt;iwlist wlp1s0&lt;/code&gt;, I discovered the problem. By looking at frequency and channel settings, I saw that my adapter was connecting to my router at 2.4 Ghz frequencies instead of the 5 GHz frequencies I wanted.&lt;/p&gt;
+&lt;p&gt;A bunch of googling suggested passing a &lt;code&gt;freq_list&lt;/code&gt; property to wpa_supplicant in its config file. One problem: I'm not configuring wpa_supplication via a config file. I'm configuring it via my &lt;code&gt;/etc/network/interfaces&lt;/code&gt; file. I was already using the &lt;code&gt;wpa-ssid&lt;/code&gt; and &lt;code&gt;wpa-psk&lt;/code&gt; options. Is there an equivalent option to pass in a frequency list?&lt;/p&gt;
+&lt;p&gt;&lt;a href='https://superuser.com/q/678194'&gt;Yes&lt;/a&gt;, but it's not very well-documented. The magic happens in the &lt;code&gt;/etc/wpa_supplicant/functions.sh&lt;/code&gt; file. The appropriate option is &lt;code&gt;wpa-freq-list&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Here's what my &lt;code&gt;/etc/network/interfaces&lt;/code&gt; file looks like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+allow-hotplug wlp1s0
+iface wlp1s0 inet dhcp
+	wpa-ssid &amp;lt;ssid&amp;gt;
+	wpa-psk &amp;lt;passphrase&amp;gt;
+	wpa-freq-list &amp;lt;frequency list&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using the &lt;code&gt;iw list&lt;/code&gt; command, I was able to determine that the right list of frequencies for my hardware and desired configuration is the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wpa-freq-list 5180 5200 5240 5260 5280 5300 5320 5500 5520 5540 5560 5580 5600 5620 5640 5660 5680 5700 5720 5745 5765 5785 5805 5825
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I encourage you to check your own hardware rather than copying my list of frequencies verbatim.&lt;/p&gt;
+&lt;p&gt;After I made this change and restarted the network subsystem, transfers looked much better at around 20 MB/s to 25 MB/s on average.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/" rel="alternate"/>
+    <category term="home server"/>
+    <category term="linux"/>
+    <published>2025-01-29T03:17:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/unit-testing-strategies/</id>
     <title>Unit Testing Strategies</title>
     <author>
@@ -534,99 +574,5 @@ Hiring? Check  to see...</subtitle>
     <link href="https://jaysherby.com/typescript-show-me-the-whole-error/" rel="alternate"/>
     <category term="typescript"/>
     <published>2023-06-21T19:26:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/react-hook-form-a-leaky-abstraction/</id>
-    <title>React Hook Form: A Leaky Abstraction</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form&lt;sup class="footnote-ref" id="fnref-1"&gt;&lt;a href="#fn-1"&gt;1&lt;/a&gt;&lt;/sup&gt;, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.&lt;/p&gt;
-&lt;p&gt;However, this past week I ran into a weird edge case. To set the stage, a friend and colleague&lt;sup class="footnote-ref" id="fnref-2"&gt;&lt;a href="#fn-2"&gt;2&lt;/a&gt;&lt;/sup&gt; was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a &lt;code&gt;&amp;lt;select&amp;gt;&lt;/code&gt; style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.&lt;/p&gt;
-&lt;p&gt;Here's a tiny example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useUser&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-
-&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;group&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="kd"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;handleSubmit&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;formState&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;errors&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;useForm&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;defaultValues&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;resolver&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;yupResolver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;schema&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
-
-&lt;span class="c1"&gt;// ...snip...&lt;/span&gt;
-
-&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;TextInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;
-&lt;span class="err"&gt;/&amp;gt;&lt;/span&gt;
-
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;userHasMultipleGroups&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Controller&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kr"&gt;as&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;SelectInput&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;control&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;group&amp;quot;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;)}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Let me break this down in words briefly to make sure we're on the same page.&lt;/p&gt;
-&lt;p&gt;This component checks a user's groups, which is provided by a custom hook called &lt;code&gt;useUser&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The form's default value for &lt;code&gt;group&lt;/code&gt; is a blank string if the given user has multiple groups available to them. If the user has just one group, which is the most common case, their group's value is automatically the default value for that form input.&lt;/p&gt;
-&lt;p&gt;Later, we choose to only render the &lt;code&gt;group&lt;/code&gt; field if there are multiple choices to choose from.&lt;/p&gt;
-&lt;p&gt;In practice, &lt;em&gt;this won't work&lt;/em&gt;. The form works as expected when the user belongs to multiple groups. When there's only one group available, this will fail. On submit, the validation will fail, claiming there's no value for the &lt;code&gt;&amp;quot;group&amp;quot;&lt;/code&gt; field.&lt;/p&gt;
-&lt;p&gt;What gives? We set the default value for that field! Making things even more confusing, if we add a logging statement like &lt;code&gt;console.log(getValues())&lt;/code&gt;, it will log an empty object until we start interacting with the form. It's like the default values aren't being used at all.&lt;/p&gt;
-&lt;p&gt;After futzing around for a couple of hours and getting nowhere, here's the result.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;getValues()&lt;/code&gt; doesn't know anything about &lt;code&gt;defaultValues&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;The values in &lt;code&gt;defaultValues&lt;/code&gt; won't propagate into the form's values unless the form &lt;em&gt;actually renders an input&lt;/em&gt;.&lt;/li&gt;
-&lt;li&gt;Similarly, using &lt;code&gt;setValue()&lt;/code&gt; in a &lt;code&gt;useEffect&lt;/code&gt; hook, for example, won't work for any field in the form that doesn't have an actual input rendered on the page.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;This is actually mentioned in the documentation, but it's not exactly front and center.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Its not default state for the form, to include additional form values:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Register hidden input: &lt;code&gt;&amp;lt;input type=&amp;quot;hidden&amp;quot; ref={register} name=&amp;quot;test&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Combine values at onSubmit callback.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;-- &lt;a href='https://legacy.react-hook-form.com/v6/api#useForm'&gt;React Hook Form docs for &lt;code&gt;useForm&lt;/code&gt;, specifically under &lt;code&gt;defaultValues&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;This little tidbit is what tipped me off to this situation.&lt;sup class="footnote-ref" id="fnref-3"&gt;&lt;a href="#fn-3"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;There's also a clue in the FAQs for v7 in the answer for the question, "How to work with modal or tab forms?"&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;It's important to understand React Hook Form embraces native form behavior by storing input state inside each input (except custom &lt;code&gt;register&lt;/code&gt; at &lt;code&gt;useEffect&lt;/code&gt;). One of the common misconceptions is that when working with modal or tab forms, by mounting and unmounting form/inputs that inputs state will remain. That is incorrect. Instead, the correct solution would be to build a new form for your form inside each modal or tab and capture your submission data in local or global state and then do something with the combined data.&lt;/p&gt;
-&lt;p&gt;-- &lt;a href='https://react-hook-form.com/faqs#Howtoworkwithmodalortabforms'&gt;React Hook Form FAQs, "How to work with modal or tab forms?"&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;These bits of information, pieced together, answer the question of why every piece of data in a React Hook Form-based form must have an input associated with it, even if it's a hidden input.&lt;/p&gt;
-&lt;h2 id=a-leaky-abstraction&gt;A Leaky Abstraction&lt;/h2&gt;&lt;p&gt;I don't use the term "leaky abstraction" lightly because it has become a generic insult thrown around by developers online, lodged against any tool or library they don't like. However, this is a textbook leaky abstraction in my mind.&lt;/p&gt;
-&lt;h3 id=the-abstraction&gt;The Abstraction&lt;/h3&gt;&lt;p&gt;I'm using React Hook Form to reduce the boilerplate of form state management.  I could write my own state management for any given form using only React built-ins like &lt;code&gt;useReducer&lt;/code&gt; or I guess a dozen or so &lt;code&gt;useState&lt;/code&gt; instances. But it's tedious, repetitive, and error-prone. If I choose to build this using React built-ins, the state of the form and the form inputs are completely separated from each other. If I should choose to conditionally render any of my input elements, the state representing the data of those inputs is unaffected. The data and its visual representation aren't dependent on one another.&lt;sup class="footnote-ref" id="fnref-4"&gt;&lt;a href="#fn-4"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;I would assume when I'm using a form state management library, it's doing this same stuff for me behind the scenes. It's just handling all of that tedious boilerplate code for me, but I assume the semantics, like a separation between data and view, would remain the same.&lt;/p&gt;
-&lt;h3 id=the-leak&gt;The Leak&lt;/h3&gt;&lt;p&gt;As we saw, my assumptions were incorrect. As the docs said, React Hook Form depends intimately upon the input elements on the page to hold its state. This is an implementation detail of the library that you generally don't need to know or care about... until you do.&lt;/p&gt;
-&lt;p&gt;I'm willing to believe that my form is the edge case here. Most forms on the web can be built using React Hook Form and you'll never need to know about these implementation details. Most forms probably show all inputs every render. But we were improving UX so that users don't need to care about a required dropdown input if there's only one option to select from.&lt;/p&gt;
-&lt;p&gt;I want to make it clear here that I'm not calling React Hook Form a leaky abstraction as an insult. I still mostly like the library, even if it's not built the same way I would choose to build it. I'm going to continue using it. I still prefer it to Formik. But this is an implementation detail, or perhaps a consequential design philosophy, that users should be aware of.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;section class="footnotes"&gt;
-&lt;ol&gt;
-&lt;li id="fn-1"&gt;&lt;p&gt;Because I regularly confuse the name as &lt;code&gt;react-form-hook&lt;/code&gt;, I've given up and lovingly refer to it as &lt;code&gt;react-man-door-hand-hook-car-door&lt;/code&gt; instead. I'm sure my coworkers have become tired of this joke.&lt;a href="#fnref-1" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-2"&gt;&lt;p&gt;This is the second shout out to Emily on my blog! ❤️&lt;a href="#fnref-2" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-3"&gt;&lt;p&gt;Note the docs' mention of combining the default data at the time of submission of the form. I did consider this approach after I'd already implemented an input component that intelligently used a hidden input when it made sense. But this approach wouldn't have worked in my case because I'm using schema validation to validate the form. Before I even got the chance to inject my default value, the validation would have failed and my submit function wouldn't have been called. I could have moved validation into my submit function, but then I'd lose the convenience of React Hook Form's built-in error messages. I guess I could make two versions of the schema, but who knows what unexpected gotchas that would uncover? It's a house of cards situation, and using a hidden input was the best choice.&lt;a href="#fnref-3" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id="fn-4"&gt;&lt;p&gt;It's been a couple of years since I've used Formik, but this is roughly how it operates IIRC. When I switched to working on a codebase using React Hook Form, I assumed this was still the case.&lt;a href="#fnref-4" class="footnote"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-</content>
-    <link href="https://jaysherby.com/react-hook-form-a-leaky-abstraction/" rel="alternate"/>
-    <category term="react"/>
-    <published>2023-06-10T15:33:11.241294+00:00</published>
   </entry>
 </feed>
