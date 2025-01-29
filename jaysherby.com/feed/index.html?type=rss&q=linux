@@ -14,6 +14,43 @@ Hiring? Check  to see...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>How I Fixed Slow Wifi In Debian 12</title>
+      <link>https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/</link>
+      <description>&lt;p&gt;&lt;a href='https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/'&gt;Last time&lt;/a&gt; I blogged about my home server's wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.&lt;/p&gt;
+&lt;p&gt;This time, I was transferring a large quantity of large files from my laptop to my home server, and I noticed the transfer speed was capped at around 3 MB/s. I found that very concerning because although wifi isn't the fastest way to transfer data by a wide margin, it should still be faster than that.&lt;/p&gt;
+&lt;p&gt;After a bunch of inspection of various settings using &lt;code&gt;iw list&lt;/code&gt; and &lt;code&gt;iwlist wlp1s0&lt;/code&gt;, I discovered the problem. By looking at frequency and channel settings, I saw that my adapter was connecting to my router at 2.4 Ghz frequencies instead of the 5 GHz frequencies I wanted.&lt;/p&gt;
+&lt;p&gt;A bunch of googling suggested passing a &lt;code&gt;freq_list&lt;/code&gt; property to wpa_supplicant in its config file. One problem: I'm not configuring wpa_supplication via a config file. I'm configuring it via my &lt;code&gt;/etc/network/interfaces&lt;/code&gt; file. I was already using the &lt;code&gt;wpa-ssid&lt;/code&gt; and &lt;code&gt;wpa-psk&lt;/code&gt; options. Is there an equivalent option to pass in a frequency list?&lt;/p&gt;
+&lt;p&gt;&lt;a href='https://superuser.com/q/678194'&gt;Yes&lt;/a&gt;, but it's not very well-documented. The magic happens in the &lt;code&gt;/etc/wpa_supplicant/functions.sh&lt;/code&gt; file. The appropriate option is &lt;code&gt;wpa-freq-list&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Here's what my &lt;code&gt;/etc/network/interfaces&lt;/code&gt; file looks like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+allow-hotplug wlp1s0
+iface wlp1s0 inet dhcp
+	wpa-ssid &amp;lt;ssid&amp;gt;
+	wpa-psk &amp;lt;passphrase&amp;gt;
+	wpa-freq-list &amp;lt;frequency list&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using the &lt;code&gt;iw list&lt;/code&gt; command, I was able to determine that the right list of frequencies for my hardware and desired configuration is the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wpa-freq-list 5180 5200 5240 5260 5280 5300 5320 5500 5520 5540 5560 5580 5600 5620 5640 5660 5680 5700 5720 5745 5765 5785 5805 5825
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I encourage you to check your own hardware rather than copying my list of frequencies verbatim.&lt;/p&gt;
+&lt;p&gt;After I made this change and restarted the network subsystem, transfers looked much better at around 20 MB/s to 25 MB/s on average.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/</guid>
+      <category>home server</category>
+      <category>linux</category>
+      <pubDate>Wed, 29 Jan 2025 03:17:00 +0000</pubDate>
+    </item>
+    <item>
       <title>How I Fixed Laggy Wifi In Debian 12</title>
       <link>https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/</link>
       <description>&lt;p&gt;The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It's been dutifully chugging along for more than 4 years, but my needs finally exceed its capabilities.&lt;/p&gt;
