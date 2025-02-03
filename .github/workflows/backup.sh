@@ -16,6 +16,7 @@ wget --wait=2 \
      --span-hosts \
      --domains="jaysherby.com,digitaloceanspaces.com" \
      --exclude-directories="hit,upvote" \
+     --regex-type pcre
      --reject-regex="[?&]q=" \
      -e robots=off \
      https://jaysherby.com
