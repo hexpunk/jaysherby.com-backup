@@ -6,7 +6,7 @@ set -u
 # Delete all directories that are not hidden to avoid keeping deleted files.
 find . -maxdepth 1 -type d -not -name '.*' -exec rm -r "{}" \;
 
-# Download website and images, ignoring /hit and /upvote paths.
+# Download website and images, ignoring /hit and /upvote paths and tag URLs.
 wget --wait=2 \
      --mirror \
      --page-requisites \
@@ -16,6 +16,7 @@ wget --wait=2 \
      --span-hosts \
      --domains="jaysherby.com,digitaloceanspaces.com" \
      --exclude-directories="hit,upvote" \
+     --reject-regex="[?&]q=" \
      -e robots=off \
      https://jaysherby.com
 
