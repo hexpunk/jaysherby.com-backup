@@ -17,6 +17,28 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check  to see...</subtitle>
   <entry>
+    <id>https://jaysherby.com/toggling-laptop-screen-auto-brightness-in-pop_os/</id>
+    <title>Toggling Laptop Screen Auto Brightness in Pop!_OS</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;I recently got a new laptop from &lt;a href='https://frame.work/'&gt;Framework&lt;/a&gt;. I'm running Pop!_OS, just like I was running on my HP Dev One I've blogged about previously. All of those little tricks and tweaks still apply.&lt;/p&gt;
+&lt;p&gt;One difference is that my Framework laptop has an ambient light sensor near the webcam, which is used to automatically adjust the brightness of the screen in response to changes in the ambient light level in the room. I usually turn this feature off on my laptops. It tends to be too sensitive for my preference.&lt;/p&gt;
+&lt;p&gt;On the last Dell XPS 13 I owned, I think there was an option to toggle this feature in the BIOS. The HP Dev One didn't have an ambient light sensor. On my Framework laptop, there is no option in the BIOS for this. Newer versions of GNOME's settings application have a GUI option to toggle this. But the latest version of Pop!_OS is still 22.04 LTS, nearly three years old now. I don't see that GUI option on my machine.&lt;/p&gt;
+&lt;p&gt;No matter, though. I was able to toggle this feature off using the &lt;code&gt;gsettings&lt;/code&gt; command-line app. The setting I care about is &lt;code&gt;ambient-enabled&lt;/code&gt; in &lt;code&gt;org.gnome.settings-daemon.plugins.power&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To see the current value of this setting, run this command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gsettings&lt;span class="w"&gt; &lt;/span&gt;get&lt;span class="w"&gt; &lt;/span&gt;org.gnome.settings-daemon.plugins.power&lt;span class="w"&gt; &lt;/span&gt;ambient-enabled
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This setting defaults to being turned on. To turn it off, run this command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gsettings&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;org.gnome.settings-daemon.plugins.power&lt;span class="w"&gt; &lt;/span&gt;ambient-enabled&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;false&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+</content>
+    <link href="https://jaysherby.com/toggling-laptop-screen-auto-brightness-in-pop_os/" rel="alternate"/>
+    <category term="pop_os"/>
+    <published>2025-02-16T23:10:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/</id>
     <title>How I Fixed Slow Wifi In Debian 12</title>
     <author>
@@ -558,21 +580,5 @@ iface wlp1s0 inet dhcp
 </content>
     <link href="https://jaysherby.com/vintage-computer-festival-midwest-18/" rel="alternate"/>
     <published>2023-09-10T01:42:53.336765+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/typescript-show-me-the-whole-error/</id>
-    <title>Typescript, Show Me The Whole Error!</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;Has this ever happened to you? Typescript throws an error about two types being incompatible, but the differing parts of the types is truncated from the error!&lt;/p&gt;
-&lt;p&gt;This is the default behavior for some reason. I'm not a fan. I know long error messages scare a lot of developers, but I'd rather have a long and helpful error message than a short and useless one.&lt;/p&gt;
-&lt;p&gt;Good news! Error message salvation is one &lt;code&gt;tsconfig.json&lt;/code&gt; setting away. Set &lt;a href='https://www.typescriptlang.org/tsconfig#noErrorTruncation'&gt;&lt;code&gt;noErrorTruncation&lt;/code&gt;&lt;/a&gt; to &lt;code&gt;true&lt;/code&gt; and you'll be all set.&lt;/p&gt;
-&lt;p&gt;Personally, I'd rather opt in to truncation than opt out, but at least it's an easy fix.&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/typescript-show-me-the-whole-error/" rel="alternate"/>
-    <category term="typescript"/>
-    <published>2023-06-21T19:26:00+00:00</published>
   </entry>
 </feed>
