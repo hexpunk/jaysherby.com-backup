@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Generating JSONB From Typescript | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+    
+
+    <meta name="jaysherby" content="look-for-the-bear-necessities">
+
+    <!-- Primary Meta Tags -->
+<meta name="title" content="Generating JSONB From Typescript">
+<meta name="description" content="I recently had a need to serialize data from Typescript into Postgresql&#x27;s JSONB format. I was surprised I couldn&#x27;t find a package on NPM to do this, so I wan...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Generating JSONB From Typescript">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/generating-jsonb-from-typescript/">
+<meta property="og:description" content="I recently had a need to serialize data from Typescript into Postgresql&#x27;s JSONB format. I was surprised I couldn&#x27;t find a package on NPM to do this, so I wan...">
+<meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/generating-jsonb-from-typescript/">
+<meta property="twitter:title" content="Generating JSONB From Typescript">
+<meta property="twitter:description" content="I recently had a need to serialize data from Typescript into Postgresql&#x27;s JSONB format. I was surprised I couldn&#x27;t find a package on NPM to do this, so I wan...">
+<meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Generating JSONB From Typescript",
+    "url": "https://jaysherby.com/generating-jsonb-from-typescript/",
+    "description": "I recently had a need to serialize data from Typescript into Postgresql&#x27;s JSONB format. I was surprised I couldn&#x27;t find a package on NPM to do this, so I wan...",
+    "about": {
+      "@type": "Generating JSONB From Typescript",
+      "description": "I recently had a need to serialize data from Typescript into Postgresql&#x27;s JSONB format. I was surprised I couldn&#x27;t find a package on NPM to do this, so I wan..."
+    }
+  }
+</script>
+
+  
+    
+
+    
+    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+  
+  
+  
+    
+        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+    
+
+
+
+  <style>
+      
+      
+    :root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+/* Blockquote styles for conversations with AI */
+blockquote.me,
+blockquote.them {
+  border: 0;
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  font: inherit;
+  padding: 0 16px;
+  
+  /* Prevent margin collapse */
+  overflow: hidden;
+}
+
+blockquote.me::before,
+blockquote.them::before {
+  float: left;
+  margin: 16px 8px 0 0;
+}
+
+blockquote.me {
+  background-color: #1e3a8a;
+  border-radius: 10px 10px 0 10px;
+  color: #ddd;
+  margin: 20px 0 20px 20%;
+}
+
+blockquote.me::before {
+  content: "👨‍💻";
+}
+
+blockquote.them {
+  background-color: #e5e7eb;
+  border-radius: 10px 10px 10px 0;
+  color: #444;
+  margin: 20px 20% 20px 0;
+}
+
+blockquote.them::before {
+  content: "🤖";
+}
+
+blockquote.me p,
+blockquote.them p {
+  white-space: pre-wrap;
+}
+
+blockquote.me strong,
+blockquote.them strong {
+  color: inherit;
+}
+
+/* Make embedded images centered and interrupt content */
+main img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give hint that <details> are clickable to reveal more */
+details > summary {
+  cursor: pointer;
+}
+
+/* Make "Made with Bear" footer always at the bottom of the page */
+/*
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+header {
+  padding-top: 20px;
+}
+
+main {
+  flex-grow: 1;
+}
+*/
+
+/* Hide upvote UI on pages */
+body.page #upvote-form {
+  display: none !important;
+}
+    .upvote-button {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background-color: inherit;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .upvote-button.upvoted {
+        color: salmon;
+    }
+    .upvote-count {
+        margin-top: -3px;
+    }
+
+      
+  </style>
+
+  
+    
+    <style>
+        body:hover {
+            border-image: url("https://jaysherby.com/hit/ZjfXVegusFjnFuzYQdfq/");
+            border-width: 0;
+        }
+    </style>
+    
+
+</head>
+
+<body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
+  
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+    
+        
+    
+
+    
+        <h1>Generating JSONB From Typescript</h1>
+
+        <p>
+            <i>
+                <time datetime="2025-02-21T17:01Z">
+                    21 Feb, 2025
+                </time>
+            </i>
+        </p>
+    
+
+    <p>I recently had a need to serialize data from Typescript into Postgresql's JSONB format. I was surprised I couldn't find a package on NPM to do this, so I wanted to share the code I wrote. But first, let me explain why I wanted to generate JSONB from Typescript.</p>
+<h2 id=the-challenge>The challenge</h2><p>I'm working in database schema that is in third normal form. I can't divulge the details because it's for my job, and there's a real possibility you'll get lost in details that aren't significant. Here's a toy schema that exhibits the relevant properties.</p>
+<p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/mermaid-diagram-2025-02-21-114735.svg" alt="A generic e-commerce database schema" /></p>
+<p>I'm inserting entire products into the database at once. How do I know I'm not inserting duplicates? It's easy to prevent duplicate insertion at the level of individual tables, but how do I know the entire product entity, including its pricing, shipping, and discount attributes, is fully unique?</p>
+<p>I set out to solve this by hashing a JSONB structure that represents the entity I intend to insert and comparing that to hashes of the existing entities that share the same name and description in the PRODUCTS table.</p>
+<h2 id=jsonb-vs-json>JSONB vs JSON</h2><p>Comparing two JSON objects is fraught because key order is insignificant.</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;one&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;hello&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;world&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;two&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="p">}</span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;two&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;one&quot;</span><span class="p">:{</span><span class="nt">&quot;hello&quot;</span><span class="p">:</span><span class="s2">&quot;world&quot;</span><span class="p">}}</span>
+</pre></div>
+<p>These two objects are semantically equal. You'll need to parse them, however, and then recursively compare them in order to determine that programmatically. What if we added some serialization rules that would let us use byte-wise comparison to determine equality, just like we would compare plain, old strings?</p>
+<p>JSONB is a data type in Postgresql that adds such serialization rules. The extra serialization rules for JSONB are actually more powerful than just enabling simpler equality checking. They allow binary search of object keys. But I'm not interested in that quality at the moment. I just want to be able to use string equality (by way of hashing in my case) to compare two JSON values.</p>
+<p>Here are the added rules for JSONB:</p>
+<ol>
+<li><p><strong>No duplicate keys within an object.</strong> This rule doesn't really affect my use case. In my experience, duplicate keys are more of a risk in hand-written JSON than in JSON that comes from serialized key-value data structures because most key-value data structures also don't support multiple instances of the same key.</p>
+</li>
+<li><p><strong>Keys in objects are sorted, first by length from short to long, then ascending by code point value.</strong> This property is what's most important to me. By "ascending by code point value", it means a naive string sort that doesn't take into account factors like locale. Postgresql uses C's <a href='https://en.cppreference.com/w/cpp/string/byte/memcmp'><code>memcmp()</code></a> function.</p>
+</li>
+<li><p><strong>The only syntactic whitespace is a single space after colons and commas.</strong> This means there are no newlines or indentation, but JSONB also isn't quite as compact as JSON can be.</p>
+</li>
+</ol>
+<h2 id=just-show-me-the-code-already>Just show me the code already</h2><p>Now that I've briefly explained what JSONB is, and why I'm choosing to use it, let me show you how to generate it from Typescript.</p>
+<p>I'm leaning on the <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify'><code>JSON.stringify()</code></a> function to do most of the heavy lifting. Most of its default behavior is adequate. I only need to change how it orders keys within objects, and how it adds syntactic whitespace.</p>
+<p>The second argument to <code>JSON.stringify()</code> can be a function that replaces values as they're being serialized. I only want to modify objects.</p>
+<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">data</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="nx">_key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// TODO: Sort the object&#39;s keys</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="mf">0</span>
+<span class="p">);</span>
+</pre></div>
+<p>Note that I'm checking to make sure <code>value</code> is not null because <code>typeof null</code> is <code>'object'</code> as well.</p>
+<p>Here's my comparison function that can be passed to a sorting function. It assumes an array of key-value tuples are being sorted.</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">compare</span><span class="p">(</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">keyA</span><span class="p">,</span><span class="w"> </span><span class="nx">_valueA</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">keyB</span><span class="p">,</span><span class="w"> </span><span class="nx">_valueB</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="p">]</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">keyA</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">keyB</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">keyA</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">charCodeA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keyA</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">charCodeB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keyB</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">charCodeA</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">charCodeB</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Sort the same way as memcmp</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">charCodeA</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">charCodeB</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Return shorter keys before longer keys</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">keyA</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nx">keyB</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>This sorting algorithm matches how Postgresql does it: from short keys to long keys with keys of identical length being sorted ascending byte-wise. The relevant function in the Postgresql source code is <a href='https://github.com/postgres/postgres/blob/98fc31d6499163a0a781aa6f13582a07f09cd7c6/src/backend/utils/adt/jsonb_util.c#L1906'><code>lengthCompareJsonbString</code></a>.</p>
+<p>Unfortunately, I can't sort the entries using my <code>compare</code> function and then turn the entries back into an object.</p>
+<p>❌ <code>Object.fromEntries(Object.entries(value).sort(compare))</code></p>
+<p>I knew that key order of objects in JavaScript can't be relied upon, but I always thought keys were stored in insertion order. It turns out, as the <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/ownKeys'><code>Reflect.ownKeys()</code> page on MDN</a> will tell you, JavaScript's object key order has a corner case that probably won't affect you... until it does.</p>
+<p>Here's how object keys are sorted in JavaScript:</p>
+<ol>
+<li><p><strong>"Non-negative integer indexes in increasing numeric order (but as strings)"</strong> This is a really interesting gotcha. I can only speculate as to why this is the case. The ramifications are fascinating. It means if you see something like <code>x[0] = 'foo';</code> in isolation, you can't necessarily assume that <code>x</code> is an array! In any case, this is the primary pitfall I'm going to have to work around.</p>
+</li>
+<li><p><strong>"Other string keys in the order of property creation"</strong> This is the rule I already knew about. Keys are <em>usually</em> presented in the order in which they were inserted into the object.</p>
+</li>
+<li><p><strong>"Symbol keys in the order of property creation."</strong> This is referring to the <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol'><code>Symbol</code></a> type. I don't need to consider this case because Symbols aren't supported in JSON, and the documentation for <code>JSON.stringify()</code> explicitly calls out that Symbol keys in objects are ignored.</p>
+</li>
+</ol>
+<p>Here's what I've come up with to work around the special case of non-negative integer keys.</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">createOrderedObject</span><span class="p">(</span><span class="nx">entries</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="p">][])</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="o">&lt;</span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">symbol</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">entries</span><span class="p">);</span><span class="w"> </span><span class="c1">// Store keys in insertion order</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Proxy</span><span class="p">(</span>
+<span class="w">        </span><span class="p">{},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">get</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nx">set</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">map</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">prop</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nx">has</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nx">deleteProperty</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nx">ownKeys</span><span class="p">(</span><span class="nx">_target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="p">[...</span><span class="nx">map</span><span class="p">.</span><span class="nx">keys</span><span class="p">()];</span><span class="w"> </span><span class="c1">// Preserve ordered keys for Object.keys()</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nx">getOwnPropertyDescriptor</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">prop</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                          </span><span class="nx">enumerable</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">                          </span><span class="nx">configurable</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">                      </span><span class="p">}</span>
+<span class="w">                    </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>The only difference between a plain old JavaScript object and the object <code>createOrderedObject</code> returns is that my version really does return keys in insertion order.</p>
+<p>The last thing to fix is how whitespace is handled. <code>JSON.stringify()</code>'s third argument allows you to control syntactic whitespace, but there's no value that will format the output like JSONB. The closest I can do is pass in <code>0</code> to minify the JSON and then handle adding a space after colons and commas myself. My final function for serializing to JSONB looks like this:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
+<span class="w">        </span><span class="nx">data</span><span class="p">,</span>
+<span class="w">        </span><span class="p">(</span><span class="nx">_key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">createOrderedObject</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">entries</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">sort</span><span class="p">(</span><span class="nx">compare</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="mf">0</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Safely add spaces after `:` and `,` characters. REGEX CANNOT DO THIS!</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">formatted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">inString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="kr">char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">prevChar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kr">char</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">prevChar</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;\\&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">inString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="nx">inString</span><span class="p">;</span><span class="w"> </span><span class="c1">// Toggle string mode only if it&#39;s NOT an escaped quote</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nx">formatted</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="kr">char</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Add space after `:` and `,` only when outside a string</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">inString</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="kr">char</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;:&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kr">char</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">formatted</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">formatted</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+    
+
+    
+        
+            <p class="tags">
+                
+                    <a href="https://jaysherby.com/blog/?q=javascript">#javascript</a>
+                
+                    <a href="https://jaysherby.com/blog/?q=nodejs">#nodejs</a>
+                
+                    <a href="https://jaysherby.com/blog/?q=postgres">#postgres</a>
+                
+                    <a href="https://jaysherby.com/blog/?q=sql">#sql</a>
+                
+                    <a href="https://jaysherby.com/blog/?q=typescript">#typescript</a>
+                
+            </p>
+        
+
+        
+            <form id="upvote-form" action="https://jaysherby.com/upvote/ZjfXVegusFjnFuzYQdfq/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="ZjfXVegusFjnFuzYQdfq" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+        
+    
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+    
+    <span>
+        Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+    </span>
+
+  </footer>
+</body>
+</html>
