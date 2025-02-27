@@ -48,6 +48,7 @@ crw-rw----+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&
 crw-------&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;7&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:24&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw7
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Devices 3, 4, and 5 are owned by the &lt;code&gt;plugdev&lt;/code&gt; group with read/write access.&lt;/p&gt;
+&lt;p&gt;If something goes wrong, it's worth trying to connect to the keyboard using Keychron's Launcher and then checking &lt;a href='chrome://device-log/'&gt;chrome://device-log/&lt;/a&gt; for any clues or interesting messages.&lt;/p&gt;
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/programming-my-qmk-keyboard-in-linux/</guid>
