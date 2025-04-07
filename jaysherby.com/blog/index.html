@@ -15,12 +15,12 @@
 <meta name="jaysherby" content="look-for-the-bear-necessities">
 
 <!-- Primary Meta Tags -->
-<meta name="title" content="Blog">
+<meta name="title" content="{{ blog_path_title }}">
 <meta name="description" content="">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
-<meta property="og:title" content="Blog">
+<meta property="og:title" content="{{ blog_path_title }}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jaysherby.com">
 <meta property="og:description" content="">
@@ -30,7 +30,7 @@
 <!-- Twitter -->
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com">
-<meta property="twitter:title" content="Blog">
+<meta property="twitter:title" content="{{ blog_path_title }}">
 <meta property="twitter:description" content="">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
@@ -41,11 +41,11 @@
   {
     "@context": "http://schema.org",
     "@type": "website",
-    "name": "Blog",
+    "name": "{{ blog_path_title }}",
     "url": "https://jaysherby.com",
     "description": "",
     "about": {
-      "@type": "Blog",
+      "@type": "{{ blog_path_title }}",
       "description": ""
     }
   }
