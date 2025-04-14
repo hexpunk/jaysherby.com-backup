@@ -438,12 +438,13 @@ dd > ul {
 }
 
 .columns {
-  columns: 2;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 @media print, (min-width: 700px) {
   .columns {
-    columns: 5;
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -491,7 +492,7 @@ dd > ul {
   </dt>
   <dd>
     <ul>
-      <li>Stabilized Onederful product code base post-acquisition of start-up</li>
+      <li>Stabilized Onederful product code post-acquisition of start-up</li>
       <li>Stepped into a leadership role post-team turnover, driving the advancement and maintenance of the Connected Care app</li>
       <li>Led end-to-end development of patient form feature, enhancing application capabilities</li>
     </ul>
@@ -513,8 +514,8 @@ dd > ul {
   <dd>
     <ul>
       <li>Developed "The Calculator": service for optimized medical and dental plan choices, introducing robust testing tools for seamless updates</li>
-      <li>Created "Rogue": Game-changing tool accelerated product customizations, revolutionizing billing structures and streamlining workflows</li>
-      <li>Pioneered "Talent Show": Innovative low-code/no-code authoring tool for pre-scripted interactive conversations</li>
+      <li>Created "Rogue": a transformative tool that accelerated product customizations, revolutionizing billing structures and streamlining workflows</li>
+      <li>Pioneered "Talent Show": innovative low-code/no-code authoring tool for pre-scripted interactive conversations</li>
     <ul>
   </dd>
   <dt>
@@ -550,6 +551,7 @@ dd > ul {
 </dl>
 <h3>Skills</h3>
 <ul class="columns">
+  <li>Clojure</li>
   <li>Docker</li>
   <li>Elixir</li>
   <li>JavaScript</li>
@@ -559,6 +561,7 @@ dd > ul {
   <li>PostgreSQL</li>
   <li>Python</li>
   <li>React</li>
+  <li>Redis</li>
   <li>Typescript</li>
 </ul>
 <h3>Education</h3>
