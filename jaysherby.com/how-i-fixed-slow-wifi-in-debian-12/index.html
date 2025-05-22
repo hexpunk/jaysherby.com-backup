@@ -16,18 +16,18 @@
 
     <!-- Primary Meta Tags -->
 <meta name="title" content="How I Fixed Slow Wifi In Debian 12">
-<meta name="description" content=" I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+<meta name="description" content="
 
-This time, I was t...">
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I also have a different router than I was using when I wrote this post. This c...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
 <meta property="og:title" content="How I Fixed Slow Wifi In Debian 12">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/">
-<meta property="og:description" content=" I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+<meta property="og:description" content="
 
-This time, I was t...">
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I also have a different router than I was using when I wrote this post. This c...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
@@ -35,9 +35,9 @@ This time, I was t...">
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/">
 <meta property="twitter:title" content="How I Fixed Slow Wifi In Debian 12">
-<meta property="twitter:description" content=" I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+<meta property="twitter:description" content="
 
-This time, I was t...">
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I also have a different router than I was using when I wrote this post. This c...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
@@ -49,14 +49,14 @@ This time, I was t...">
     "@type": "article",
     "name": "How I Fixed Slow Wifi In Debian 12",
     "url": "https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/",
-    "description": " I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+    "description": "
 
-This time, I was t...",
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I also have a different router than I was using when I wrote this post. This c...",
     "about": {
       "@type": "How I Fixed Slow Wifi In Debian 12",
-      "description": " I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+      "description": "
 
-This time, I was t..."
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I also have a different router than I was using when I wrote this post. This c..."
     }
   }
 </script>
@@ -371,7 +371,9 @@ details > summary {
         </p>
     
 
-    <p><a href='../how-i-fixed-laggy-wifi-in-debian-12/index.html'>Last time</a> I blogged about my home server's wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.</p>
+    <h3 id=may-21-2025-update>May 21, 2025 Update</h3><p>I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I also have a different router than I was using when I wrote this post. This combination of hardware does not require setting <code>wpa-freq-list</code> to automatically connect at the best possible protocol level.</p>
+<hr />
+<p><a href='../how-i-fixed-laggy-wifi-in-debian-12/index.html'>Last time</a> I blogged about my home server's wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.</p>
 <p>This time, I was transferring a large quantity of large files from my laptop to my home server, and I noticed the transfer speed was capped at around 3 MB/s. I found that very concerning because although wifi isn't the fastest way to transfer data by a wide margin, it should still be faster than that.</p>
 <p>After a bunch of inspection of various settings using <code>iw list</code> and <code>iwlist wlp1s0</code>, I discovered the problem. By looking at frequency and channel settings, I saw that my adapter was connecting to my router at 2.4 Ghz frequencies instead of the 5 GHz frequencies I wanted.</p>
 <p>A bunch of googling suggested passing a <code>freq_list</code> property to wpa_supplicant in its config file. One problem: I'm not configuring wpa_supplication via a config file. I'm configuring it via my <code>/etc/network/interfaces</code> file. I was already using the <code>wpa-ssid</code> and <code>wpa-psk</code> options. Is there an equivalent option to pass in a frequency list?</p>
