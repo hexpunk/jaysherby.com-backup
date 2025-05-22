@@ -16,14 +16,18 @@
 
     <!-- Primary Meta Tags -->
 <meta name="title" content="How I Fixed Laggy Wifi In Debian 12">
-<meta name="description" content="The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...">
+<meta name="description" content="
+
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I updated the commands here from using  to . I also modified the systemd unit ...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
 <meta property="og:title" content="How I Fixed Laggy Wifi In Debian 12">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/">
-<meta property="og:description" content="The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...">
+<meta property="og:description" content="
+
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I updated the commands here from using  to . I also modified the systemd unit ...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
@@ -31,7 +35,9 @@
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/">
 <meta property="twitter:title" content="How I Fixed Laggy Wifi In Debian 12">
-<meta property="twitter:description" content="The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...">
+<meta property="twitter:description" content="
+
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I updated the commands here from using  to . I also modified the systemd unit ...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
@@ -43,10 +49,14 @@
     "@type": "article",
     "name": "How I Fixed Laggy Wifi In Debian 12",
     "url": "https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/",
-    "description": "The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y...",
+    "description": "
+
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I updated the commands here from using  to . I also modified the systemd unit ...",
     "about": {
       "@type": "How I Fixed Laggy Wifi In Debian 12",
-      "description": "The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It&#x27;s been dutifully chugging along for more than 4 y..."
+      "description": "
+
+I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I updated the commands here from using  to . I also modified the systemd unit ..."
     }
   }
 </script>
@@ -361,11 +371,13 @@ details > summary {
         </p>
     
 
-    <p>The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It's been dutifully chugging along for more than 4 years, but my needs finally exceed its capabilities.</p>
+    <h3 id=may-21-2025-update>May 21, 2025 Update</h3><p>I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I updated the commands here from using <code>wlp1s0</code> to <code>wlp1s0f0</code>. I also modified the systemd unit template to make it easier to diagnose when things go sideways.</p>
+<hr />
+<p>The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It's been dutifully chugging along for more than 4 years, but my needs finally exceed its capabilities.</p>
 <p>I got a good deal on a Lenovo ThinkCentre M910q from <a href='https://www.backmarket.com/'>Back Market</a>. When I went to install Debian 12 Bookworm, I found that Debian's non-free firmware packages don't include the necessary drivers for the cheap USB wifi adapter the seller included. Rather than faff about trying to compile and install the kernel module, I bought an Intel 8265 M.2 wifi adapter from Amazon. Its drivers are included in Debian's non-free firmware, and according to Lenovo's service manuals, this was the model they would have included in my machine had that option been chosen during configuration.</p>
 <p>Installation of Debian worked without any issues. However, once the system was running, I noticed SSH sessions were very laggy. Pings to the new machine were averaging around 150 milliseconds, which is ten times longer than pings to the Raspberry Pi it was set to replace.</p>
 <p>After a little searching online, I found the culprit to be the power management on the wifi adapter. I think the wifi adapter goes into a low-power state after a lull in network traffic, but the lull is so short that the time between key presses in a SSH session is enough to trigger it. Because this device is not running on a battery, I feel comfortable turning the wifi adapter's power management off. This appears the solve the issue, and my SSH sessions are properly peppy afterwards.</p>
-<div class="highlight"><pre><span></span>server-user@m910q:~$ sudo iw dev wlp1s0 set power_save off
+<div class="highlight"><pre><span></span>server-user@m910q:~$ sudo iw dev wlp1s0f0 set power_save off
 </pre></div>
 <p>However, there's still a problem. If the system reboots, the power management for the wifi adapter returns to its default state of being turned on.</p>
 <p>Systemd to the rescue. After debugging some examples online that are very close to correct but ultimately out of date, here's the unit file I ended up with and the commands I used to set it up for my wifi adapter.</p>
@@ -373,17 +385,20 @@ details > summary {
 </pre></div>
 <div class="highlight"><pre><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Keep wireless device %i from sleeping.</span>
-<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network-online.target</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">network-online.target</span>
 
 <span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">oneshot</span>
+<span class="na">RemainAfterExit</span><span class="o">=</span><span class="s">yes</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/sbin/iw dev %i set power_save off</span>
 
 <span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </pre></div>
-<div class="highlight"><pre><span></span>sudo systemctl enable --now wlan_always_on@wlp1s0.service
+<div class="highlight"><pre><span></span>sudo systemctl enable --now wlan_always_on@wlp1s0f0.service
 </pre></div>
-<p>This setup may not be perfect. I'm no systemd expect. This is cobbled and cargo culted together. But it works on my machine™.</p>
+<p>This setup may not be perfect. I'm no systemd expert. This is cobbled and cargo culted together. But it works on my machine™.</p>
 
 
     
