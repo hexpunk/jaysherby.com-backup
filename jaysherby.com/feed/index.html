@@ -17,6 +17,55 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check  to see...</subtitle>
   <entry>
+    <id>https://jaysherby.com/vscode-debugger-ignoring-exceptions-in-your-dependencies/</id>
+    <title>VSCode Debugger: Ignoring Exceptions In Your Dependencies</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;I spend a lot of my time at work debugging a web application server that runs on top of Node. Like most web application servers, it has robust exception handling to make sure that uncaught exceptions don't crash the server application.&lt;/p&gt;
+&lt;p&gt;While this is a solid engineering decision, it does make debugging the application a little more complicated. Sometimes exceptions are thrown that don't have stack traces or even descriptive names. That's the worst case scenario. I know an exception occurred, but I don't know what or where.&lt;/p&gt;
+&lt;p&gt;When debugging this in the VSCode debugger, you're given two options:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/uncaught-exceptions.png" alt="" /&gt;&lt;/p&gt;
+&lt;p&gt;Checking "uncaught exceptions" isn't going to help here because &lt;em&gt;all&lt;/em&gt; exceptions are caught, even if it's only at the point of the web application server's umbrella exception handler.&lt;/p&gt;
+&lt;p&gt;Checking "caught exceptions" will stop on every caught exception, which will eventually catch the exception you're looking for. However, it will also stop on all of the other exceptions that are thrown. I've noticed that my dependencies often throw a lot of exceptions that they catch. Hey, throwing and catching is just another method of control flow. Who am I to say my dependencies can't use it? But it does create a lot more noise when I'm trying to debug a problem in my own code.&lt;/p&gt;
+&lt;p&gt;Here's a debugger launch configuration that runs &lt;code&gt;npm run start:server&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// Use IntelliSense to learn about possible attributes.&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// Hover to view descriptions of existing attributes.&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.2.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;configurations&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;node&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;request&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;launch&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Start Server&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;runtimeExecutable&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;npm&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;runtimeArgs&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;run&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;start:server&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;console&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;integratedTerminal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;skipFiles&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;node_internals&amp;gt;/**&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;**/node_modules/**&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;internalConsoleOptions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;neverOpen&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The crucial addition here is in the &lt;code&gt;skipFiles&lt;/code&gt; array. The &lt;code&gt;&amp;quot;&amp;lt;node_internals&amp;gt;/**&amp;quot;&lt;/code&gt; element is there by default in VSCode. I've added the &lt;code&gt;&amp;quot;**/node_modules/**&amp;quot;&lt;/code&gt; element for the same reason the default entry is present. I'm only interested in where the exceptions are introduced inside &lt;em&gt;my&lt;/em&gt; code. If an exception is thrown and caught within Node's implementation or within my dependencies, I don't care about it. I only care about exceptions that were caused by my code, that my code needs to handle.&lt;/p&gt;
+&lt;p&gt;This launch configuration works fine, but I don't typically run my local web application server from launch configurations. In my workflow, I tend to launch it from the NPM scripts pane in the explorer view. When launched in debug mode, it runs the appropriate command inside of a JavaScript Debug Terminal.&lt;/p&gt;
+&lt;p&gt;Quick aside, I love the JavaScript Debug Terminal feature in VSCode. I can run Node or NPM in a terminal session and VSCode's debugger automatically attaches.&lt;/p&gt;
+&lt;p&gt;In any case, I want this configuration for the JavaScript Debug Terminal, too! The way to do this is to add a new key in my &lt;code&gt;settings.json&lt;/code&gt; file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;debug.javascript.terminalOptions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;skipFiles&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;node_internals&amp;gt;/**&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;**/node_modules/**&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With this addition, I now get to ignore noisy exceptions inside my dependencies. And if an exception is thrown in a dependency and my code is expected to handle it, the debugger stops at the line in my code where the exception was thrown instead of in the deepest bowels of the dependency's probably minified code.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/vscode-debugger-ignoring-exceptions-in-your-dependencies/" rel="alternate"/>
+    <category term="nodejs"/>
+    <published>2025-05-30T22:27:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/batching-messages-in-async-clojure/</id>
     <title>Batching Messages in Async Clojure</title>
     <author>
@@ -538,47 +587,5 @@ iface wlp1s0 inet dhcp
     <link href="https://jaysherby.com/expresss-finish-event/" rel="alternate"/>
     <category term="nodejs"/>
     <published>2024-06-11T16:11:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/</id>
-    <title>How I Fixed Laggy Wifi In Debian 12</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;h3 id=may-21-2025-update&gt;May 21, 2025 Update&lt;/h3&gt;&lt;p&gt;I replaced the old Intel 8265 wifi card with a new Intel BE200 Wifi 7 card. I updated the commands here from using &lt;code&gt;wlp1s0&lt;/code&gt; to &lt;code&gt;wlp1s0f0&lt;/code&gt;. I also modified the systemd unit template to make it easier to diagnose when things go sideways.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;The time has finally come to replace my Raspberry Pi 4 home server with something a little more capable. It's been dutifully chugging along for more than 4 years, but my needs finally exceed its capabilities.&lt;/p&gt;
-&lt;p&gt;I got a good deal on a Lenovo ThinkCentre M910q from &lt;a href='https://www.backmarket.com/'&gt;Back Market&lt;/a&gt;. When I went to install Debian 12 Bookworm, I found that Debian's non-free firmware packages don't include the necessary drivers for the cheap USB wifi adapter the seller included. Rather than faff about trying to compile and install the kernel module, I bought an Intel 8265 M.2 wifi adapter from Amazon. Its drivers are included in Debian's non-free firmware, and according to Lenovo's service manuals, this was the model they would have included in my machine had that option been chosen during configuration.&lt;/p&gt;
-&lt;p&gt;Installation of Debian worked without any issues. However, once the system was running, I noticed SSH sessions were very laggy. Pings to the new machine were averaging around 150 milliseconds, which is ten times longer than pings to the Raspberry Pi it was set to replace.&lt;/p&gt;
-&lt;p&gt;After a little searching online, I found the culprit to be the power management on the wifi adapter. I think the wifi adapter goes into a low-power state after a lull in network traffic, but the lull is so short that the time between key presses in a SSH session is enough to trigger it. Because this device is not running on a battery, I feel comfortable turning the wifi adapter's power management off. This appears the solve the issue, and my SSH sessions are properly peppy afterwards.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;server-user@m910q:~$ sudo iw dev wlp1s0f0 set power_save off
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;However, there's still a problem. If the system reboots, the power management for the wifi adapter returns to its default state of being turned on.&lt;/p&gt;
-&lt;p&gt;Systemd to the rescue. After debugging some examples online that are very close to correct but ultimately out of date, here's the unit file I ended up with and the commands I used to set it up for my wifi adapter.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo systemctl --full --force edit wlan_always_on@.service
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
-&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Keep wireless device %i from sleeping.&lt;/span&gt;
-&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
-&lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
-
-&lt;span class="k"&gt;[Service]&lt;/span&gt;
-&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;oneshot&lt;/span&gt;
-&lt;span class="na"&gt;RemainAfterExit&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;yes&lt;/span&gt;
-&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/sbin/iw dev %i set power_save off&lt;/span&gt;
-
-&lt;span class="k"&gt;[Install]&lt;/span&gt;
-&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;multi-user.target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo systemctl enable --now wlan_always_on@wlp1s0f0.service
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This setup may not be perfect. I'm no systemd expert. This is cobbled and cargo culted together. But it works on my machine™.&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/how-i-fixed-laggy-wifi-in-debian-12/" rel="alternate"/>
-    <category term="home server"/>
-    <category term="linux"/>
-    <category term="systemd"/>
-    <published>2024-02-21T04:21:00+00:00</published>
   </entry>
 </feed>
