@@ -14,6 +14,45 @@ Hiring? Check  to see...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Don't Rely On mtime For Anything Important</title>
+      <link>https://jaysherby.com/dont-rely-on-mtime-for-anything-important/</link>
+      <description>&lt;p&gt;Rachel Kroll posted &lt;a href='https://rachelbythebay.com/w/2025/05/31/sync/'&gt;"rsync's defaults are not always enough"&lt;/a&gt; on her well-known blog yesterday. Everything she said is true. It's a short post, just over 500 words. Go read it.&lt;/p&gt;
+&lt;p&gt;The gist is that venerable data transfer application &lt;code&gt;rsync&lt;/code&gt; by default only compares the file size and modification time (mtime) to decide if a file has differed between the source and destination. There is an option to compare files by checksum instead. In the &lt;code&gt;rsync&lt;/code&gt; man page, it shows the option &lt;code&gt;--checksum, -c&lt;/code&gt;: "skip based on checksum, not mod-time &amp; size".&lt;/p&gt;
+&lt;p&gt;In Rachel's case, a particular file's contents had changed, but the overall file size hadn't changed, &lt;em&gt;and the mtime hadn't changed&lt;/em&gt;. The first part makes sense. If you swap one byte in a file with another byte, the file's contents have changed but its overall size has not. But how would the mtime stay the same? Probably shenanigans from a human being somewhere. But let's stop a moment and answer the question...&lt;/p&gt;
+&lt;h2 id=what-is-mtime&gt;What is mtime?&lt;/h2&gt;&lt;p&gt;Depending on the features of the file system being used, there may be lots of metadata attached to a file. Speaking broadly, most file systems used with *nix operating systems include things like the owning user's id, the owning group's id, read/write/execute permissions, atime, and mtime.&lt;/p&gt;
+&lt;p&gt;Atime stands for access time. Whenever a file is read, the atime is updated. This is theoretically great for audit logging, except that it doesn't tell you &lt;em&gt;who&lt;/em&gt; accessed the file, and it creates a lot of disk activity overhead. Imagine having to write to disk every time you read from disk. That's why this option is usually disabled by default in most modern systems I've used.&lt;/p&gt;
+&lt;p&gt;The very fact that a configuration option can disable one of these should automatically give you trust issues.&lt;/p&gt;
+&lt;p&gt;Mtime, as previously established, stands for modification time. But what does that really mean? I'm running Pop!_OS and the oldest file on my system is &lt;code&gt;/usr/share/doc/cron/THANKS&lt;/code&gt; from September 1st, 1994. But I bought this laptop earlier this year! I doubt there's a single part inside that was manufactured before 2023. SSDs didn't even exist in 1994. How could this file's mtime be from the mid-1990s?&lt;/p&gt;
+&lt;p&gt;Here's our first problem. Is mtime supposed to represent the last time the file was modified &lt;em&gt;anywhere&lt;/em&gt; or when it was modified on this particular storage device? I guess that's up for interpretation. When you transfer files using &lt;code&gt;rsync&lt;/code&gt;'s archive mode (&lt;code&gt;--archive, -a&lt;/code&gt;), it copies metadata from the source to the destination exactly, including the mtime. This is also true when files are untarballed. So, depending on how a file arrived onto your hard disk, its mtime may predate your device.&lt;/p&gt;
+&lt;p&gt;Our second problem is the &lt;code&gt;touch&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;NAME
+     touch - change file access and modification times
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This command, available to every user to use on any file they can write to, is explicitly for modifying atime and mtime. Here's a bit of an ontological question. If I can update the modification time of a file without actually modifying the contents of the file, does mtime still have any real meaning?&lt;/p&gt;
+&lt;p&gt;The most common usage of &lt;code&gt;touch&lt;/code&gt; is with default settings, &lt;code&gt;touch filename&lt;/code&gt;, which simply updates mtime to the current date and time. However, it's not like it's hard to change mtime to whatever value you want.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;touch&lt;span class="w"&gt; &lt;/span&gt;filename
+jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"&gt; &lt;/span&gt;-lah&lt;span class="w"&gt; &lt;/span&gt;filename
+-rw-rw-r--&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;jaysherby&lt;span class="w"&gt; &lt;/span&gt;jaysherby&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Jun&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;15&lt;/span&gt;:54&lt;span class="w"&gt; &lt;/span&gt;filename
+jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;touch&lt;span class="w"&gt; &lt;/span&gt;--date&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;1970-01-01 16:20:00 UTC&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;filename
+jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"&gt; &lt;/span&gt;-lah&lt;span class="w"&gt; &lt;/span&gt;filename
+-rw-rw-r--&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;jaysherby&lt;span class="w"&gt; &lt;/span&gt;jaysherby&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Jan&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1970&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;filename
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It's just that easy to forge a file's mtime. I suspect that's what happened to Rachel's system file. Why would someone change a file's contents making sure not to change its length and then modify its mtime to match the file before the change occurred? It seems very suspicious if not necessarily malicious.&lt;/p&gt;
+&lt;p&gt;Mtime is so notoriously unreliable that &lt;code&gt;git&lt;/code&gt;, for example, keeps its own internal file modification timestamp records and notably does not update mtime values to match its internal records. I found this out once upon a time when I was curious about the oldest files in a repository and found that I had to parse git logs to do so.&lt;/p&gt;
+&lt;h2 id=what-checksum-does-codersynccode-use&gt;What checksum does &lt;code&gt;rsync&lt;/code&gt; use?&lt;/h2&gt;&lt;p&gt;I was curious about this. It seems that when you pass one of the &lt;code&gt;--checksum, -c&lt;/code&gt; flags, &lt;code&gt;rsync&lt;/code&gt; defaults to using MD5, which is probably fine. But if you don't like it and would prefer something else, there's also the &lt;code&gt;--checksum-choice=STR&lt;/code&gt; flag: "choose the checksum algorithm (aka --cc)". You can run &lt;code&gt;rsync --version&lt;/code&gt; locally to see what algorithms your version of &lt;code&gt;rsync&lt;/code&gt; supports. My local copy supports some xxhash algorithms, MD5, MD4, and SHA1.&lt;/p&gt;
+&lt;h2 id=will-this-prevent-corruptions-during-transfer-like-bittorrent&gt;Will this prevent corruptions during transfer, like BitTorrent?&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;No.&lt;/strong&gt; The checksum is only run on files &lt;em&gt;before&lt;/em&gt; transfer to determine if the destination file needs to be updated. It does not compare checksums after transfer has completed.&lt;/p&gt;
+&lt;p&gt;This is important for my use cases. I'm usually using &lt;code&gt;rsync&lt;/code&gt; to move files from one place to another, not to back them up. That means I will delete the source files after the transfer is complete. I have been bitten by this before when files end up mysteriously corrupted. That's why I know so much about this aspect of the &lt;code&gt;rsync&lt;/code&gt; tool.&lt;/p&gt;
+&lt;p&gt;Think about the complete path a file needs to traverse when it's transferred via &lt;code&gt;rsync&lt;/code&gt;.  To goes from the disk, to memory, through application code, over the network, through application code, to memory, to disk. There are several places in that pipeline where something could technically go wrong and I'd never know.&lt;/p&gt;
+&lt;p&gt;You can create your own utility or script to hash the files on both sides afterwards and compare them, or you can just run the &lt;code&gt;rsync&lt;/code&gt; command again. I do the latter due to simplicity. If everything transferred fine the first time, nothing should need to be transferred on the second run. After that, I feel safe deleting the local copy of the files.&lt;/p&gt;
+&lt;p&gt;I don't think &lt;code&gt;rsync&lt;/code&gt; or network issues were at fault for the occasional file corruptions I've experienced, but it's nice to be able to reasonably rule it out.&lt;/p&gt;
+&lt;p&gt;Don't use mtime for anything important. Its meaning is debatable, and it's a convenient fiction at best.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/dont-rely-on-mtime-for-anything-important/</guid>
+      <category>rsync</category>
+      <pubDate>Sun, 01 Jun 2025 21:12:00 +0000</pubDate>
+    </item>
+    <item>
       <title>VSCode Debugger: Ignoring Exceptions In Your Dependencies</title>
       <link>https://jaysherby.com/vscode-debugger-ignoring-exceptions-in-your-dependencies/</link>
       <description>&lt;p&gt;I spend a lot of my time at work debugging a web application server that runs on top of Node. Like most web application servers, it has robust exception handling to make sure that uncaught exceptions don't crash the server application.&lt;/p&gt;
@@ -521,39 +560,6 @@ iface wlp1s0 inet dhcp
       <category>sql</category>
       <category>til</category>
       <pubDate>Mon, 29 Jul 2024 22:01:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Express's "finish" Event</title>
-      <link>https://jaysherby.com/expresss-finish-event/</link>
-      <description>&lt;p&gt;Let's say you want to write some middleware for &lt;a href='https://expressjs.com/'&gt;Express&lt;/a&gt; that does something after the request is complete. The standard advice on the web is to add an event listener to the response object listening for the "finish" event.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;use&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;req&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;// DON&amp;#39;T USE THIS!!!&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;finish&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Request finished&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I learned the hard way that the "finish" event doesn't always get fired. There are lots of ways you can screw this up as a programmer.  "finish" may not fire if:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;there's a break in the middleware chain, i.e. not calling &lt;code&gt;next&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;the response isn't completed using &lt;code&gt;res.send&lt;/code&gt; or &lt;code&gt;res.end&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;an error isn't handled somewhere, including uncaught exceptions in promises&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;But even if you're the best, most diligent programmer on Earth, if the client closes the connection before the request has been completed, that's enough to cause the "finish" event to never fire for that request.&lt;/p&gt;
-&lt;p&gt;Maybe that's the behavior you want. Maybe you only want your event listener to fire on &lt;em&gt;successful&lt;/em&gt; requests. If so, carry on. But if you're like me and you want your event listener to fire after &lt;em&gt;every&lt;/em&gt; request, you should listen for a different event. I fixed my issue by listening for the "close" event, which is always fired.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;use&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;req&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Request finished&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/expresss-finish-event/</guid>
-      <category>nodejs</category>
-      <pubDate>Tue, 11 Jun 2024 16:11:00 +0000</pubDate>
     </item>
   </channel>
 </rss>

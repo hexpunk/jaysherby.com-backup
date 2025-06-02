@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Don&#x27;t Rely On mtime For Anything Important | Jay&#x27;s blog</title>
+  <link rel="canonical" href="index.html">
+  
+    
+
+    <meta name="jaysherby" content="look-for-the-bear-necessities">
+
+    <!-- Primary Meta Tags -->
+<meta name="title" content="Don&#x27;t Rely On mtime For Anything Important">
+<meta name="description" content="Rachel Kroll posted  on her well-known blog yesterday. Everything she said is true. It&#x27;s a short post, just over 500 words. Go read it.
+
+The gist is that v...">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:site_name" content="Jay&#x27;s blog">
+<meta property="og:title" content="Don&#x27;t Rely On mtime For Anything Important">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaysherby.com/dont-rely-on-mtime-for-anything-important/">
+<meta property="og:description" content="Rachel Kroll posted  on her well-known blog yesterday. Everything she said is true. It&#x27;s a short post, just over 500 words. Go read it.
+
+The gist is that v...">
+<meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:url" content="https://jaysherby.com/dont-rely-on-mtime-for-anything-important/">
+<meta property="twitter:title" content="Don&#x27;t Rely On mtime For Anything Important">
+<meta property="twitter:description" content="Rachel Kroll posted  on her well-known blog yesterday. Everything she said is true. It&#x27;s a short post, just over 500 words. Go read it.
+
+The gist is that v...">
+<meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
+
+
+
+<!-- Microdata -->
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "article",
+    "name": "Don&#x27;t Rely On mtime For Anything Important",
+    "url": "https://jaysherby.com/dont-rely-on-mtime-for-anything-important/",
+    "description": "Rachel Kroll posted  on her well-known blog yesterday. Everything she said is true. It&#x27;s a short post, just over 500 words. Go read it.
+
+The gist is that v...",
+    "about": {
+      "@type": "Don&#x27;t Rely On mtime For Anything Important",
+      "description": "Rachel Kroll posted  on her well-known blog yesterday. Everything she said is true. It&#x27;s a short post, just over 500 words. Go read it.
+
+The gist is that v..."
+    }
+  }
+</script>
+
+  
+    
+
+    
+    <link rel="stylesheet" href="../static/pygmentify/css/default.min.css">
+  
+  
+  
+    
+        <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E👨‍💻%3C/text%3E%3C/svg%3E">
+    
+
+
+
+  <style>
+      
+      
+    :root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+/* Make embedded images centered and interrupt content */
+main img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Give hint that <details> are clickable to reveal more */
+details > summary {
+  cursor: pointer;
+}
+
+/* Use Monokai code highlighting theme in dark mode */
+@media (prefers-color-scheme: dark) {
+  .hll { background-color: #49483e }
+  .c { color: #75715e } /* Comment */
+  .err { color: #960050; background-color: #1e0010 } /* Error */
+  .k { color: #66d9ef } /* Keyword */
+  .l { color: #ae81ff } /* Literal */
+  .n { color: #f8f8f2 } /* Name */
+  .o { color: #f92672 } /* Operator */
+  .p { color: #f8f8f2 } /* Punctuation */
+  .ch { color: #75715e } /* Comment.Hashbang */
+  .cm { color: #75715e } /* Comment.Multiline */
+  .cp { color: #75715e } /* Comment.Preproc */
+  .cpf { color: #75715e } /* Comment.PreprocFile */
+  .c1 { color: #75715e } /* Comment.Single */
+  .cs { color: #75715e } /* Comment.Special */
+  .gd { color: #f92672 } /* Generic.Deleted */
+  .ge { font-style: italic } /* Generic.Emph */
+  .gi { color: #a6e22e } /* Generic.Inserted */
+  .gs { font-weight: bold } /* Generic.Strong */
+  .gu { color: #75715e } /* Generic.Subheading */
+  .kc { color: #66d9ef } /* Keyword.Constant */
+  .kd { color: #66d9ef } /* Keyword.Declaration */
+  .kn { color: #f92672 } /* Keyword.Namespace */
+  .kp { color: #66d9ef } /* Keyword.Pseudo */
+  .kr { color: #66d9ef } /* Keyword.Reserved */
+  .kt { color: #66d9ef } /* Keyword.Type */
+  .ld { color: #e6db74 } /* Literal.Date */
+  .m { color: #ae81ff } /* Literal.Number */
+  .s { color: #e6db74 } /* Literal.String */
+  .na { color: #a6e22e } /* Name.Attribute */
+  .nb { color: #f8f8f2 } /* Name.Builtin */
+  .nc { color: #a6e22e } /* Name.Class */
+  .no { color: #66d9ef } /* Name.Constant */
+  .nd { color: #a6e22e } /* Name.Decorator */
+  .ni { color: #f8f8f2 } /* Name.Entity */
+  .ne { color: #a6e22e } /* Name.Exception */
+  .nf { color: #a6e22e } /* Name.Function */
+  .nl { color: #f8f8f2 } /* Name.Label */
+  .nn { color: #f8f8f2 } /* Name.Namespace */
+  .nx { color: #a6e22e } /* Name.Other */
+  .py { color: #f8f8f2 } /* Name.Property */
+  .nt { color: #f92672 } /* Name.Tag */
+  .nv { color: #f8f8f2 } /* Name.Variable */
+  .ow { color: #f92672 } /* Operator.Word */
+  .w { color: #f8f8f2 } /* Text.Whitespace */
+  .mb { color: #ae81ff } /* Literal.Number.Bin */
+  .mf { color: #ae81ff } /* Literal.Number.Float */
+  .mh { color: #ae81ff } /* Literal.Number.Hex */
+  .mi { color: #ae81ff } /* Literal.Number.Integer */
+  .mo { color: #ae81ff } /* Literal.Number.Oct */
+  .sa { color: #e6db74 } /* Literal.String.Affix */
+  .sb { color: #e6db74 } /* Literal.String.Backtick */
+  .sc { color: #e6db74 } /* Literal.String.Char */
+  .dl { color: #e6db74 } /* Literal.String.Delimiter */
+  .sd { color: #e6db74 } /* Literal.String.Doc */
+  .s2 { color: #e6db74 } /* Literal.String.Double */
+  .se { color: #ae81ff } /* Literal.String.Escape */
+  .sh { color: #e6db74 } /* Literal.String.Heredoc */
+  .si { color: #e6db74 } /* Literal.String.Interpol */
+  .sx { color: #e6db74 } /* Literal.String.Other */
+  .sr { color: #e6db74 } /* Literal.String.Regex */
+  .s1 { color: #e6db74 } /* Literal.String.Single */
+  .ss { color: #e6db74 } /* Literal.String.Symbol */
+  .bp { color: #f8f8f2 } /* Name.Builtin.Pseudo */
+  .fm { color: #a6e22e } /* Name.Function.Magic */
+  .vc { color: #f8f8f2 } /* Name.Variable.Class */
+  .vg { color: #f8f8f2 } /* Name.Variable.Global */
+  .vi { color: #f8f8f2 } /* Name.Variable.Instance */
+  .vm { color: #f8f8f2 } /* Name.Variable.Magic */
+  .il { color: #ae81ff } /* Literal.Number.Integer.Long */
+}
+    .upvote-button {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background-color: inherit;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .upvote-button.upvoted {
+        color: salmon;
+    }
+    .upvote-count {
+        margin-top: -3px;
+    }
+
+      
+  </style>
+
+  
+    
+    <style>
+        body:hover {
+            shape-outside: url("https://jaysherby.com/hit/MhfCcxTHDbaXFnbKofpx/");
+        }
+    </style>
+    
+
+</head>
+
+<body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
+  
+  <header>
+    <a class="title" href="../index.html">
+      <h1>
+        Jay&#x27;s blog
+      </h1>
+    </a>
+    <nav>
+      <p><a href='../index.html'>Home</a> <a href='../resume/index.html'>Résumé</a> <a href='../blog/index.html'>Blog</a></p>
+
+    </nav>
+  </header>
+  <main>
+    
+
+    
+        
+    
+
+    
+        <h1>Don&#x27;t Rely On mtime For Anything Important</h1>
+
+        <p>
+            <i>
+                <time datetime="2025-06-01T21:12Z">
+                    01 Jun, 2025
+                </time>
+            </i>
+        </p>
+    
+
+    <p>Rachel Kroll posted <a href='https://rachelbythebay.com/w/2025/05/31/sync/'>"rsync's defaults are not always enough"</a> on her well-known blog yesterday. Everything she said is true. It's a short post, just over 500 words. Go read it.</p>
+<p>The gist is that venerable data transfer application <code>rsync</code> by default only compares the file size and modification time (mtime) to decide if a file has differed between the source and destination. There is an option to compare files by checksum instead. In the <code>rsync</code> man page, it shows the option <code>--checksum, -c</code>: "skip based on checksum, not mod-time & size".</p>
+<p>In Rachel's case, a particular file's contents had changed, but the overall file size hadn't changed, <em>and the mtime hadn't changed</em>. The first part makes sense. If you swap one byte in a file with another byte, the file's contents have changed but its overall size has not. But how would the mtime stay the same? Probably shenanigans from a human being somewhere. But let's stop a moment and answer the question...</p>
+<h2 id=what-is-mtime>What is mtime?</h2><p>Depending on the features of the file system being used, there may be lots of metadata attached to a file. Speaking broadly, most file systems used with *nix operating systems include things like the owning user's id, the owning group's id, read/write/execute permissions, atime, and mtime.</p>
+<p>Atime stands for access time. Whenever a file is read, the atime is updated. This is theoretically great for audit logging, except that it doesn't tell you <em>who</em> accessed the file, and it creates a lot of disk activity overhead. Imagine having to write to disk every time you read from disk. That's why this option is usually disabled by default in most modern systems I've used.</p>
+<p>The very fact that a configuration option can disable one of these should automatically give you trust issues.</p>
+<p>Mtime, as previously established, stands for modification time. But what does that really mean? I'm running Pop!_OS and the oldest file on my system is <code>/usr/share/doc/cron/THANKS</code> from September 1st, 1994. But I bought this laptop earlier this year! I doubt there's a single part inside that was manufactured before 2023. SSDs didn't even exist in 1994. How could this file's mtime be from the mid-1990s?</p>
+<p>Here's our first problem. Is mtime supposed to represent the last time the file was modified <em>anywhere</em> or when it was modified on this particular storage device? I guess that's up for interpretation. When you transfer files using <code>rsync</code>'s archive mode (<code>--archive, -a</code>), it copies metadata from the source to the destination exactly, including the mtime. This is also true when files are untarballed. So, depending on how a file arrived onto your hard disk, its mtime may predate your device.</p>
+<p>Our second problem is the <code>touch</code> command.</p>
+<div class="highlight"><pre><span></span>NAME
+     touch - change file access and modification times
+</pre></div>
+<p>This command, available to every user to use on any file they can write to, is explicitly for modifying atime and mtime. Here's a bit of an ontological question. If I can update the modification time of a file without actually modifying the contents of the file, does mtime still have any real meaning?</p>
+<p>The most common usage of <code>touch</code> is with default settings, <code>touch filename</code>, which simply updates mtime to the current date and time. However, it's not like it's hard to change mtime to whatever value you want.</p>
+<div class="highlight"><pre><span></span>jaysherby@framework13:~$<span class="w"> </span>touch<span class="w"> </span>filename
+jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<span class="w"> </span>filename
+-rw-rw-r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>jaysherby<span class="w"> </span>jaysherby<span class="w"> </span><span class="m">0</span><span class="w"> </span>Jun<span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="m">15</span>:54<span class="w"> </span>filename
+jaysherby@framework13:~$<span class="w"> </span>touch<span class="w"> </span>--date<span class="o">=</span><span class="s2">&quot;1970-01-01 16:20:00 UTC&quot;</span><span class="w"> </span>filename
+jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<span class="w"> </span>filename
+-rw-rw-r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>jaysherby<span class="w"> </span>jaysherby<span class="w"> </span><span class="m">0</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">1970</span><span class="w"> </span>filename
+</pre></div>
+<p>It's just that easy to forge a file's mtime. I suspect that's what happened to Rachel's system file. Why would someone change a file's contents making sure not to change its length and then modify its mtime to match the file before the change occurred? It seems very suspicious if not necessarily malicious.</p>
+<p>Mtime is so notoriously unreliable that <code>git</code>, for example, keeps its own internal file modification timestamp records and notably does not update mtime values to match its internal records. I found this out once upon a time when I was curious about the oldest files in a repository and found that I had to parse git logs to do so.</p>
+<h2 id=what-checksum-does-codersynccode-use>What checksum does <code>rsync</code> use?</h2><p>I was curious about this. It seems that when you pass one of the <code>--checksum, -c</code> flags, <code>rsync</code> defaults to using MD5, which is probably fine. But if you don't like it and would prefer something else, there's also the <code>--checksum-choice=STR</code> flag: "choose the checksum algorithm (aka --cc)". You can run <code>rsync --version</code> locally to see what algorithms your version of <code>rsync</code> supports. My local copy supports some xxhash algorithms, MD5, MD4, and SHA1.</p>
+<h2 id=will-this-prevent-corruptions-during-transfer-like-bittorrent>Will this prevent corruptions during transfer, like BitTorrent?</h2><p><strong>No.</strong> The checksum is only run on files <em>before</em> transfer to determine if the destination file needs to be updated. It does not compare checksums after transfer has completed.</p>
+<p>This is important for my use cases. I'm usually using <code>rsync</code> to move files from one place to another, not to back them up. That means I will delete the source files after the transfer is complete. I have been bitten by this before when files end up mysteriously corrupted. That's why I know so much about this aspect of the <code>rsync</code> tool.</p>
+<p>Think about the complete path a file needs to traverse when it's transferred via <code>rsync</code>.  To goes from the disk, to memory, through application code, over the network, through application code, to memory, to disk. There are several places in that pipeline where something could technically go wrong and I'd never know.</p>
+<p>You can create your own utility or script to hash the files on both sides afterwards and compare them, or you can just run the <code>rsync</code> command again. I do the latter due to simplicity. If everything transferred fine the first time, nothing should need to be transferred on the second run. After that, I feel safe deleting the local copy of the files.</p>
+<p>I don't think <code>rsync</code> or network issues were at fault for the occasional file corruptions I've experienced, but it's nice to be able to reasonably rule it out.</p>
+<p>Don't use mtime for anything important. Its meaning is debatable, and it's a convenient fiction at best.</p>
+
+
+    
+
+    
+        
+            <p class="tags">
+                
+                    <a href="https://jaysherby.com/blog/?q=rsync">#rsync</a>
+                
+            </p>
+        
+
+        
+            <form id="upvote-form" action="https://jaysherby.com/upvote/MhfCcxTHDbaXFnbKofpx/" method="post" style="display: inline">
+    <small>
+        <input hidden name="uid" value="MhfCcxTHDbaXFnbKofpx" style="display:none">
+        <input hidden name="title" style="display:none">
+        
+        <button
+            class="upvote-button"
+            title="Toast this post"
+        >
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="17 11 12 6 7 11"></polyline>
+                <polyline points="17 18 12 13 7 18"></polyline>
+            </svg>
+            <small class="upvote-count">1</small>
+        </button>
+    </small>        
+</form>
+
+<script>
+    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+        });
+        const button = form.querySelector('button')
+        button.disabled = true
+        button.style.color = "salmon"
+        const upvoteCount = document.querySelector('.upvote-count')
+        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+    });
+</script>
+        
+    
+
+
+  </main>
+  <footer style="padding:25px 0;">
+    
+    
+    <span>
+        Powered by <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+    </span>
+
+  </footer>
+</body>
+</html>
