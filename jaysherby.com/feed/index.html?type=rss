@@ -14,6 +14,142 @@ Hiring? Check  to see...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Adopt These Trackers</title>
+      <link>https://jaysherby.com/adopt-these-trackers/</link>
+      <description>&lt;p&gt;A recent blog post by Kian Bradley called &lt;a href='https://kianbradley.com/2025/06/15/resurrecting-a-dead-tracker.html'&gt;"Resurrecting a dead torrent tracker and finding 3 million peers"&lt;/a&gt; is making the rounds and it captured my imagination. There's something undeniably punk rock about adopting a dead tracker and bringing it back to life.&lt;/p&gt;
+&lt;p&gt;I was curious how someone might find old tracker domains to resurrect, though. Kian seemed to find his through natural usage of BitTorrent. I had a different idea.&lt;/p&gt;
+&lt;p&gt;&lt;a href='https://github.com/ngosang/trackerslist'&gt;This git repository&lt;/a&gt; has an automatically updated list of valid tracker URLs as well as an automatically updated block list. It also has 50k stars on GitHub, so I figure it's a decent source of data.&lt;/p&gt;
+&lt;p&gt;I vibe-coded up a &lt;a href='https://www.nushell.sh/'&gt;Nushell&lt;/a&gt; script that will look through the git history for tracker domain names that were removed from the tracker list but never added to the block list. Finally, it writes out the results in files of max 100 entries because the final step is embarrassingly manual. I checked the removed but not blocked domains in the bulk search feature of my preferred registrar, who limits bulk search to 100 entries at a time.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#!/bin/env nu
+
+def parse_file [path: string] {
+  open $path
+  | str replace &amp;#39;\n\n+&amp;#39; &amp;#39;\n&amp;#39;
+  | lines
+  | str trim
+  | where {|x| $x != &amp;quot;&amp;quot;}
+  | uniq
+}
+
+def get_all_commits [] {
+  ^git rev-list master
+  | lines
+}
+
+def build_blacklist_set [] {
+  get_all_commits
+  | each {|rev|
+      let file = (try { ^git show $&amp;quot;($rev):blacklist.txt&amp;quot; } catch { &amp;quot;&amp;quot; })
+      $file
+      | lines
+      | str trim
+      | where {|x| $x != &amp;quot;&amp;quot;}
+  }
+  | flatten
+  | uniq
+}
+
+def main [] {
+  let all_commits = (get_all_commits | reverse)
+  let blacklist_set = (build_blacklist_set)
+
+  mut prev_trackers = []
+  mut removed_total = []
+
+  for commit in $all_commits {
+    let file = (try { ^git show $&amp;quot;($commit):trackers_all.txt&amp;quot; } catch { &amp;quot;&amp;quot; })
+    let trackers = (
+      $file
+      | str replace &amp;#39;\n\n+&amp;#39; &amp;#39;\n&amp;#39;
+      | lines
+      | str trim
+      | where {|x| $x != &amp;quot;&amp;quot;}
+      | uniq
+    )
+
+    if ($prev_trackers | length) &amp;gt; 0 {
+      let removed = ($prev_trackers | where {|x| not ($trackers | any {|y| $y == $x }) })
+      $removed_total = ($removed_total | append $removed)
+    }
+
+    $prev_trackers = $trackers
+  }
+
+  let final_list = (
+    $removed_total
+    | flatten
+    | uniq
+    | where {|x| not ($blacklist_set | any {|y| $y == $x }) }
+    | parse -r &amp;#39;(?P&amp;lt;uri&amp;gt;.+)&amp;#39;  # ensure strings not treated as plain
+    | each {|row|
+        let host = (try { $row.uri | url parse | get host } catch { &amp;quot;&amp;quot; })
+        let parts = ($host | split row &amp;quot;.&amp;quot;)
+        if ($parts | length) &amp;gt;= 2 {
+          let root = ($parts | last 2 | str join &amp;quot;.&amp;quot;)
+          $root
+        } else {
+          $host  # fallback to full host if malformed
+        }
+    }
+    | uniq
+  )
+
+  # Save output in batches of 100
+  let chunked = ($final_list | chunks 100)
+
+  let saved_files = $chunked
+  | enumerate
+  | each {|row|
+      let idx = $row.index
+      let part = $row.item
+      let filename = $&amp;quot;output_part_($idx | fill -c &amp;#39;0&amp;#39; -w 3).txt&amp;quot;
+      $part | str join &amp;quot;\n&amp;quot; | save --force $filename
+      $filename
+  }
+
+  $saved_files
+}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After a little copy-pasta, here are the available domain names that were once trackers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;edoardocolombo.eu&lt;/li&gt;
+&lt;li&gt;poweredcore.com&lt;/li&gt;
+&lt;li&gt;demonoid.ooo&lt;/li&gt;
+&lt;li&gt;bluefrog.pw&lt;/li&gt;
+&lt;li&gt;bittor.xyz&lt;/li&gt;
+&lt;li&gt;grifon.info&lt;/li&gt;
+&lt;li&gt;facedatabg.net&lt;/li&gt;
+&lt;li&gt;dl1234.com&lt;/li&gt;
+&lt;li&gt;torrentsnows.com&lt;/li&gt;
+&lt;li&gt;torrentclub.tech&lt;/li&gt;
+&lt;li&gt;nullrebel.com&lt;/li&gt;
+&lt;li&gt;value-wolf.org&lt;/li&gt;
+&lt;li&gt;handrew.me&lt;/li&gt;
+&lt;li&gt;derpyradio.net&lt;/li&gt;
+&lt;li&gt;100.pet&lt;/li&gt;
+&lt;li&gt;sleepyinternetfun.xyz&lt;/li&gt;
+&lt;li&gt;nrx.me&lt;/li&gt;
+&lt;li&gt;highstar.shop&lt;/li&gt;
+&lt;li&gt;oldboystudy.com&lt;/li&gt;
+&lt;li&gt;chennuo.xyz&lt;/li&gt;
+&lt;li&gt;120181311.xyz&lt;/li&gt;
+&lt;li&gt;chouchou.top&lt;/li&gt;
+&lt;li&gt;buddyfly.top&lt;/li&gt;
+&lt;li&gt;torrentclub.space&lt;/li&gt;
+&lt;li&gt;arcbox.cc&lt;/li&gt;
+&lt;li&gt;trojangogogo.site&lt;/li&gt;
+&lt;li&gt;sheesh.rip&lt;/li&gt;
+&lt;li&gt;market-re.quest&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This was a quick little project that took me all of 20 minutes to satisfy my curiosity. If I cared more deeply about answering this question, I might be inclined to try to scrape torrent search websites to collect tracker URLs from their &lt;a href='https://en.wikipedia.org/wiki/Magnet_URI_scheme'&gt;magnet links&lt;/a&gt; instead of relying on one GitHub repository. I'd also want to figure out a way to automate checking if domains are available for sale. That data appears to be gated behind services that require registration and might cost money.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/adopt-these-trackers/</guid>
+      <category>bittorrent</category>
+      <category>nushell</category>
+      <pubDate>Wed, 18 Jun 2025 03:38:00 +0000</pubDate>
+    </item>
+    <item>
       <title>Don't Rely On mtime For Anything Important</title>
       <link>https://jaysherby.com/dont-rely-on-mtime-for-anything-important/</link>
       <description>&lt;p&gt;Rachel Kroll posted &lt;a href='https://rachelbythebay.com/w/2025/05/31/sync/'&gt;"rsync's defaults are not always enough"&lt;/a&gt; on her well-known blog yesterday. Everything she said is true. It's a short post, just over 500 words. Go read it.&lt;/p&gt;
@@ -531,35 +667,6 @@ iface wlp1s0 inet dhcp
       <category>typescript</category>
       <category>unit testing</category>
       <pubDate>Mon, 20 Jan 2025 23:55:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Nullable Parameters in SQL Queries</title>
-      <link>https://jaysherby.com/nullable-parameters-in-sql-queries/</link>
-      <description>&lt;p&gt;A common beginners' trap in SQL is the NULL value. Nothing equals NULL, not even itself. Imagine a table called &lt;code&gt;foo&lt;/code&gt; with a nullable column called &lt;code&gt;bar&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;-- THIS IS A BROKEN QUERY!&lt;/span&gt;
-&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;That query shouldn't return any results because comparing any value to NULL will evaluate as false. To find rows in &lt;code&gt;foo&lt;/code&gt; where &lt;code&gt;bar&lt;/code&gt; is NULL will require, well, &lt;code&gt;IS NULL&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;IS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;That's all well and good when you're writing custom queries by hand. Just remember to use &lt;code&gt;IS NULL&lt;/code&gt;. But what about when you're writing a parameterized query and one of the parameters &lt;em&gt;may&lt;/em&gt; be NULL, or it may be a value?&lt;/p&gt;
-&lt;p&gt;I've seen some tricks out there that use &lt;code&gt;COALESCE&lt;/code&gt;. But if you're using PostgreSQL, you're in luck. There's a very nice, clean solution available: &lt;a href='https://wiki.postgresql.org/wiki/Is_distinct_from'&gt;&lt;code&gt;IS NOT DISTINCT FROM&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;PREPARE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;integer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;
-&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;IS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NOT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;DISTINCT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="k"&gt;EXECUTE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-&lt;span class="k"&gt;EXECUTE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;my_query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you've never heard of the &lt;code&gt;IS NOT DISTINCT FROM&lt;/code&gt; operator, neither had I until today. I'm glad it exists, but using the word "distinct" makes this handy operator very difficult to search for online.&lt;/p&gt;
-&lt;p&gt;For the sake of readability, I'd recommend only using this operator in this particular situation. In other words, don't rush to go change every usage of &lt;code&gt;=&lt;/code&gt; and &lt;code&gt;IS NULL&lt;/code&gt; in queries that don't need this special consideration. This is a special tool that deserves a spot in your tool belt for just the right occasion.&lt;/p&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/nullable-parameters-in-sql-queries/</guid>
-      <category>postgres</category>
-      <category>sql</category>
-      <category>til</category>
-      <pubDate>Mon, 29 Jul 2024 22:01:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
