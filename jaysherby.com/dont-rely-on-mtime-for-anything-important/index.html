@@ -416,7 +416,8 @@ jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<s
             <form id="upvote-form" action="https://jaysherby.com/upvote/MhfCcxTHDbaXFnbKofpx/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="MhfCcxTHDbaXFnbKofpx" style="display:none">
-        <input hidden name="title" style="display:none">
+        <input hidden name="title" value="Don&#x27;t Rely On mtime For Anything Important" style="display:none">
+        
         
         <button
             class="upvote-button"
@@ -433,9 +434,24 @@ jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<s
 </form>
 
 <script>
+    let moved = false;
+    let pageLoaded = Date.now();
+
+    document.addEventListener('touchmove', () => moved = true);
+    document.addEventListener('mousemove', () => moved = true);
+
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
+
+        if (moved) {
+            document.querySelector('input[name="title"]').value = "";
+        }
+        if (Date.now() - pageLoaded < 2000 || !moved) {
+            return;
+        }
+
         const form = e.target;
+
         fetch(form.action, {
             method: form.method,
             body: new FormData(form),

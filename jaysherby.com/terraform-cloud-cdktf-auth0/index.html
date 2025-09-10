@@ -431,7 +431,8 @@ details > summary {
             <form id="upvote-form" action="https://jaysherby.com/upvote/AAYfjLYibRbDDEPRAJvp/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="AAYfjLYibRbDDEPRAJvp" style="display:none">
-        <input hidden name="title" style="display:none">
+        <input hidden name="title" value="Terraform Cloud + CDKTF + Auth0" style="display:none">
+        
         
         <button
             class="upvote-button"
@@ -448,9 +449,24 @@ details > summary {
 </form>
 
 <script>
+    let moved = false;
+    let pageLoaded = Date.now();
+
+    document.addEventListener('touchmove', () => moved = true);
+    document.addEventListener('mousemove', () => moved = true);
+
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
+
+        if (moved) {
+            document.querySelector('input[name="title"]').value = "";
+        }
+        if (Date.now() - pageLoaded < 2000 || !moved) {
+            return;
+        }
+
         const form = e.target;
+
         fetch(form.action, {
             method: form.method,
             body: new FormData(form),
