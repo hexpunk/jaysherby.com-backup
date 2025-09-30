@@ -369,7 +369,7 @@ details > summary {
         </p>
     
 
-    <p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png" alt="Original art, the suspense is terrible, I hope it'll last" /></p>
+    <p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby-1680055815-0.png" alt="" title="Original art, the suspense is terrible, I hope it'll last" /></p>
 <p>There are two features I think should be in Typescript that are currently missing. It's not just <em>my</em> opinion, either. When I was researching this blog post, I discovered that the tickets requesting these two features are the most discussed tickets with the "suggestion" tag still open. If I could wave a magic wand to change Typescript in any way, I'd add these two features.</p>
 <h2 id=a-hrefhttpsgithubcommicrosofttypescriptissues1321913219a-codethrowscode-clause-and-typed-catch-clause><a href='https://github.com/microsoft/TypeScript/issues/13219'>#13219</a> <code>throws</code> clause and typed catch clause</h2><p>This missing feature came up in discussion on a pull request of mine at work this week. A particular function had a return type of <code>Promise&lt;boolean&gt;</code> and included a <code>try...catch</code> statement in its body. A friend and colleague<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup> left a comment asking why the possible error types weren't represented in the return type of the function. Maybe something like <code>Promise&lt;boolean, AppException&gt;</code>?</p>
 <p>The answer is that the <code>Promise</code> type doesn't support a second type variable to describe the value returned on rejection of a promise.</p>

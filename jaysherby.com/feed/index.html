@@ -17,6 +17,28 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check  to see...</subtitle>
   <entry>
+    <id>https://jaysherby.com/macos-26-tahoe-applications-menu/</id>
+    <title>MacOS 26 "Tahoe" Applications Menu</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;Apple recently released the newest version of MacOS, "Tahoe", with their latest UI revolution: "liquid glass".&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/liquid-glass-is-great.webp" alt="" title="perfection" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;And it's going great! Everyone just loves it. /s&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;One of the less exciting changes is the replacement of the dedicated applications menu, activated from the "show apps" button on the dock, with the Spotlight search function in an applications-only filter mode. The UI is no longer fullscreen, but seeing as it is Spotlight, MacOS's dedicated search function, the search bar is front and center.&lt;/p&gt;
+&lt;p&gt;And that's fine. I don't mind a keyboard-driven UI. There's just one problem...&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/spotlight-application-menu.gif" alt="" /&gt;&lt;/p&gt;
+&lt;p&gt;As you can see in the above video, typing anything produces no results. After thinking about this for a bit, I decided to check the Spotlight settings, something I don't recall ever doing before. I'm not what you'd call a frequent Spotlight user.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/spotlight-settings-apps.webp" alt="" title="Apps must be toggled on" /&gt;&lt;/p&gt;
+&lt;p&gt;I've highlighted the option "apps" in the "results from system" section of Spotlight's options in the above screenshot. That setting was toggled off. It must be toggled on.&lt;/p&gt;
+&lt;p&gt;I don't recall ever changing this option before. As I mentioned, I'm not a frequent Spotlight user. You would think Apple would make sure this was toggled on during the upgrade process to make sure their replacement for the old applications menu was guaranteed to work as expected. I'm not generally a fan of upgrades changing users' preferences, but now that Spotlight is the officially blessed way to launch applications, I can't think of a reason the user would want to prevent Spotlight from building that index. It would be appropriate to deprecate that option and always index installed applications' names.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/macos-26-tahoe-applications-menu/" rel="alternate"/>
+    <category term="MacOS"/>
+    <published>2025-09-29T22:29:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/how-to-add-an-existing-git-repo-to-a-monorepo/</id>
     <title>How To Add An Existing Git Repo To A Monorepo</title>
     <author>
@@ -25,7 +47,7 @@ Hiring? Check  to see...</subtitle>
     </author>
     <content type="html">&lt;p&gt;At several points over the course of my career, I've found myself lifting business logic code out of a monolithic application for the purposes of reuse across multiple applications.&lt;/p&gt;
 &lt;p&gt;It's almost never appropriate to simply copy the current snapshot of the files in your main branch to a new directory and &lt;code&gt;git init&lt;/code&gt;. If you leave good commit messages, the repository's commit history can document the reasons why code was changed. You should keep that if you can.&lt;/p&gt;
-&lt;p&gt;Depending on the intented consumers of your new business logic library, it may make sense for the new library to live in its own repository. This makes the code migration very easy. Fork the repo and start trimming away the application portions of the code. I've done this several times and the approach works well.&lt;/p&gt;
+&lt;p&gt;Depending on the intended consumers of your new business logic library, it may make sense for the new library to live in its own repository. This makes the code migration very easy. Fork the repo and start trimming away the application portions of the code. I've done this several times and the approach works well.&lt;/p&gt;
 &lt;p&gt;I recently found myself in need of a more complex migration at $JOB. The code is going to be migrated into an existing monorepo. For the purposes of this example, a repository called &lt;code&gt;alpha&lt;/code&gt; is the existing application from which I'd like to harvest its business logic. A repository called &lt;code&gt;omega&lt;/code&gt; is the monorepo I'm targeting.&lt;/p&gt;
 &lt;p&gt;Here's the process I followed to achieve this commit history transplant.&lt;/p&gt;
 &lt;h2 id=step-1-add-the-codealphacode-remote-temporarily-to-codeomegacode&gt;Step 1: Add the &lt;code&gt;alpha&lt;/code&gt; remote temporarily to &lt;code&gt;omega&lt;/code&gt;&lt;/h2&gt;&lt;p&gt;Here's how my remote looks before I start:&lt;/p&gt;
@@ -73,8 +95,8 @@ git-subtree-split: 123bf0fd7a82a76743adb0ce224a1987fe754093
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=step-6-make-your-pull-request-emwithout-squashing-commitsem&gt;Step 6: Make your pull request &lt;em&gt;WITHOUT SQUASHING COMMITS!!!&lt;/em&gt;&lt;/h2&gt;&lt;p&gt;The only thing you must remember to do differently compared to most pull requests is this: &lt;strong&gt;&lt;em&gt;DO NOT SQUASH COMMITS ON MERGE&lt;/em&gt;&lt;/strong&gt;. I cannot overstate how important this is.
 Depending on the repository, "squash commits" may be enabled by default for pull requests. Although this may be preferred for typical feature and bugfix merge flows, it would defeat the point of this entire exercise by squashing away all of that beautiful commit history I just worked so hard to maintain.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/repo_settings.png" alt="repository setting for squash commits by default" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/merge_request.png" alt="the squash commits option in the merge request (hi, gitlab!) is unchecked" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/repo_settings.png" alt="" title="repository setting for squash commits by default" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/merge_request.png" alt="" title="the squash commits option in the merge request (hi, gitlab!) is unchecked" /&gt;&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;git subtree&lt;/code&gt; command actually has a &lt;code&gt;--squash&lt;/code&gt; option that I specifically chose not to use. Squashing commits from subtree commands makes sense if I was going to use this as an alternative to &lt;code&gt;git submodule&lt;/code&gt;, which is the situation most prominently described in the documentation. In my case, having the files' histories ride along with them as they're assimilated into the monorepo is precisely the value of this operation.&lt;/p&gt;
 &lt;h2 id=step-7-diligently-isolate-the-renaming-of-files-within-their-own-commits&gt;Step 7: Diligently isolate the renaming of files within their own commits&lt;/h2&gt;&lt;p&gt;Wouldn't it be terrible if I did all of this work to keep files' histories just to throw it all away? That's why I need to be really strict with myself as I move and rename files and directories. Git is really good at recognizing file movement as long as it happens in isolated commits. If I were to move the file &lt;em&gt;and&lt;/em&gt; change its contents, I risk the history looking like a delete and a create instead of a rename, which will essentially launder the history of the file for common file-wise history tools like &lt;code&gt;git blame&lt;/code&gt;.&lt;/p&gt;
 </content>
@@ -639,27 +661,5 @@ crw-------&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&
     <category term="sql"/>
     <category term="typescript"/>
     <published>2025-02-21T17:01:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/toggling-laptop-screen-auto-brightness-in-pop_os/</id>
-    <title>Toggling Laptop Screen Auto Brightness in Pop!_OS</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I recently got a new laptop from &lt;a href='https://frame.work/'&gt;Framework&lt;/a&gt;. I'm running Pop!_OS, just like I was running on my HP Dev One I've blogged about previously. All of those little tricks and tweaks still apply.&lt;/p&gt;
-&lt;p&gt;One difference is that my Framework laptop has an ambient light sensor near the webcam, which is used to automatically adjust the brightness of the screen in response to changes in the ambient light level in the room. I usually turn this feature off on my laptops. It tends to be too sensitive for my preference.&lt;/p&gt;
-&lt;p&gt;On the last Dell XPS 13 I owned, I think there was an option to toggle this feature in the BIOS. The HP Dev One didn't have an ambient light sensor. On my Framework laptop, there is no option in the BIOS for this. Newer versions of GNOME's settings application have a GUI option to toggle this. But the latest version of Pop!_OS is still 22.04 LTS, nearly three years old now. I don't see that GUI option on my machine.&lt;/p&gt;
-&lt;p&gt;No matter, though. I was able to toggle this feature off using the &lt;code&gt;gsettings&lt;/code&gt; command-line app. The setting I care about is &lt;code&gt;ambient-enabled&lt;/code&gt; in &lt;code&gt;org.gnome.settings-daemon.plugins.power&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;To see the current value of this setting, run this command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gsettings&lt;span class="w"&gt; &lt;/span&gt;get&lt;span class="w"&gt; &lt;/span&gt;org.gnome.settings-daemon.plugins.power&lt;span class="w"&gt; &lt;/span&gt;ambient-enabled
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This setting defaults to being turned on. To turn it off, run this command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gsettings&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;org.gnome.settings-daemon.plugins.power&lt;span class="w"&gt; &lt;/span&gt;ambient-enabled&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;false&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-</content>
-    <link href="https://jaysherby.com/toggling-laptop-screen-auto-brightness-in-pop_os/" rel="alternate"/>
-    <category term="pop_os"/>
-    <published>2025-02-16T23:10:00+00:00</published>
   </entry>
 </feed>
