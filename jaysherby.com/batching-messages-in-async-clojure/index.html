@@ -415,27 +415,36 @@ details > summary {
         
 
         
-            <form id="upvote-form" action="https://jaysherby.com/upvote/rPmXwwKRVwvvezAXpSjn/" method="post" style="display: inline">
+            <form id="upvote-form" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="rPmXwwKRVwvvezAXpSjn" style="display:none">
         <input hidden name="title" value="Batching Messages in Async Clojure" style="display:none">
-        
-        
+
         <button
             class="upvote-button"
             title="Toast this post"
         >
-        
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
-            <small class="upvote-count">2</small>
+            <small class="upvote-count">&nbsp;</small>
         </button>
     </small>        
 </form>
 
 <script>
+    const $upvoteButton = document.querySelector('.upvote-button');
+
+    fetch('/upvote-info/rPmXwwKRVwvvezAXpSjn/').then(response => response.json()).then(data => {
+        document.querySelector('.upvote-count').innerText = data.upvote_count;
+        if (data.upvoted) {
+            $upvoteButton.disabled = true
+            $upvoteButton.style.color = "salmon"
+            $upvoteButton.title = "Toasted"
+        }
+    });
+
     let moved = false;
     let pageLoaded = Date.now();
 
@@ -452,15 +461,14 @@ details > summary {
             return;
         }
 
-        const form = e.target;
-
-        fetch(form.action, {
-            method: form.method,
-            body: new FormData(form),
+        fetch("/upvote/rPmXwwKRVwvvezAXpSjn/", {
+            method: 'post',
+            body: new FormData(e.target),
         });
-        const button = form.querySelector('button')
-        button.disabled = true
-        button.style.color = "salmon"
+        
+        $upvoteButton.disabled = true
+        $upvoteButton.style.color = "salmon"
+        $upvoteButton.title = "Toasted"
         const upvoteCount = document.querySelector('.upvote-count')
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
     });
