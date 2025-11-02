@@ -14,6 +14,84 @@ Hiring? Check  to see...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Auto Update Podman Quadlet Images</title>
+      <link>https://jaysherby.com/auto-update-podman-quadlet-images/</link>
+      <description>&lt;p&gt;I &lt;a href='https://jaysherby.com/from-docker-compose-to-quadlets/'&gt;recently&lt;/a&gt; wrote about moving from Docker Compose to Podman Quadlets. I haven't had any issues with the configuration so far, but I did make one change today.&lt;/p&gt;
+&lt;p&gt;My old setup made it easy to pull newer versions of images when I wanted by running &lt;code&gt;docker compose down&lt;/code&gt; followed by &lt;code&gt;docker compose up --pull=always -d&lt;/code&gt; to actually pull new images and restart the services. It was a manual process, but it was easy.&lt;/p&gt;
+&lt;p&gt;Today, I looked into how I'd accomplish the equivalent action for my Podman Quadlets. It turns out that Podman has a fancy way to do this more or less automatically.&lt;/p&gt;
+&lt;p&gt;First, you must enable a systemd timer that Podman provides for doing automatic updates.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--now&lt;span class="w"&gt; &lt;/span&gt;podman-auto-update.timer
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that I'm enabling this timer &lt;em&gt;at the user level&lt;/em&gt;.  That's important since my Quadlets are also user level. The timer needs to run at the same level as the Quadlet services.&lt;/p&gt;
+&lt;p&gt;Second, update the Quadlet files so that &lt;code&gt;AutoUpdate=registry&lt;/code&gt; is added in the &lt;code&gt;[Container]&lt;/code&gt; section of the file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/plex.container&lt;/span&gt;
+&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Plex Media Server&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Container]&lt;/span&gt;
+&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;lscr.io/linuxserver/plex:latest&lt;/span&gt;
+&lt;span class="na"&gt;AutoUpdate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;registry&lt;/span&gt;
+
+&lt;span class="na"&gt;Network&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;host&lt;/span&gt;
+&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
+
+&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TZ=America/Chicago&lt;/span&gt;
+&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;VERSION=docker&lt;/span&gt;
+&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;PLEX_CLAIM=[REDACTED]&lt;/span&gt;
+
+&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/plex/config:/config:Z&lt;/span&gt;
+&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Television:/tv:Z&lt;/span&gt;
+&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Movies:/movies:Z&lt;/span&gt;
+
+&lt;span class="na"&gt;AddDevice&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/dev/dri:/dev/dri&lt;/span&gt;
+&lt;span class="na"&gt;PublishPort&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;32400:32400/tcp&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/tiddlywiki.container&lt;/span&gt;
+&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TiddlyWiki&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Container]&lt;/span&gt;
+&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;docker.io/library/node:lts-alpine&lt;/span&gt;
+&lt;span class="na"&gt;AutoUpdate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;registry&lt;/span&gt;
+
+&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
+
+&lt;span class="na"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;npx --yes tiddlywiki /wiki --listen host=0.0.0.0 port=8080&lt;/span&gt;
+
+&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/wiki:/wiki:Z&lt;/span&gt;
+
+&lt;span class="na"&gt;PublishPort&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;80:8080/tcp&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After updating the Quadlets, reload the systemd daemon and restart the services, and everything should be ready to go. Podman should check for new images daily and restart the services when appropriate.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
+
+systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;plex.service
+
+systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;tiddlywiki.service
+&lt;/pre&gt;&lt;/div&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/auto-update-podman-quadlet-images/</guid>
+      <category>home server</category>
+      <category>podman</category>
+      <category>systemd</category>
+      <pubDate>Sun, 02 Nov 2025 03:47:31 +0000</pubDate>
+    </item>
+    <item>
       <title>From Docker Compose to Quadlets</title>
       <link>https://jaysherby.com/from-docker-compose-to-quadlets/</link>
       <description>&lt;p&gt;I recently migrated my home server from Debian 12 to 13 and I decided to ditch Docker for Podman. I've written about some of the differences when moving from Docker to Podman &lt;a href='https://jaysherby.com/tips-for-becoming-a-pod-person/'&gt;previously&lt;/a&gt;.&lt;/p&gt;
@@ -549,50 +627,6 @@ jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"
       <guid isPermaLink="false">https://jaysherby.com/maybe-fix-your-philips-sonicare-toothbrush/</guid>
       <category>right to repair</category>
       <pubDate>Mon, 14 Apr 2025 22:03:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Programming My QMK Keyboard In Linux</title>
-      <link>https://jaysherby.com/programming-my-qmk-keyboard-in-linux/</link>
-      <description>&lt;p&gt;My daily driver keyboard is a Keychron Q60 Max that I just adore. To change settings, I use &lt;a href='https://launcher.keychron.com/'&gt;Keychron's Launcher&lt;/a&gt; (which appears to be a forked version of &lt;a href='https://www.caniusevia.com/'&gt;Via&lt;/a&gt;) in &lt;a href='https://github.com/ungoogled-software/ungoogled-chromium'&gt;Ungoogled Chromium&lt;/a&gt; via flatpak.&lt;/p&gt;
-&lt;p&gt;In order to successfully connect to the keyboard, I need to have read/write access to it. Here's how to set this up in a relatively strict and sane way using udev.&lt;/p&gt;
-&lt;h2 id=pick-a-group-to-own-the-device&gt;Pick a group to own the device&lt;/h2&gt;&lt;p&gt;Some people choose &lt;code&gt;users&lt;/code&gt;, but I picked &lt;code&gt;plugdev&lt;/code&gt;. Funny enough, my default user in Pop!_OS was a member of &lt;code&gt;plugdev&lt;/code&gt; by default, but not a member of &lt;code&gt;users&lt;/code&gt;. 🤷&lt;/p&gt;
-&lt;p&gt;Make sure your user is a member of the group you pick.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;groups
-jaysherby&lt;span class="w"&gt; &lt;/span&gt;adm&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;plugdev&lt;span class="w"&gt; &lt;/span&gt;lpadmin
-&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=find-the-devices-vendor-id-and-product-id&gt;Find the device's vendor id and product id&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;lsusb
-&lt;span class="c1"&gt;# ...snip...&lt;/span&gt;
-Bus&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;003&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Device&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;015&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;ID&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;3434&lt;/span&gt;:08c0&lt;span class="w"&gt; &lt;/span&gt;Keychron&lt;span class="w"&gt; &lt;/span&gt;Keychron&lt;span class="w"&gt; &lt;/span&gt;Q60&lt;span class="w"&gt; &lt;/span&gt;Max
-&lt;span class="c1"&gt;# ...snip...&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;My keyboard's vendor id is 3434 and its product id is 08c0.&lt;/p&gt;
-&lt;h2 id=add-a-udev-rule&gt;Add a udev rule&lt;/h2&gt;&lt;p&gt;I named my udev rule &lt;code&gt;/etc/udev/rules.d/92-keychron-q60-max.rules&lt;/code&gt;. I know the number at the beginning determines the order in which rules are processed relative to each other. This is my only current custom udev rule. The number 92 was cargo culted in from the internet.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;KERNEL==&amp;quot;hidraw*&amp;quot;, SUBSYSTEM==&amp;quot;hidraw&amp;quot;, ATTRS{idVendor}==&amp;quot;3434&amp;quot;, ATTRS{idProduct}==&amp;quot;08c0&amp;quot;, MODE=&amp;quot;0660&amp;quot;, GROUP=&amp;quot;plugdev&amp;quot;, TAG+=&amp;quot;uaccess&amp;quot;, TAG+=&amp;quot;udev-acl&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Notice the usage of the vendor and product ids and the name of the group. The tags are also cargo culted and may not be strictly necessary.&lt;/p&gt;
-&lt;h2 id=reload-the-udev-rules&gt;Reload the udev rules&lt;/h2&gt;&lt;p&gt;To reload the udev rules without having to restart the computer, run the following command.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;udevadm&lt;span class="w"&gt; &lt;/span&gt;control&lt;span class="w"&gt; &lt;/span&gt;--reload-rules&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;udevadm&lt;span class="w"&gt; &lt;/span&gt;trigger
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;You can make sure the rules applied correctly by checking the permissions and ownership of the &lt;code&gt;/dev/hidraw*&lt;/code&gt; devices.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"&gt; &lt;/span&gt;-lah&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw*
-crw-------&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:24&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw0
-crw-------&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:24&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw1
-crw-------&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:24&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw2
-crw-rw----&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;plugdev&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:31&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw3
-crw-rw----&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;plugdev&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:31&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw4
-crw-rw----&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;plugdev&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:31&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw5
-crw-rw----+&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;6&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:24&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw6
-crw-------&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt; &lt;/span&gt;root&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;241&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;7&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Feb&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;:24&lt;span class="w"&gt; &lt;/span&gt;/dev/hidraw7
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Devices 3, 4, and 5 are owned by the &lt;code&gt;plugdev&lt;/code&gt; group with read/write access.&lt;/p&gt;
-&lt;p&gt;If something goes wrong, it's worth trying to connect to the keyboard using Keychron's Launcher and then checking &lt;a href='chrome://device-log/'&gt;chrome://device-log/&lt;/a&gt; for any clues or interesting messages.&lt;/p&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/programming-my-qmk-keyboard-in-linux/</guid>
-      <category>linux</category>
-      <category>pop_os</category>
-      <category>udev</category>
-      <pubDate>Thu, 27 Feb 2025 05:02:00 +0000</pubDate>
     </item>
   </channel>
 </rss>

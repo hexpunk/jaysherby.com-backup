@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
   
-  <title>How I Fixed Slow Wifi In Debian 12 | Jay&#x27;s blog</title>
+  <title>Auto Update Podman Quadlet Images | Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
     
@@ -15,29 +15,29 @@
     <meta name="jaysherby" content="look-for-the-bear-necessities">
 
     <!-- Primary Meta Tags -->
-<meta name="title" content="How I Fixed Slow Wifi In Debian 12">
-<meta name="description" content=" I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+<meta name="title" content="Auto Update Podman Quadlet Images">
+<meta name="description" content="I  wrote about moving from Docker Compose to Podman Quadlets. I haven&#x27;t had any issues with the configuration so far, but I did make one change today.
 
-This time, I was t...">
+My ...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
-<meta property="og:title" content="How I Fixed Slow Wifi In Debian 12">
+<meta property="og:title" content="Auto Update Podman Quadlet Images">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/">
-<meta property="og:description" content=" I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+<meta property="og:url" content="https://jaysherby.com/auto-update-podman-quadlet-images/">
+<meta property="og:description" content="I  wrote about moving from Docker Compose to Podman Quadlets. I haven&#x27;t had any issues with the configuration so far, but I did make one change today.
 
-This time, I was t...">
+My ...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary">
-<meta property="twitter:url" content="https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/">
-<meta property="twitter:title" content="How I Fixed Slow Wifi In Debian 12">
-<meta property="twitter:description" content=" I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+<meta property="twitter:url" content="https://jaysherby.com/auto-update-podman-quadlet-images/">
+<meta property="twitter:title" content="Auto Update Podman Quadlet Images">
+<meta property="twitter:description" content="I  wrote about moving from Docker Compose to Podman Quadlets. I haven&#x27;t had any issues with the configuration so far, but I did make one change today.
 
-This time, I was t...">
+My ...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
@@ -47,12 +47,12 @@ This time, I was t...">
   {
     "@context": "http://schema.org",
     "@type": "article",
-    "name": "How I Fixed Slow Wifi In Debian 12",
-    "headline": "How I Fixed Slow Wifi In Debian 12",
-    "url": "https://jaysherby.com/how-i-fixed-slow-wifi-in-debian-12/",
-    "description": " I blogged about my home server&#x27;s wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.
+    "name": "Auto Update Podman Quadlet Images",
+    "headline": "Auto Update Podman Quadlet Images",
+    "url": "https://jaysherby.com/auto-update-podman-quadlet-images/",
+    "description": "I  wrote about moving from Docker Compose to Podman Quadlets. I haven&#x27;t had any issues with the configuration so far, but I did make one change today.
 
-This time, I was t...",
+My ...",
     "image": "https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png"
   }
 </script>
@@ -331,7 +331,7 @@ details > summary {
     
     <style>
         body:hover {
-            shape-outside: url("https://jaysherby.com/hit/avCfTfPpzhKgvcSuKNfC/");
+            shape-outside: url("https://jaysherby.com/hit/poLgUQjrhxyayhXoSVjf/");
         }
     </style>
     
@@ -359,55 +359,84 @@ details > summary {
     
 
     
-        <h1>How I Fixed Slow Wifi In Debian 12</h1>
+        <h1>Auto Update Podman Quadlet Images</h1>
 
         <p>
             <i>
-                <time datetime="2025-01-29T03:17Z">
-                    29 Jan, 2025
+                <time datetime="2025-11-02T03:47Z">
+                    02 Nov, 2025
                 </time>
             </i>
         </p>
     
 
-    <p><a href='../how-i-fixed-laggy-wifi-in-debian-12/index.html'>Last time</a> I blogged about my home server's wifi connection, I had to disable power management on the wifi adapter to avoid undesirable behavior.</p>
-<p>This time, I was transferring a large quantity of large files from my laptop to my home server, and I noticed the transfer speed was capped at around 3 MB/s. I found that very concerning because although wifi isn't the fastest way to transfer data by a wide margin, it should still be faster than that.</p>
-<p>After a bunch of inspection of various settings using <code>iw list</code> and <code>iwlist wlp1s0</code>, I discovered the problem. By looking at frequency and channel settings, I saw that my adapter was connecting to my router at 2.4 Ghz frequencies instead of the 5 GHz frequencies I wanted.</p>
-<p>A bunch of googling suggested passing a <code>freq_list</code> property to wpa_supplicant in its config file. One problem: I'm not configuring wpa_supplication via a config file. I'm configuring it via my <code>/etc/network/interfaces</code> file. I was already using the <code>wpa-ssid</code> and <code>wpa-psk</code> options. Is there an equivalent option to pass in a frequency list?</p>
-<p><a href='https://superuser.com/q/678194'>Yes</a>, but it's not very well-documented. The magic happens in the <code>/etc/wpa_supplicant/functions.sh</code> file. The appropriate option is <code>wpa-freq-list</code>.</p>
-<p>Here's what my <code>/etc/network/interfaces</code> file looks like:</p>
-<div class="highlight"><pre><span></span># This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
-
-source /etc/network/interfaces.d/*
-
-# The loopback network interface
-auto lo
-iface lo inet loopback
-
-# The primary network interface
-allow-hotplug wlp1s0
-iface wlp1s0 inet dhcp
-	wpa-ssid &lt;ssid&gt;
-	wpa-psk &lt;passphrase&gt;
-	wpa-freq-list &lt;frequency list&gt;
+    <p>I <a href='../from-docker-compose-to-quadlets/index.html'>recently</a> wrote about moving from Docker Compose to Podman Quadlets. I haven't had any issues with the configuration so far, but I did make one change today.</p>
+<p>My old setup made it easy to pull newer versions of images when I wanted by running <code>docker compose down</code> followed by <code>docker compose up --pull=always -d</code> to actually pull new images and restart the services. It was a manual process, but it was easy.</p>
+<p>Today, I looked into how I'd accomplish the equivalent action for my Podman Quadlets. It turns out that Podman has a fancy way to do this more or less automatically.</p>
+<p>First, you must enable a systemd timer that Podman provides for doing automatic updates.</p>
+<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>podman-auto-update.timer
 </pre></div>
-<p>Using the <code>iw list</code> command, I was able to determine that the right list of frequencies for my hardware and desired configuration is the following:</p>
-<div class="highlight"><pre><span></span>wpa-freq-list 5180 5200 5240 5260 5280 5300 5320 5500 5520 5540 5560 5580 5600 5620 5640 5660 5680 5700 5720 5745 5765 5785 5805 5825
+<p>Note that I'm enabling this timer <em>at the user level</em>.  That's important since my Quadlets are also user level. The timer needs to run at the same level as the Quadlet services.</p>
+<p>Second, update the Quadlet files so that <code>AutoUpdate=registry</code> is added in the <code>[Container]</code> section of the file.</p>
+<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/containers/systemd/plex.container</span>
+<span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Plex Media Server</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Container]</span>
+<span class="na">Image</span><span class="o">=</span><span class="s">lscr.io/linuxserver/plex:latest</span>
+<span class="na">AutoUpdate</span><span class="o">=</span><span class="s">registry</span>
+
+<span class="na">Network</span><span class="o">=</span><span class="s">host</span>
+<span class="na">UserNS</span><span class="o">=</span><span class="s">keep-id</span>
+
+<span class="na">Environment</span><span class="o">=</span><span class="s">TZ=America/Chicago</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">VERSION=docker</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">PLEX_CLAIM=[REDACTED]</span>
+
+<span class="na">Volume</span><span class="o">=</span><span class="s">/home/server-user/plex/config:/config:Z</span>
+<span class="na">Volume</span><span class="o">=</span><span class="s">/media/wd-gold/Television:/tv:Z</span>
+<span class="na">Volume</span><span class="o">=</span><span class="s">/media/wd-gold/Movies:/movies:Z</span>
+
+<span class="na">AddDevice</span><span class="o">=</span><span class="s">/dev/dri:/dev/dri</span>
+<span class="na">PublishPort</span><span class="o">=</span><span class="s">32400:32400/tcp</span>
+
+<span class="k">[Service]</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
 </pre></div>
-<p>I encourage you to check your own hardware rather than copying my list of frequencies verbatim.</p>
-<p>After I made this change and restarted the network subsystem, transfers looked much better at around 20 MB/s to 25 MB/s on average.</p>
-<hr />
-<h3 id=november-1-2025-update>November 1, 2025 Update</h3><p>I replaced the old Intel 8265 wifi card in my home server machine with a new Intel BE200 Wifi 7 card. I also recently upgraded to Debian 13. I found that my new BE200 card was only connecting to 2.6 GHz wifi.</p>
-<p>The first issue was that my regulatory domain wasn't set. When no regulatory domain is set, the allowed frequencies are very conservative, restricted to only 2.6 GHz in my case. The standard advice is to use <code>iw set reg US</code> (substitute your actual regulatory domain).</p>
-<p>Hot tip: <code>iw</code> isn't installed by default anymore. After you install it, <code>iw</code> still won't be in your path. Call it at <code>/usr/sbin/iw</code>.</p>
-<p>The problem with <code>iw set reg US</code> is that it doesn't persist beyond reboots. To do that, make sure the <code>wireless-regdb</code> package is installed and then add this file to <code>/etc/modprobe.d/ieee80211_regdom.conf</code>:</p>
-<div class="highlight"><pre><span></span>options cfg80211 ieee80211_regdom=US
+<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/containers/systemd/tiddlywiki.container</span>
+<span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">TiddlyWiki</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Container]</span>
+<span class="na">Image</span><span class="o">=</span><span class="s">docker.io/library/node:lts-alpine</span>
+<span class="na">AutoUpdate</span><span class="o">=</span><span class="s">registry</span>
+
+<span class="na">UserNS</span><span class="o">=</span><span class="s">keep-id</span>
+
+<span class="na">Exec</span><span class="o">=</span><span class="s">npx --yes tiddlywiki /wiki --listen host=0.0.0.0 port=8080</span>
+
+<span class="na">Volume</span><span class="o">=</span><span class="s">/home/server-user/wiki:/wiki:Z</span>
+
+<span class="na">PublishPort</span><span class="o">=</span><span class="s">80:8080/tcp</span>
+
+<span class="k">[Service]</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
 </pre></div>
-<p>Then reboot. The regulatory domain will be set on boot from now on.</p>
-<p>I still had to use the <code>wpa-freq-list</code> trick I described in the original post (below) to restrict wpasupplicant to only scanning frequencies <code>5180 5220 5745 5805</code>. Those are the 5 GHz 40 MHz channels that don't share frequencies with radar systems.</p>
-<p>Unfortunately, I can't connect to 6 GHz frequencies yet. It appears my current combination of regulatory domain and driver stack results in the  6 GHz frequencies being flagged as "no IR" (no initiating radiation), making those channels useless. I'm eagerly awaiting driver updates to enable this new band. FWIW, this also affects my Framework 13 laptop running Pop!_OS, which uses the same wireless card. 🤷</p>
-<p>I'm now averaging around 28 MB/s transfer speeds.</p>
+<p>After updating the Quadlets, reload the systemd daemon and restart the services, and everything should be ready to go. Podman should check for new images daily and restart the services when appropriate.</p>
+<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+
+systemctl<span class="w"> </span>restart<span class="w"> </span>--user<span class="w"> </span>plex.service
+
+systemctl<span class="w"> </span>restart<span class="w"> </span>--user<span class="w"> </span>tiddlywiki.service
+</pre></div>
 
 
     
@@ -418,7 +447,9 @@ iface wlp1s0 inet dhcp
                 
                     <a href="https://jaysherby.com/blog/?q=home&#32;server">#home server</a>
                 
-                    <a href="https://jaysherby.com/blog/?q=linux">#linux</a>
+                    <a href="https://jaysherby.com/blog/?q=podman">#podman</a>
+                
+                    <a href="https://jaysherby.com/blog/?q=systemd">#systemd</a>
                 
             </p>
         
@@ -426,8 +457,8 @@ iface wlp1s0 inet dhcp
         
             <form id="upvote-form" method="post" style="display: inline">
     <small>
-        <input hidden name="uid" value="avCfTfPpzhKgvcSuKNfC" style="display:none">
-        <input hidden name="title" value="How I Fixed Slow Wifi In Debian 12" style="display:none">
+        <input hidden name="uid" value="poLgUQjrhxyayhXoSVjf" style="display:none">
+        <input hidden name="title" value="Auto Update Podman Quadlet Images" style="display:none">
 
         <button
             class="upvote-button"
@@ -445,7 +476,7 @@ iface wlp1s0 inet dhcp
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
 
-    fetch('/upvote-info/avCfTfPpzhKgvcSuKNfC/').then(response => response.json()).then(data => {
+    fetch('/upvote-info/poLgUQjrhxyayhXoSVjf/').then(response => response.json()).then(data => {
         document.querySelector('.upvote-count').innerText = data.upvote_count;
         if (data.upvoted) {
             $upvoteButton.disabled = true
@@ -470,7 +501,7 @@ iface wlp1s0 inet dhcp
             return;
         }
 
-        fetch("/upvote/avCfTfPpzhKgvcSuKNfC/", {
+        fetch("/upvote/poLgUQjrhxyayhXoSVjf/", {
             method: 'post',
             body: new FormData(e.target),
         });
