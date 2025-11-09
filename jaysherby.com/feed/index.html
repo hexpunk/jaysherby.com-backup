@@ -17,6 +17,52 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check  to see...</subtitle>
   <entry>
+    <id>https://jaysherby.com/im-restarting-plex-every-24-hours-now/</id>
+    <title>I'm Restarting Plex Every 24 Hours Now</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;I only use Plex because the phone app and the PlayStation app make it convenient. If Jellyfin had a native app on PlayStation, I'd switch tomorrow. I already don't completely trust Plex, which is why I run it in a Podman container. If anything goes &lt;em&gt;really&lt;/em&gt; sideways, at least the blast radius should be minimized.&lt;/p&gt;
+&lt;p&gt;Plex is also flaky. I find myself occasionally needing to SSH into my home server to restart Plex when the app can't connect to the server. No errors are ever logged from the server, and even if I went to the trouble of getting logs from the apps, I doubt I could really do anything to fix it. Plex and its apps are a black box to me. I treat them less like software and more like hermetically sealed appliances. And what do you do when a hermetically sealed appliance acts up? Power cycle it!&lt;/p&gt;
+&lt;p&gt;As much as I'd prefer perfect appliances, sometimes the power cycle approach has to be good enough. Most home routers have settings in their UI nowadays to automatically power cycle themselves on a regular schedule. Even the expensive ones! Especially the expensive ones. My phone runs GrapheneOS, which has an option to automatically power cycle your phone after a set period of inactivity. In that case, it's because your phone is subtly more secure before it's been unlocked after a power cycle. Like it or not, "Have you tried turning it off and on again?" is now the way of the world.&lt;/p&gt;
+&lt;p&gt;I'm currently in my systemd era. Sooner or later, systemd comes for us all. 🪦 The path of least resistance seems to be a service and a timer to trigger that service.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/systemd/user/plex-restart.service&lt;/span&gt;
+&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Restart Plex container service&lt;/span&gt;
+&lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;plex.service&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;plex.service&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;oneshot&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/systemctl --user is-active --quiet plex.service &amp;amp;&amp;amp; /usr/bin/systemctl --user restart plex.service&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The service itself only attempts to restart the Plex service if the service is already active. If I should decide to manually stop the Plex service, I don't want this job to restart it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/systemd/user/plex-restart.timer&lt;/span&gt;
+&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Daily restart of Plex container service at 6 AM&lt;/span&gt;
+
+&lt;span class="k"&gt;[Timer]&lt;/span&gt;
+&lt;span class="na"&gt;OnCalendar&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;*-*-* 06:00:00&lt;/span&gt;
+&lt;span class="na"&gt;Unit&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;plex-restart.service&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;timers.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I have the timer set to go off every day at 6 AM because I can't imagine a situation where anyone in my household is using it at that time, so there shouldn't be any service interruption.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
+
+systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt;  &lt;/span&gt;plex-restart.timer
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And with that, I hopefully won't have to restart Plex manually any time soon. Sure, I could have tried to rig up a script that detects the server's health and restart it only when necessary. But remember that Plex is a black box. Just because my server can essentially ping itself doesn't mean other devices can reach it. No, an automatic power switch flipper should be good enough.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/im-restarting-plex-every-24-hours-now/" rel="alternate"/>
+    <category term="home server"/>
+    <category term="plex"/>
+    <category term="systemd"/>
+    <published>2025-11-09T04:31:06.072827+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/auto-update-podman-quadlet-images/</id>
     <title>Auto Update Podman Quadlet Images</title>
     <author>
@@ -624,41 +670,5 @@ jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"
 </content>
     <link href="https://jaysherby.com/batching-messages-in-async-clojure/" rel="alternate"/>
     <published>2025-05-20T01:38:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/maybe-fix-your-philips-sonicare-toothbrush/</id>
-    <title>Maybe Fix Your Philips Sonicare Toothbrush</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-all-parts.webp" alt="toothbrush-all-parts" /&gt;&lt;/p&gt;
-&lt;p&gt;I like my Philips Sonicare electric toothbrush, but I've had two of them fail in exactly the same way. I decided to open it up and figure out why. Unfortunately, I destroyed mine in the process, but only for lack of information. Maybe you can fix yours armed with what I learned.&lt;/p&gt;
-&lt;p&gt;Standard disclaimer: I'm not responsible for how you use this information. If you break a working toothbrush or hurt yourself, don't blame me. If you're not comfortable opening up electronic devices that weren't meant to be customer serviceable, don't try to repair your toothbrush. I strongly recommend reading this to the end before attempting any of the steps I'm about to describe.&lt;/p&gt;
-&lt;h2 id=the-symptoms&gt;The symptoms&lt;/h2&gt;&lt;p&gt;Both of my toothbrushes that failed in this way stopped vibrating the brush head with any significant force, but they became unsettlingly loud while they were turned on. If I took the brush head off, the metal prong the brush head is press fit onto seemed looser than when it was new. It would freely tilt forward and back.&lt;/p&gt;
-&lt;h2 id=opening-up-the-toothbrush&gt;Opening up the toothbrush&lt;/h2&gt;&lt;p&gt;To open the toothbrush, you must use a spudger to pry out the cap on the bottom of the enclosure. It is press fit into place and has a rubber o-ring to keep water out. I recommend using a plastic spudger as the metal one I used chewed up the plastic on the enclosure.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-cap-front.webp" alt="toothbrush-cap-front" /&gt;
-&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-cap-side.webp" alt="toothbrush-cap-side" /&gt;
-&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-cap-back.webp" alt="toothbrush-cap-back" /&gt;&lt;/p&gt;
-&lt;p&gt;Once the cap is removed, there are two clips holding the inner assembly inside the enclosure. This is what tripped me up and led to the damage to the induction coil at the bottom that is used to charge the battery, as seen in the photo. Using thin spudgers, small screwdrivers, or perhaps even a bent paperclip, I believe the clips can be undone without causing damage. The inner assembly should freely and easily slide out of the enclosure. It's probably a fiddly job, but I'm pretty sure it's possible to do.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-tabs.webp" alt="toothbrush-tabs" /&gt;&lt;/p&gt;
-&lt;h2 id=the-underlying-issue&gt;The underlying issue&lt;/h2&gt;&lt;p&gt;See the screw at the top of the toothbrush, near the mechanism attached to the brush head's prong? Check to see if it's loose and tighten it if it is.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-front.webp" alt="toothbrush-front" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;That's it.&lt;/em&gt; That screw came loose and your toothbrush failed. It probably came loose because it's part of a mechanism that's subject to intense vibration when the toothbrush is in use. A fraction of a cent's worth of thread locking compound would probably prevent this failure and keep these toothbrushes in service for much longer.&lt;/p&gt;
-&lt;p&gt;If you look at the back of the assembly, you'll see two pieces of metal, pictured here. They rest against each other thanks to the pressure provided when the aforementioned screw is tight, but they are otherwise unsecured to one another.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-back.webp" alt="toothbrush-back" /&gt;&lt;/p&gt;
-&lt;p&gt;The bottom piece is the actuator that vibrates when the toothbrush is on. The top pieces are part of the sub-assembly that connects to the brush prong. If that screw becomes loose, there's not enough resistance to keep the prong assembly in contact with the actuator, causing it to vibrate freely instead of channeling the vibration into your brush head.&lt;/p&gt;
-&lt;h2 id=closing-up&gt;Closing up&lt;/h2&gt;&lt;p&gt;I broke my toothbrush and won't be reassembling it, but it should be as easy as taking it apart in reverse. Make sure the inner assembly's black plastic rails locate in the grooves along the inside of the enclosure. Insert it until the clips snap into place. Firmly press the bottom cap back into place.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/toothbrush-enclosure-inside.webp" alt="toothbrush-enclosure-inside" /&gt;&lt;/p&gt;
-&lt;p&gt;Note that the lithium ion battery in the assembly looks like it's replaceable. &lt;strong&gt;The battery is not replaceable.&lt;/strong&gt;  Do not try to remove it as it is soldered to the circuit board, but not so strongly that it won't easily break off if you force it.&lt;/p&gt;
-&lt;p&gt;In case it helps someone searching for the numbers on the bottom of their toothbrush, here are the numbers that were on the bottom of this one:&lt;/p&gt;
-&lt;p&gt;HX681J&lt;/p&gt;
-&lt;p&gt;210706 1A&lt;/p&gt;
-&lt;p&gt;FCC ID: 2ADZNHX86&lt;/p&gt;
-&lt;p&gt;IC: 20109-HX68&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/maybe-fix-your-philips-sonicare-toothbrush/" rel="alternate"/>
-    <category term="right to repair"/>
-    <published>2025-04-14T22:03:00+00:00</published>
   </entry>
 </feed>
