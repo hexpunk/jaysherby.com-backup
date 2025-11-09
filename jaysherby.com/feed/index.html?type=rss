@@ -38,7 +38,6 @@ Hiring? Check  to see...</description>
 
 &lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TZ=America/Chicago&lt;/span&gt;
 &lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;VERSION=docker&lt;/span&gt;
-&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;PLEX_CLAIM=[REDACTED]&lt;/span&gt;
 
 &lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/plex/config:/config:Z&lt;/span&gt;
 &lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Television:/tv:Z&lt;/span&gt;
@@ -87,9 +86,11 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/auto-update-podman-quadlet-images/</guid>
       <category>home server</category>
+      <category>plex</category>
       <category>podman</category>
-      <category>systemd</category>
-      <pubDate>Sun, 02 Nov 2025 03:47:31 +0000</pubDate>
+      <category>system</category>
+      <category>tiddlywiki</category>
+      <pubDate>Sun, 02 Nov 2025 03:47:00 +0000</pubDate>
     </item>
     <item>
       <title>From Docker Compose to Quadlets</title>
@@ -107,7 +108,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;VERSION=docker&lt;/span&gt;
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;PUID=1000&lt;/span&gt;
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;PGID=1000&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;PLEX_CLAIM=&amp;lt;REDACTED&amp;gt;&lt;/span&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;volumes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/home/server-user/plex/config:/config&lt;/span&gt;
 &lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/media/wd-gold/Television:/tv&lt;/span&gt;
@@ -152,7 +152,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/
 
 &lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TZ=America/Chicago&lt;/span&gt;
 &lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;VERSION=docker&lt;/span&gt;
-&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;PLEX_CLAIM=&amp;lt;REDACTED&amp;gt;&lt;/span&gt;
 
 &lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/plex/config:/config:Z&lt;/span&gt;
 &lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Television:/tv:Z&lt;/span&gt;
@@ -217,7 +216,8 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
       <guid isPermaLink="false">https://jaysherby.com/from-docker-compose-to-quadlets/</guid>
       <category>home server</category>
       <category>podman</category>
-      <category>systemd</category>
+      <category>system</category>
+      <category>tiddlywiki</category>
       <pubDate>Sun, 26 Oct 2025 00:03:00 +0000</pubDate>
     </item>
     <item>
