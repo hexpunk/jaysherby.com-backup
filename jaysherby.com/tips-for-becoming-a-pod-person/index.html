@@ -331,9 +331,11 @@ details > summary {
     
     <script>
         window.addEventListener("load", (event) => {
-            document.body.addEventListener('pointerover', () => {
-                fetch(`/hit/iNICPIvAGbKFWececxEJ${document.referrer && new URL(document.referrer).hostname !== "jaysherby.com" ? `?ref=${encodeURIComponent(document.referrer)}` : ""}`);
-            }, { once: true });
+            if (navigator.webdriver !== true) {
+                document.body.addEventListener('pointerover', () => {
+                    fetch(`/hit/iNICPIvAGbKFWececxEJ${document.referrer && new URL(document.referrer).hostname !== "jaysherby.com" ? `?ref=${encodeURIComponent(document.referrer)}` : ""}`);
+                }, { once: true });
+            }
         });
     </script>
     
@@ -442,7 +444,7 @@ ignore_chown_errors = &quot;true&quot;
         
 
         
-            <form id="upvote-form" method="post" style="display: inline">
+            <form id="upvote-form" action="https://jaysherby.com/upvote/iNICPIvAGbKFWececxEJ/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="iNICPIvAGbKFWececxEJ" style="display:none">
         <input hidden name="title" value="Tips For Becoming A Pod Person" style="display:none">
@@ -488,7 +490,7 @@ ignore_chown_errors = &quot;true&quot;
             return;
         }
 
-        fetch("/upvote/iNICPIvAGbKFWececxEJ/", {
+        fetch(e.target.action, {
             method: 'post',
             body: new FormData(e.target),
         });

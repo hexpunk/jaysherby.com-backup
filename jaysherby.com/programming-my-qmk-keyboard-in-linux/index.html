@@ -331,9 +331,11 @@ details > summary {
     
     <script>
         window.addEventListener("load", (event) => {
-            document.body.addEventListener('pointerover', () => {
-                fetch(`/hit/CEsCQSMxxqLAeqefMRKr${document.referrer && new URL(document.referrer).hostname !== "jaysherby.com" ? `?ref=${encodeURIComponent(document.referrer)}` : ""}`);
-            }, { once: true });
+            if (navigator.webdriver !== true) {
+                document.body.addEventListener('pointerover', () => {
+                    fetch(`/hit/CEsCQSMxxqLAeqefMRKr${document.referrer && new URL(document.referrer).hostname !== "jaysherby.com" ? `?ref=${encodeURIComponent(document.referrer)}` : ""}`);
+                }, { once: true });
+            }
         });
     </script>
     
@@ -421,7 +423,7 @@ crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </sp
         
 
         
-            <form id="upvote-form" method="post" style="display: inline">
+            <form id="upvote-form" action="https://jaysherby.com/upvote/CEsCQSMxxqLAeqefMRKr/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="CEsCQSMxxqLAeqefMRKr" style="display:none">
         <input hidden name="title" value="Programming My QMK Keyboard In Linux" style="display:none">
@@ -467,7 +469,7 @@ crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </sp
             return;
         }
 
-        fetch("/upvote/CEsCQSMxxqLAeqefMRKr/", {
+        fetch(e.target.action, {
             method: 'post',
             body: new FormData(e.target),
         });

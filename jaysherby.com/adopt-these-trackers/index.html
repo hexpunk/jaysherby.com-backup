@@ -318,18 +318,6 @@ details > summary {
 
       
   </style>
-
-  
-    
-    <script>
-        window.addEventListener("load", (event) => {
-            document.body.addEventListener('pointerover', () => {
-                fetch(`/hit/ypHWjQURZHzthzPCZkgE${document.referrer && new URL(document.referrer).hostname !== "jaysherby.com" ? `?ref=${encodeURIComponent(document.referrer)}` : ""}`);
-            }, { once: true });
-        });
-    </script>
-    
-
 </head>
 
 <body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
@@ -504,7 +492,7 @@ def main [] {
         
 
         
-            <form id="upvote-form" method="post" style="display: inline">
+            <form id="upvote-form" action="https://jaysherby.com/upvote/ypHWjQURZHzthzPCZkgE/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="ypHWjQURZHzthzPCZkgE" style="display:none">
         <input hidden name="title" value="Adopt These Trackers" style="display:none">
@@ -550,7 +538,7 @@ def main [] {
             return;
         }
 
-        fetch("/upvote/ypHWjQURZHzthzPCZkgE/", {
+        fetch(e.target.action, {
             method: 'post',
             body: new FormData(e.target),
         });
@@ -562,6 +550,43 @@ def main [] {
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
     });
 </script>
+        
+
+        
+            <form id="hit-form" action="https://jaysherby.com/hit/" method="post" style="display: none">
+                <input name="token" value="ypHWjQURZHzthzPCZkgE">
+                <input name="title" value="Adopt These Trackers" >
+                <input name="referrer" >
+            </form>
+
+            <script>
+                window.addEventListener("load", (event) => {
+                    if (navigator.webdriver !== true) {
+                        document.body.addEventListener('pointerover', () => {
+                            const hitForm = document.getElementById('hit-form');
+                            const referrerInput = hitForm.querySelector('input[name="referrer"]');
+                            const titleInput = hitForm.querySelector('input[name=title]')
+                            
+                            // Set the referrer value
+                            if (!document.referrer.includes("jaysherby.com")) {
+                                referrerInput.value = document.referrer;
+                            }
+
+                            // Remove the title value
+                            titleInput.value = ""
+                            
+                            // Log the form data before submitting
+                            const formData = new FormData(hitForm);
+                            
+                            // Submit the form
+                            fetch(hitForm.action, {
+                                method: 'post',
+                                body: new FormData(hitForm),
+                            });
+                        }, { once: true });
+                    }
+                });
+            </script>
         
     
 
