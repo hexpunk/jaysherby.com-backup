@@ -400,7 +400,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
         
 
         
-            <form id="upvote-form" action="https://jaysherby.com/upvote/XCZRZnLUjXhorPWaueXh/" method="post" style="display: inline">
+            <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="XCZRZnLUjXhorPWaueXh" style="display:none">
         <input hidden name="title" value="I&#x27;m Restarting Plex Every 24 Hours Now" style="display:none">
@@ -542,6 +542,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
             'd': () => day.toString().padStart(2, '0'),
             'm': () => (month + 1).toString().padStart(2, '0'),
             'Y': () => year.toString(),
+            'y': () => year.toString().slice(-2),
             'F': () => monthsFull[month],
             'j': () => day.toString(),
             'D': () => daysShort[weekday],

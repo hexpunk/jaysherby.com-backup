@@ -370,18 +370,6 @@ details > summary {
 
       
   </style>
-
-  
-    
-    <script>
-        window.addEventListener("load", (event) => {
-            document.body.addEventListener('pointerover', () => {
-                fetch(`/hit/UWJGHRyHIJXkrQyxWnee${document.referrer && new URL(document.referrer).hostname !== "jaysherby.com" ? `?ref=${encodeURIComponent(document.referrer)}` : ""}`);
-            }, { once: true });
-        });
-    </script>
-    
-
 </head>
 
 <body class="page " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
@@ -566,6 +554,43 @@ dd > ul {
     
         
 
+        
+
+        
+            <form id="hit-form" action="https://jaysherby.com/hit/" method="post" style="display: none">
+                <input name="token" value="UWJGHRyHIJXkrQyxWnee">
+                <input name="title" value="Résumé" >
+                <input name="referrer" >
+            </form>
+
+            <script>
+                window.addEventListener("load", (event) => {
+                    if (navigator.webdriver !== true) {
+                        document.body.addEventListener('pointerover', () => {
+                            const hitForm = document.getElementById('hit-form');
+                            const referrerInput = hitForm.querySelector('input[name="referrer"]');
+                            const titleInput = hitForm.querySelector('input[name=title]')
+                            
+                            // Set the referrer value
+                            if (!document.referrer.includes("jaysherby.com")) {
+                                referrerInput.value = document.referrer;
+                            }
+
+                            // Remove the title value
+                            titleInput.value = ""
+                            
+                            // Log the form data before submitting
+                            const formData = new FormData(hitForm);
+                            
+                            // Submit the form
+                            fetch(hitForm.action, {
+                                method: 'post',
+                                body: new FormData(hitForm),
+                            });
+                        }, { once: true });
+                    }
+                });
+            </script>
         
     
 
