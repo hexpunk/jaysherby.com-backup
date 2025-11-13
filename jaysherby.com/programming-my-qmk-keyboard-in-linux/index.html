@@ -409,7 +409,7 @@ crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </sp
         
 
         
-            <form id="upvote-form" action="https://jaysherby.com/upvote/CEsCQSMxxqLAeqefMRKr/" method="post" style="display: inline">
+            <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="CEsCQSMxxqLAeqefMRKr" style="display:none">
         <input hidden name="title" value="Programming My QMK Keyboard In Linux" style="display:none">
@@ -551,6 +551,7 @@ crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </sp
             'd': () => day.toString().padStart(2, '0'),
             'm': () => (month + 1).toString().padStart(2, '0'),
             'Y': () => year.toString(),
+            'y': () => year.toString().slice(-2),
             'F': () => monthsFull[month],
             'j': () => day.toString(),
             'D': () => daysShort[weekday],

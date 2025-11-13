@@ -446,7 +446,7 @@ details > summary {
         
 
         
-            <form id="upvote-form" action="https://jaysherby.com/upvote/LLySDMrwKuhCNitfrJRf/" method="post" style="display: inline">
+            <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="LLySDMrwKuhCNitfrJRf" style="display:none">
         <input hidden name="title" value="React Hook Form: A Leaky Abstraction" style="display:none">
@@ -588,6 +588,7 @@ details > summary {
             'd': () => day.toString().padStart(2, '0'),
             'm': () => (month + 1).toString().padStart(2, '0'),
             'Y': () => year.toString(),
+            'y': () => year.toString().slice(-2),
             'F': () => monthsFull[month],
             'j': () => day.toString(),
             'D': () => daysShort[weekday],

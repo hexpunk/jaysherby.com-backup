@@ -418,7 +418,7 @@ Depending on the repository, "squash commits" may be enabled by default for pull
         
 
         
-            <form id="upvote-form" action="https://jaysherby.com/upvote/APNiGaKYPBIXxvSRHGtu/" method="post" style="display: inline">
+            <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="APNiGaKYPBIXxvSRHGtu" style="display:none">
         <input hidden name="title" value="How To Add An Existing Git Repo To A Monorepo" style="display:none">
@@ -560,6 +560,7 @@ Depending on the repository, "squash commits" may be enabled by default for pull
             'd': () => day.toString().padStart(2, '0'),
             'm': () => (month + 1).toString().padStart(2, '0'),
             'Y': () => year.toString(),
+            'y': () => year.toString().slice(-2),
             'F': () => monthsFull[month],
             'j': () => day.toString(),
             'D': () => daysShort[weekday],
