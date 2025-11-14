@@ -507,39 +507,23 @@ systemctl<span class="w"> </span>restart<span class="w"> </span>--user<span clas
         
 
         
-            <form id="hit-form" action="https://jaysherby.com/hit/" method="post" style="display: none">
-                <input name="token" value="poLgUQjrhxyayhXoSVjf">
-                <input name="title" value="Auto Update Podman Quadlet Images" >
-                <input name="referrer" >
-            </form>
-
             <script>
-                window.addEventListener("load", (event) => {
-                    if (navigator.webdriver !== true) {
-                        document.body.addEventListener('pointerover', () => {
-                            const hitForm = document.getElementById('hit-form');
-                            const referrerInput = hitForm.querySelector('input[name="referrer"]');
-                            const titleInput = hitForm.querySelector('input[name=title]')
-                            
-                            // Set the referrer value
-                            if (!document.referrer.includes("jaysherby.com")) {
-                                referrerInput.value = document.referrer;
-                            }
+            window.addEventListener("load", () => {
+                if (navigator.webdriver !== true) {
+                    const sendHit = score => {
+                        const params = new URLSearchParams({
+                            token: "poLgUQjrhxyayhXoSVjf",
+                            referrer: document.referrer.includes("jaysherby.com") ? "" : document.referrer,
+                            title: "",
+                            score: score
+                        });
+                        new Image().src = `/hit/?${params.toString()}`;
+                    };
 
-                            // Remove the title value
-                            titleInput.value = ""
-                            
-                            // Log the form data before submitting
-                            const formData = new FormData(hitForm);
-                            
-                            // Submit the form
-                            fetch(hitForm.action, {
-                                method: 'post',
-                                body: new FormData(hitForm),
-                            });
-                        }, { once: true });
-                    }
-                });
+                    document.addEventListener('touchmove', () => sendHit(100), { once: true });
+                    document.addEventListener('mousemove', () => sendHit(100), { once: true });
+                }
+            });
             </script>
         
     

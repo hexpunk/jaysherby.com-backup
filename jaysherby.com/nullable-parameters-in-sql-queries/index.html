@@ -463,39 +463,20 @@ details > summary {
         
 
         
-            <form id="hit-form" action="https://jaysherby.com/hit/" method="post" style="display: none">
-                <input name="token" value="VRjeAuYimSrdDFGIIJdK">
-                <input name="title" value="Nullable Parameters in SQL Queries" >
-                <input name="referrer" >
-            </form>
-
             <script>
-                window.addEventListener("load", (event) => {
-                    if (navigator.webdriver !== true) {
-                        document.body.addEventListener('pointerover', () => {
-                            const hitForm = document.getElementById('hit-form');
-                            const referrerInput = hitForm.querySelector('input[name="referrer"]');
-                            const titleInput = hitForm.querySelector('input[name=title]')
-                            
-                            // Set the referrer value
-                            if (!document.referrer.includes("jaysherby.com")) {
-                                referrerInput.value = document.referrer;
-                            }
+            window.addEventListener("load", () => {
+                if (navigator.webdriver !== true) {
+                    document.body.addEventListener('pointerover', () => {
+                        const params = new URLSearchParams({
+                            token: "VRjeAuYimSrdDFGIIJdK",
+                            referrer: document.referrer.includes("jaysherby.com") ? "" : document.referrer,
+                            title: ""
+                        });
 
-                            // Remove the title value
-                            titleInput.value = ""
-                            
-                            // Log the form data before submitting
-                            const formData = new FormData(hitForm);
-                            
-                            // Submit the form
-                            fetch(hitForm.action, {
-                                method: 'post',
-                                body: new FormData(hitForm),
-                            });
-                        }, { once: true });
-                    }
-                });
+                        new Image().src = `/hit/?${params.toString()}`;
+                    }, { once: true });
+                }
+            });
             </script>
         
     
