@@ -356,6 +356,28 @@ details > summary {
 
 
 
+    <script>
+    window.addEventListener("load", () => {
+        if (navigator.webdriver !== true) {
+            const sendHit = score => {
+                const params = new URLSearchParams({
+                    blog: "jaysherby",
+                    token: "/",
+                    referrer: document.referrer.includes("jaysherby.com") ? "" : document.referrer,
+                    title: "",
+                    score: score
+                });
+                new Image().src = `/hit/?${params.toString()}`;
+            };
+
+            document.addEventListener('touchmove', () => sendHit(100), { once: true });
+            document.addEventListener('mousemove', () => sendHit(100), { once: true });
+        }
+    });
+    </script>
+
+
+
   </main>
   <footer style="padding:25px 0;">
     
