@@ -14,6 +14,61 @@ Hiring? Check  to see...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Working Around A Kernel Regression in Debian 13</title>
+      <link>https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/</link>
+      <description>&lt;p&gt;I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is no longer on the network. Serves me right for keeping up to date.&lt;/p&gt;
+&lt;p&gt;A quick look around determined that &lt;code&gt;networking.service&lt;/code&gt; is failing because my network device doesn't exist. The logs confirm that the iwlwifi driver is having an oopsy.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: enabling device (0000 -&amp;gt; 0002)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Detected crf-id 0x2001910, cnv-id 0x2001910 wfpm id 0x80000000
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: PCI dev 272b/00f4, rev=0x472, rfid=0x112200
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Detected Intel(R) Wi-Fi 7 BE200 320MHz
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-102.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-102.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-102.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-102.ucode failed with error -2
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-101.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-101.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-101.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-101.ucode failed with error -2
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-100.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-100.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-100.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-100.ucode failed with error -2
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-99.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-99.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-99.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-99.ucode failed with error -2
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-98.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-98.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-98.ucode (-2)
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-98.ucode failed with error -2
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: no suitable firmware found!
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: minimum version required: iwlwifi-gl-c0-fm-c0-98
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: maximum version supported: iwlwifi-gl-c0-fm-c0-102
+Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: check git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I rebooted and selected the previous kernel from the Grub boot menu and wifi works again. The old, working kernel is &lt;code&gt;linux-image-6.16.3+deb13-amd64&lt;/code&gt; whereas the new, broken kernel is &lt;code&gt;linux-image-6.17.8+deb13-amd64&lt;/code&gt;. Both are provided by the bookworm-backports package repository.&lt;/p&gt;
+&lt;p&gt;A quick web search found &lt;a href='https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/161'&gt;a lovely issue&lt;/a&gt; filed over at Arch Linux that describes the exact issue I'm experiencing. This bug is upstream in the kernel itself.&lt;/p&gt;
+&lt;p&gt;This put me in a peculiar situation. I need to stay on the old kernel until this is fixed. In the meantime, I want to continue receiving new kernel versions when I update my system so I can test if the issue has been fixed. But until that happens, I want to continue using the known-working kernel.&lt;/p&gt;
+&lt;p&gt;The solution I chose was to change my Grub configuration slightly. There's a line in &lt;code&gt;/etc/default/grub&lt;/code&gt; that looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;GRUB_DEFAULT=0
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That makes Grub boot with the first menu entry by default, which is the newest kernel. I changed it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#GRUB_DEFAULT=0
+GRUB_DEFAULT=saved
+GRUB_SAVEDEFAULT=true
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After running &lt;code&gt;sudo update-grub&lt;/code&gt;, Grub now remembers the last option I chose and uses that by default. I had to reboot one more time to choose the preferred kernel so it would remember after I changed this setting.&lt;/p&gt;
+&lt;p&gt;This meets all of my desired criteria. As long as I don't uninstall &lt;code&gt;linux-image-6.16.3+deb13-amd64&lt;/code&gt;, I should be able to receive new kernel versions and test them at my leisure without worrying that any subsequent updates and reboots might make my system drop off the network again.&lt;/p&gt;
+&lt;p&gt;Although experiencing a kernel regression is annoying, this is the first instance of a regression that has affected me personally in probably two decades. I'm happy it wasn't my fault. And I'm grateful it was easy to diagnose and work around it.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/</guid>
+      <category>grub</category>
+      <category>home server</category>
+      <pubDate>Sun, 14 Dec 2025 23:18:14 +0000</pubDate>
+    </item>
+    <item>
       <title>I'm Restarting Plex Every 24 Hours Now</title>
       <link>https://jaysherby.com/im-restarting-plex-every-24-hours-now/</link>
       <description>&lt;p&gt;I only use Plex because the phone app and the PlayStation app make it convenient. If Jellyfin had a native app on PlayStation, I'd switch tomorrow. I already don't completely trust Plex, which is why I run it in a Podman container. If anything goes &lt;em&gt;really&lt;/em&gt; sideways, at least the blast radius should be minimized.&lt;/p&gt;
@@ -583,60 +638,6 @@ jaysherby@framework13:~$&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"
       <guid isPermaLink="false">https://jaysherby.com/vscode-debugger-ignoring-exceptions-in-your-dependencies/</guid>
       <category>nodejs</category>
       <pubDate>Fri, 30 May 2025 22:27:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Batching Messages in Async Clojure</title>
-      <link>https://jaysherby.com/batching-messages-in-async-clojure/</link>
-      <description>&lt;p&gt;I read this interesting blog post called &lt;a href='https://matklad.github.io/2025/05/14/scalar-select-aniti-pattern.html'&gt;Scalar Select Anti-Pattern&lt;/a&gt; by Alex Kladov about the advantages to batching the processing of messages when you're working with an event-driven asynchronous loop pattern. I recommend you go and read it.&lt;/p&gt;
-&lt;p&gt;It came at just the right time, too, because I was recently working with just such a pattern in Clojure using its &lt;a href='https://github.com/clojure/core.async'&gt;async library&lt;/a&gt;. Here's the basic outline of what I had before I read the aforementioned blog post.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;require&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;clojure.core.async&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ss"&gt;:refer&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;&amp;lt;!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;chan&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;go-loop&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defonce &lt;/span&gt;&lt;span class="nv"&gt;running?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;atom&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;true&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defonce &lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;chan&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;go-loop&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;when &lt;/span&gt;&lt;span class="o"&gt;@&lt;/span&gt;&lt;span class="nv"&gt;running?&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;when-let &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;message&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;&amp;lt;!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="c1"&gt;;; Process a message&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="c1"&gt;;; When I want to quit:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="c1"&gt;;; (reset! running? false)&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;recur&lt;/span&gt;&lt;span class="p"&gt;))))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;My &lt;code&gt;go-loop&lt;/code&gt; block is a state machine that waits for a val from the channel &lt;code&gt;ch&lt;/code&gt; and then processes it. It does this loop until the &lt;code&gt;running?&lt;/code&gt; atom is set to &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;In order to process messages in batches, I need a function that will drain a channel of vals and return a vector of them.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;require&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;clojure.core.async&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ss"&gt;:refer&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;poll!&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;collect-available!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;loop &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;acc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[]]&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;if-some&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;msg&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;poll!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;recur&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;conj &lt;/span&gt;&lt;span class="nv"&gt;acc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;msg&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nv"&gt;acc&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Okay, I'm half-way there. Now I want to encapsulate this idea to include awaiting the first value within a &lt;code&gt;go-loop&lt;/code&gt; before draining the rest of the channel.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;defn &lt;/span&gt;&lt;span class="nv"&gt;collect-batch!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;go&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;if-some&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;first-msg&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;&amp;lt;!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;let &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;rest-msgs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;collect-available!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;conj &lt;/span&gt;&lt;span class="nv"&gt;rest-msgs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;first-msg&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nv"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Cool! Now I can process messages in batches with a little tweak to my &lt;code&gt;go-loop&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;go-loop&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;when &lt;/span&gt;&lt;span class="o"&gt;@&lt;/span&gt;&lt;span class="nv"&gt;running?&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;if-some&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;messages&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;&amp;lt;!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;collect-batch!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;))]&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;do&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;doseq &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;message&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;messages&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="c1"&gt;;; Process a message&lt;/span&gt;
-&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;recur&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;reset!&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;running?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;false&lt;/span&gt;&lt;span class="p"&gt;))))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I've added some safety so that my &lt;code&gt;go-loop&lt;/code&gt; exits if the channel &lt;code&gt;ch&lt;/code&gt; is closed.&lt;/p&gt;
-&lt;p&gt;This is already an improvement since I only have to yield to the scheduler once per &lt;em&gt;batch&lt;/em&gt; of messages rather than once per individual message. It also establishes the pattern, which will make it easier to utilize other optimization strategies like the ones Alex discusses in his blog post when I find I need them.&lt;/p&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/batching-messages-in-async-clojure/</guid>
-      <pubDate>Tue, 20 May 2025 01:38:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
