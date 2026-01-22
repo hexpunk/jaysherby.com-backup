@@ -433,18 +433,19 @@ ignore_chown_errors = &quot;true&quot;
         
             <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
-        <input hidden name="uid" value="iNICPIvAGbKFWececxEJ" style="display:none">
-        <input hidden name="title" value="Tips For Becoming A Pod Person" style="display:none">
+        <input hidden name="uid" value="iNICPIvAGbKFWececxEJ">
+        <input hidden name="title" value="Tips For Becoming A Pod Person">
 
         <button
             class="upvote-button"
+            aria-label="Toast this post"
             title="Toast this post"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
-            <small class="upvote-count">&nbsp;</small>
+            <small class="upvote-count" aria-live="polite">&nbsp;</small>
         </button>
     </small>        
 </form>
@@ -457,6 +458,7 @@ ignore_chown_errors = &quot;true&quot;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
+            $upvoteButton.ariaLabel = "Toasted"
             $upvoteButton.title = "Toasted"
         }
     });
@@ -484,6 +486,7 @@ ignore_chown_errors = &quot;true&quot;
         
         $upvoteButton.disabled = true
         $upvoteButton.style.color = "salmon"
+        $upvoteButton.ariaLabel = "Toasted"
         $upvoteButton.title = "Toasted"
         const upvoteCount = document.querySelector('.upvote-count')
         upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
