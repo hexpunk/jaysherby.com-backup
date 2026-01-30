@@ -433,22 +433,24 @@ Depending on the repository, "squash commits" may be enabled by default for pull
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
-            <small class="upvote-count" aria-live="polite">&nbsp;</small>
+            <small class="upvote-count" aria-hidden="true">&nbsp;</small>
         </button>
     </small>        
 </form>
 
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
+    const $upvoteCount =  document.querySelector('.upvote-count')
 
     fetch('/upvote-info/APNiGaKYPBIXxvSRHGtu/').then(response => response.json()).then(data => {
-        document.querySelector('.upvote-count').innerText = data.upvote_count;
+        $upvoteCount.innerText = data.upvote_count;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
             $upvoteButton.ariaLabel = "Toasted"
             $upvoteButton.title = "Toasted"
         }
+        $upvoteButton.ariaLabel += ` (${data.upvote_count})`
     });
 
     let moved = false;
@@ -476,8 +478,9 @@ Depending on the repository, "squash commits" may be enabled by default for pull
         $upvoteButton.style.color = "salmon"
         $upvoteButton.ariaLabel = "Toasted"
         $upvoteButton.title = "Toasted"
-        const upvoteCount = document.querySelector('.upvote-count')
-        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+        const newUpvoteCount = `${(parseInt($upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+        $upvoteCount.innerHTML = newUpvoteCount
+        $upvoteButton.ariaLabel += ` (${newUpvoteCount})`
     });
 </script>
         
