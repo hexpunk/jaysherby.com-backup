@@ -78,7 +78,7 @@
     --heading-color: #222;
     --text-color: #444;
     --link-color: #3273dc;
-    --visited-color:  #8b6fcb;
+    --visited-color:  #adcafa;
     --code-background-color: #f2f2f2;
     --code-color: #222;
     --blockquote-color: #222;
@@ -90,7 +90,7 @@
         --heading-color: #eee;
         --text-color: #ddd;
         --link-color: #8cc2dd;
-        --visited-color:  #8b6fcb;
+        --visited-color:  #adcafa;
         --code-background-color: #000;
         --code-color: #ddd;
         --blockquote-color: #ccc;
@@ -403,22 +403,24 @@ details > summary {
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
-            <small class="upvote-count" aria-live="polite">&nbsp;</small>
+            <small class="upvote-count" aria-hidden="true">&nbsp;</small>
         </button>
     </small>        
 </form>
 
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
+    const $upvoteCount =  document.querySelector('.upvote-count')
 
     fetch('/upvote-info/HPhtrKTzaGXENxEbKDfI/').then(response => response.json()).then(data => {
-        document.querySelector('.upvote-count').innerText = data.upvote_count;
+        $upvoteCount.innerText = data.upvote_count;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
             $upvoteButton.ariaLabel = "Toasted"
             $upvoteButton.title = "Toasted"
         }
+        $upvoteButton.ariaLabel += ` (${data.upvote_count})`
     });
 
     let moved = false;
@@ -446,8 +448,9 @@ details > summary {
         $upvoteButton.style.color = "salmon"
         $upvoteButton.ariaLabel = "Toasted"
         $upvoteButton.title = "Toasted"
-        const upvoteCount = document.querySelector('.upvote-count')
-        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+        const newUpvoteCount = `${(parseInt($upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+        $upvoteCount.innerHTML = newUpvoteCount
+        $upvoteButton.ariaLabel += ` (${newUpvoteCount})`
     });
 </script>
         
@@ -477,7 +480,7 @@ details > summary {
 
 
   </main>
-  <footer style="padding:25px 0;">
+  <footer>
     
     
     <span>
