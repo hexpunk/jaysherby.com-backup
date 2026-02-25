@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
   
-  <title>Working Around A Kernel Regression in Debian 13 | Jay&#x27;s blog</title>
+  <title>Working Around Firmware Lag in Debian 13 | Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
     
@@ -16,23 +16,23 @@
     <meta name="token" content="UYrFiQfxKASpZXoRraFW">
 
     <!-- Primary Meta Tags -->
-<meta name="title" content="Working Around A Kernel Regression in Debian 13">
-<meta name="description" content="I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is n...">
+<meta name="title" content="Working Around Firmware Lag in Debian 13">
+<meta name="description" content="Note: The title of the post used to be &quot;Working Around A Kernel Regression in Debian 13&quot;. However, after finally actually solving the issue, I find that titl...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
-<meta property="og:title" content="Working Around A Kernel Regression in Debian 13">
+<meta property="og:title" content="Working Around Firmware Lag in Debian 13">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/">
-<meta property="og:description" content="I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is n...">
+<meta property="og:description" content="Note: The title of the post used to be &quot;Working Around A Kernel Regression in Debian 13&quot;. However, after finally actually solving the issue, I find that titl...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary">
 <meta property="twitter:url" content="https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/">
-<meta property="twitter:title" content="Working Around A Kernel Regression in Debian 13">
-<meta property="twitter:description" content="I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is n...">
+<meta property="twitter:title" content="Working Around Firmware Lag in Debian 13">
+<meta property="twitter:description" content="Note: The title of the post used to be &quot;Working Around A Kernel Regression in Debian 13&quot;. However, after finally actually solving the issue, I find that titl...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
@@ -42,10 +42,10 @@
   {
     "@context": "http://schema.org",
     "@type": "article",
-    "name": "Working Around A Kernel Regression in Debian 13",
-    "headline": "Working Around A Kernel Regression in Debian 13",
+    "name": "Working Around Firmware Lag in Debian 13",
+    "headline": "Working Around Firmware Lag in Debian 13",
     "url": "https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/",
-    "description": "I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is n...",
+    "description": "Note: The title of the post used to be &quot;Working Around A Kernel Regression in Debian 13&quot;. However, after finally actually solving the issue, I find that titl...",
     "image": "https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png"
   }
 </script>
@@ -340,7 +340,7 @@ details > summary {
     
 
     
-        <h1>Working Around A Kernel Regression in Debian 13</h1>
+        <h1>Working Around Firmware Lag in Debian 13</h1>
 
         <p>
             <i>
@@ -351,7 +351,10 @@ details > summary {
         </p>
     
 
-    <p>I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is no longer on the network. Serves me right for keeping up to date.</p>
+    <p><strong>Note:</strong> The title of the post used to be "Working Around A Kernel Regression in Debian 13". However, after finally actually solving the issue, I find that title to be inaccurate and a little click-baity.</p>
+<p>The initial post describes the symptoms of the issue and a workaround I chose that allowed me to stay on an old kernel while installing newer kernels. See <a href='index.html#2252026-update'>the end of the post</a> for an update that describes the true source of the problem as well as a way to work around it while using up-to-date kernels.</p>
+<hr />
+<p>I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is no longer on the network. Serves me right for keeping up to date.</p>
 <p>A quick look around determined that <code>networking.service</code> is failing because my network device doesn't exist. The logs confirm that the iwlwifi driver is having an oopsy.</p>
 <div class="highlight"><pre><span></span>Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: enabling device (0000 -&gt; 0002)
 Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Detected crf-id 0x2001910, cnv-id 0x2001910 wfpm id 0x80000000
@@ -395,7 +398,30 @@ GRUB_SAVEDEFAULT=true
 </pre></div>
 <p>After running <code>sudo update-grub</code>, Grub now remembers the last option I chose and uses that by default. I had to reboot one more time to choose the preferred kernel so it would remember after I changed this setting.</p>
 <p>This meets all of my desired criteria. As long as I don't uninstall <code>linux-image-6.16.3+deb13-amd64</code>, I should be able to receive new kernel versions and test them at my leisure without worrying that any subsequent updates and reboots might make my system drop off the network again.</p>
-<p>Although experiencing a kernel regression is annoying, this is the first instance of a regression that has affected me personally in probably two decades. I'm happy it wasn't my fault. And I'm grateful it was easy to diagnose and work around it.</p>
+<p><del>Although experiencing a kernel regression is annoying, this is the first instance of a regression that has affected me personally in probably two decades.</del> I'm happy it wasn't my fault. And I'm grateful it was easy to diagnose and work around it.</p>
+<h2 id=2252026-update>2/25/2026 Update</h2><p>Today, I installed the latest backports kernel, <code>linux-image-6.18.9+deb13-amd64</code>, and to my dismay, the issue described above persisted. I did a little more digging and I discovered this wasn't a kernel regression at all! (Apologies to the fine folks who work on the kernel.) It was lag between the latest version of the kernel available via backports and the latest version of the <code>linux-firmware</code> package available via backports. Those ucode files mentioned in the logs are supposed to be provided via <code>linux-firmware</code>.</p>
+<p>After checking I was indeed using the latest version of <code>linux-firmware</code>, I fixed the problem by cloning the latest version of the <code>linux-firmware</code> source from <a href='https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git'>https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git</a> and checking within the <code>intel/iwlwifi</code> directory for the files mentioned in the logs.</p>
+<div class="highlight"><pre><span></span>ls -lah intel/iwlwifi/iwlwifi-gl-c0-fm-c0-*
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-100.ucode
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-101.ucode
+-rw-rw-r-- 1 server-user server-user 1.8M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-83.ucode
+-rw-rw-r-- 1 server-user server-user 1.8M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-86.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-90.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-92.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-94.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-96.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-97.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-98.ucode
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-c101.ucode
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-c102.ucode
+</pre></div>
+<p>Yep, there are those pesky files. I just needed to copy them (as root) to the proper location: <code>/lib/firmware</code>.</p>
+<div class="highlight"><pre><span></span>sudo cp intel/iwlwifi/iwlwifi-gl-c0-fm-c0-*.ucode /lib/firmware/
+</pre></div>
+<p>Then update the initramfs images.</p>
+<div class="highlight"><pre><span></span>sudo update-initramfs -u -k all
+</pre></div>
+<p>I undid the changes I made to my Grub config from earlier, rebooted, and Bob's your uncle, everything worked again. That's how you run bleeding edge Intel drivers when Debian's firmware package is lagging behind the kernel. 🙌</p>
 
 
     
@@ -415,7 +441,7 @@ GRUB_SAVEDEFAULT=true
             <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
         <input hidden name="uid" value="UYrFiQfxKASpZXoRraFW" style="display:none">
-        <input hidden name="title" value="Working Around A Kernel Regression in Debian 13" style="display:none">
+        <input hidden name="title" value="Working Around Firmware Lag in Debian 13" style="display:none">
 
         <button
             class="upvote-button"

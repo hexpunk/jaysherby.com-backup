@@ -194,9 +194,12 @@ Hiring? Check my résu...</description>
       <pubDate>Mon, 02 Feb 2026 04:56:00 +0000</pubDate>
     </item>
     <item>
-      <title>Working Around A Kernel Regression in Debian 13</title>
+      <title>Working Around Firmware Lag in Debian 13</title>
       <link>https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/</link>
-      <description>&lt;p&gt;I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is no longer on the network. Serves me right for keeping up to date.&lt;/p&gt;
+      <description>&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The title of the post used to be "Working Around A Kernel Regression in Debian 13". However, after finally actually solving the issue, I find that title to be inaccurate and a little click-baity.&lt;/p&gt;
+&lt;p&gt;The initial post describes the symptoms of the issue and a workaround I chose that allowed me to stay on an old kernel while installing newer kernels. See &lt;a href='#2252026-update'&gt;the end of the post&lt;/a&gt; for an update that describes the true source of the problem as well as a way to work around it while using up-to-date kernels.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is no longer on the network. Serves me right for keeping up to date.&lt;/p&gt;
 &lt;p&gt;A quick look around determined that &lt;code&gt;networking.service&lt;/code&gt; is failing because my network device doesn't exist. The logs confirm that the iwlwifi driver is having an oopsy.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: enabling device (0000 -&amp;gt; 0002)
 Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Detected crf-id 0x2001910, cnv-id 0x2001910 wfpm id 0x80000000
@@ -240,13 +243,36 @@ GRUB_SAVEDEFAULT=true
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After running &lt;code&gt;sudo update-grub&lt;/code&gt;, Grub now remembers the last option I chose and uses that by default. I had to reboot one more time to choose the preferred kernel so it would remember after I changed this setting.&lt;/p&gt;
 &lt;p&gt;This meets all of my desired criteria. As long as I don't uninstall &lt;code&gt;linux-image-6.16.3+deb13-amd64&lt;/code&gt;, I should be able to receive new kernel versions and test them at my leisure without worrying that any subsequent updates and reboots might make my system drop off the network again.&lt;/p&gt;
-&lt;p&gt;Although experiencing a kernel regression is annoying, this is the first instance of a regression that has affected me personally in probably two decades. I'm happy it wasn't my fault. And I'm grateful it was easy to diagnose and work around it.&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;Although experiencing a kernel regression is annoying, this is the first instance of a regression that has affected me personally in probably two decades.&lt;/del&gt; I'm happy it wasn't my fault. And I'm grateful it was easy to diagnose and work around it.&lt;/p&gt;
+&lt;h2 id=2252026-update&gt;2/25/2026 Update&lt;/h2&gt;&lt;p&gt;Today, I installed the latest backports kernel, &lt;code&gt;linux-image-6.18.9+deb13-amd64&lt;/code&gt;, and to my dismay, the issue described above persisted. I did a little more digging and I discovered this wasn't a kernel regression at all! (Apologies to the fine folks who work on the kernel.) It was lag between the latest version of the kernel available via backports and the latest version of the &lt;code&gt;linux-firmware&lt;/code&gt; package available via backports. Those ucode files mentioned in the logs are supposed to be provided via &lt;code&gt;linux-firmware&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;After checking I was indeed using the latest version of &lt;code&gt;linux-firmware&lt;/code&gt;, I fixed the problem by cloning the latest version of the &lt;code&gt;linux-firmware&lt;/code&gt; source from &lt;a href='https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git'&gt;https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git&lt;/a&gt; and checking within the &lt;code&gt;intel/iwlwifi&lt;/code&gt; directory for the files mentioned in the logs.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ls -lah intel/iwlwifi/iwlwifi-gl-c0-fm-c0-*
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-100.ucode
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-101.ucode
+-rw-rw-r-- 1 server-user server-user 1.8M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-83.ucode
+-rw-rw-r-- 1 server-user server-user 1.8M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-86.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-90.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-92.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-94.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-96.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-97.ucode
+-rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-98.ucode
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-c101.ucode
+-rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-c102.ucode
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Yep, there are those pesky files. I just needed to copy them (as root) to the proper location: &lt;code&gt;/lib/firmware&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo cp intel/iwlwifi/iwlwifi-gl-c0-fm-c0-*.ucode /lib/firmware/
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then update the initramfs images.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo update-initramfs -u -k all
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I undid the changes I made to my Grub config from earlier, rebooted, and Bob's your uncle, everything worked again. That's how you run bleeding edge Intel drivers when Debian's firmware package is lagging behind the kernel. 🙌&lt;/p&gt;
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/</guid>
       <category>grub</category>
       <category>home server</category>
-      <pubDate>Sun, 14 Dec 2025 23:18:14 +0000</pubDate>
+      <pubDate>Sun, 14 Dec 2025 23:18:00 +0000</pubDate>
     </item>
     <item>
       <title>I'm Restarting Plex Every 24 Hours Now</title>
@@ -366,7 +392,7 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/
       <category>home server</category>
       <category>plex</category>
       <category>podman</category>
-      <category>system</category>
+      <category>systemd</category>
       <category>tiddlywiki</category>
       <pubDate>Sun, 02 Nov 2025 03:47:00 +0000</pubDate>
     </item>
@@ -494,7 +520,7 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
       <guid isPermaLink="false">https://jaysherby.com/from-docker-compose-to-quadlets/</guid>
       <category>home server</category>
       <category>podman</category>
-      <category>system</category>
+      <category>systemd</category>
       <category>tiddlywiki</category>
       <pubDate>Sun, 26 Oct 2025 00:03:00 +0000</pubDate>
     </item>
