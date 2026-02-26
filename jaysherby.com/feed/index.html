@@ -17,6 +17,85 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check my résu...</subtitle>
   <entry>
+    <id>https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/</id>
+    <title>Multiple mDNS A Records with a Dynamic IP Address</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.&lt;/p&gt;
+&lt;p&gt;My home server is a tiny box that sits on the corner of my desk. I want to treat it like an appliance as much as I can. All configuration should live on the server itself. I don't want to do anything special in my router settings to make it work. My server gets a dynamic IP address just like everything else on my network. I want to be able to turn it on and it should Just Work™ assuming it can successfully connect to a network and get assigned an IP address.&lt;/p&gt;
+&lt;p&gt;I host multiple services on this one physical machine, such as a family wiki and a Plex server. My experience with setting up reverse proxies for situations like this has taught me that services I haven't developed to specifically support such a feature don't always play nice when I try to host them at different sub-paths on the same host. Path rewriting gets complicated quickly and can be fragile. Depending on the service I'm trying to run, sometimes it's just not feasible. Because of this, I need my home server to respond to multiple A records to make reverse proxying the various services as painless as possible. Using A records instead of special port numbers makes it easy to remember how to access any given service.&lt;/p&gt;
+&lt;p&gt;Here's how I met these requirements using Avahi and some user-level Systemd units.&lt;/p&gt;
+&lt;p&gt;The first step is to install Avahi and make sure its daemon is running. Next, add these unit files:&lt;/p&gt;
+&lt;h2 id=codeconfigsystemdusermdns-publish-addressservicecode&gt;&lt;code&gt;.config/systemd/user/mdns-publish-address@.service&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Advertise %i.local address via mDNS&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
+&lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
+&lt;span class="na"&gt;PartOf&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;mdns.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;simple&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/bin/sh -c &amp;#39;&lt;/span&gt;\
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s"&gt;while [ -z &amp;quot;$(hostname -I)&amp;quot; ]; do sleep 1; done; &lt;/span&gt;\
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s"&gt;IP=$(hostname -I | awk &amp;quot;{print \$1}&amp;quot;); &lt;/span&gt;\
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s"&gt;exec avahi-publish-address &amp;quot;%i.local&amp;quot; &amp;quot;$IP&amp;quot; -R &lt;/span&gt;\
+&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;
+&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;on-failure&lt;/span&gt;
+&lt;span class="na"&gt;RestartSec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;10s&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;mdns.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is a template for advertising the current IP address as a particular A record in addition to the default one Avahi advertises.&lt;/p&gt;
+&lt;p&gt;Let's address the elephant in the room: that sleep loop. That is present because I don't want to attempt to advertise until the machine actual has an IP address. The reason I'm using a sleep loop instead of something more sophisticated like Systemd dependencies is because I'm running Debian 13, which still uses ifupdown to manage networking, not networkd or NetworkManager. It's grog-brained, but it's simple and it works.&lt;/p&gt;
+&lt;p&gt;It's worth noting that I don't enable this service template directly. Keep reading.&lt;/p&gt;
+&lt;h2 id=codeconfigsystemdusermdns-publish-httpservicecode&gt;&lt;code&gt;.config/systemd/user/mdns-publish-http@.service&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Advertise %i.local as HTTP via mDNS&lt;/span&gt;
+&lt;span class="na"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;mdns-publish-address@%i.service&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target mdns-publish-address@%i.service&lt;/span&gt;
+&lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
+&lt;span class="na"&gt;PartOf&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;mdns.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;simple&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;avahi-publish-service &amp;quot;%i.local&amp;quot; _http._tcp 80&lt;/span&gt;
+&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;on-failure&lt;/span&gt;
+&lt;span class="na"&gt;RestartSec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;10s&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;mdns.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In order for Avahi to work as expected, it needs to advertise both the A record &lt;em&gt;and&lt;/em&gt; a service, like an HTTP server in my case. Instead of making a single shell script that runs both &lt;code&gt;avahi-publish-address&lt;/code&gt; and &lt;code&gt;avahi-publish-service&lt;/code&gt;, I decided to get a little fancy and make them two separate Systemd templates such that &lt;code&gt;mdns-publish-http@.service&lt;/code&gt; depends upon an equivalent &lt;code&gt;mdns-publish-address@.service&lt;/code&gt;. That means &lt;em&gt;this&lt;/em&gt; is the only template that needs to be actualized. The other one comes along for free. Neat!&lt;/p&gt;
+&lt;h2 id=codeconfigsystemdusermdnstargetcode&gt;&lt;code&gt;.config/systemd/user/mdns.target&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Target for mDNS service advertisement instances&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
+&lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is just a convenience target that makes it easy to bring all of the various Avahi services up and down together.&lt;/p&gt;
+&lt;h2 id=enable-the-services&gt;Enable the services&lt;/h2&gt;&lt;p&gt;The last step is to enable the desired services.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl --user enable mdns-publish-http@wiki.service
+systemctl --user enable mdns-publish-http@plex.service
+systemctl --user enable mdns-publish-http@traefik.service
+
+systemctl --user enable mdns.target
+
+systemctl --user start mdns.target
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=wait-why-not&gt;Wait, why not...?&lt;/h2&gt;&lt;p&gt;Yes, I'm fully aware that this is an unusual way to accomplish my goal. That's why I'm documenting it. Usually, you'd want to create XML files at &lt;code&gt;/etc/avahi/services&lt;/code&gt; and add the necessary entries in &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. But that doesn't work in my case for a few reasons.&lt;/p&gt;
+&lt;p&gt;For one, my home server does not have a static IP address, so I don't have a static value to insert into &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. My solution works around that issue.&lt;/p&gt;
+&lt;p&gt;Also, when I was attempting the more typical solution, I ran into some issues with the Avahi daemon not liking a bunch of hosts pointing at the same IP address. I honestly might have been doing something else wrong when I tried that approach. But regardless, that approach doesn't meet my stringent requirements and the one I documented here does. 'Nuff said.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/" rel="alternate"/>
+    <category term="avahi"/>
+    <category term="home server"/>
+    <category term="systemd"/>
+    <published>2026-02-26T22:14:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/how-to-change-your-apple-accounts-primary-email-address-without-losing-your-sanity/</id>
     <title>How To Change Your Apple Account's Primary Email Address Without Losing Your Sanity</title>
     <author>
@@ -653,144 +732,5 @@ Depending on the repository, "squash commits" may be enabled by default for pull
     <category term="nautilus"/>
     <category term="pop_os"/>
     <published>2025-06-20T04:08:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/adopt-these-trackers/</id>
-    <title>Adopt These Trackers</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;A recent blog post by Kian Bradley called &lt;a href='https://kianbradley.com/2025/06/15/resurrecting-a-dead-tracker.html'&gt;"Resurrecting a dead torrent tracker and finding 3 million peers"&lt;/a&gt; is making the rounds and it captured my imagination. There's something undeniably punk rock about adopting a dead tracker and bringing it back to life.&lt;/p&gt;
-&lt;p&gt;I was curious how someone might find old tracker domains to resurrect, though. Kian seemed to find his through natural usage of BitTorrent. I had a different idea.&lt;/p&gt;
-&lt;p&gt;&lt;a href='https://github.com/ngosang/trackerslist'&gt;This git repository&lt;/a&gt; has an automatically updated list of valid tracker URLs as well as an automatically updated block list. It also has 50k stars on GitHub, so I figure it's a decent source of data.&lt;/p&gt;
-&lt;p&gt;I vibe-coded up a &lt;a href='https://www.nushell.sh/'&gt;Nushell&lt;/a&gt; script that will look through the git history for tracker domain names that were removed from the tracker list but never added to the block list. Finally, it writes out the results in files of max 100 entries because the final step is embarrassingly manual. I checked the removed but not blocked domains in the bulk search feature of my preferred registrar, who limits bulk search to 100 entries at a time.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#!/bin/env nu
-
-def parse_file [path: string] {
-  open $path
-  | str replace &amp;#39;\n\n+&amp;#39; &amp;#39;\n&amp;#39;
-  | lines
-  | str trim
-  | where {|x| $x != &amp;quot;&amp;quot;}
-  | uniq
-}
-
-def get_all_commits [] {
-  ^git rev-list master
-  | lines
-}
-
-def build_blacklist_set [] {
-  get_all_commits
-  | each {|rev|
-      let file = (try { ^git show $&amp;quot;($rev):blacklist.txt&amp;quot; } catch { &amp;quot;&amp;quot; })
-      $file
-      | lines
-      | str trim
-      | where {|x| $x != &amp;quot;&amp;quot;}
-  }
-  | flatten
-  | uniq
-}
-
-def main [] {
-  let all_commits = (get_all_commits | reverse)
-  let blacklist_set = (build_blacklist_set)
-
-  mut prev_trackers = []
-  mut removed_total = []
-
-  for commit in $all_commits {
-    let file = (try { ^git show $&amp;quot;($commit):trackers_all.txt&amp;quot; } catch { &amp;quot;&amp;quot; })
-    let trackers = (
-      $file
-      | str replace &amp;#39;\n\n+&amp;#39; &amp;#39;\n&amp;#39;
-      | lines
-      | str trim
-      | where {|x| $x != &amp;quot;&amp;quot;}
-      | uniq
-    )
-
-    if ($prev_trackers | length) &amp;gt; 0 {
-      let removed = ($prev_trackers | where {|x| not ($trackers | any {|y| $y == $x }) })
-      $removed_total = ($removed_total | append $removed)
-    }
-
-    $prev_trackers = $trackers
-  }
-
-  let final_list = (
-    $removed_total
-    | flatten
-    | uniq
-    | where {|x| not ($blacklist_set | any {|y| $y == $x }) }
-    | parse -r &amp;#39;(?P&amp;lt;uri&amp;gt;.+)&amp;#39;  # ensure strings not treated as plain
-    | each {|row|
-        let host = (try { $row.uri | url parse | get host } catch { &amp;quot;&amp;quot; })
-        let parts = ($host | split row &amp;quot;.&amp;quot;)
-        if ($parts | length) &amp;gt;= 2 {
-          let root = ($parts | last 2 | str join &amp;quot;.&amp;quot;)
-          $root
-        } else {
-          $host  # fallback to full host if malformed
-        }
-    }
-    | uniq
-  )
-
-  # Save output in batches of 100
-  let chunked = ($final_list | chunks 100)
-
-  let saved_files = $chunked
-  | enumerate
-  | each {|row|
-      let idx = $row.index
-      let part = $row.item
-      let filename = $&amp;quot;output_part_($idx | fill -c &amp;#39;0&amp;#39; -w 3).txt&amp;quot;
-      $part | str join &amp;quot;\n&amp;quot; | save --force $filename
-      $filename
-  }
-
-  $saved_files
-}
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;After a little copy-pasta, here are the available domain names that were once trackers:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;edoardocolombo.eu&lt;/li&gt;
-&lt;li&gt;poweredcore.com&lt;/li&gt;
-&lt;li&gt;demonoid.ooo&lt;/li&gt;
-&lt;li&gt;bluefrog.pw&lt;/li&gt;
-&lt;li&gt;bittor.xyz&lt;/li&gt;
-&lt;li&gt;grifon.info&lt;/li&gt;
-&lt;li&gt;facedatabg.net&lt;/li&gt;
-&lt;li&gt;dl1234.com&lt;/li&gt;
-&lt;li&gt;torrentsnows.com&lt;/li&gt;
-&lt;li&gt;torrentclub.tech&lt;/li&gt;
-&lt;li&gt;nullrebel.com&lt;/li&gt;
-&lt;li&gt;value-wolf.org&lt;/li&gt;
-&lt;li&gt;handrew.me&lt;/li&gt;
-&lt;li&gt;derpyradio.net&lt;/li&gt;
-&lt;li&gt;100.pet&lt;/li&gt;
-&lt;li&gt;sleepyinternetfun.xyz&lt;/li&gt;
-&lt;li&gt;nrx.me&lt;/li&gt;
-&lt;li&gt;highstar.shop&lt;/li&gt;
-&lt;li&gt;oldboystudy.com&lt;/li&gt;
-&lt;li&gt;chennuo.xyz&lt;/li&gt;
-&lt;li&gt;120181311.xyz&lt;/li&gt;
-&lt;li&gt;chouchou.top&lt;/li&gt;
-&lt;li&gt;buddyfly.top&lt;/li&gt;
-&lt;li&gt;torrentclub.space&lt;/li&gt;
-&lt;li&gt;arcbox.cc&lt;/li&gt;
-&lt;li&gt;trojangogogo.site&lt;/li&gt;
-&lt;li&gt;sheesh.rip&lt;/li&gt;
-&lt;li&gt;market-re.quest&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;This was a quick little project that took me all of 20 minutes to satisfy my curiosity. If I cared more deeply about answering this question, I might be inclined to try to scrape torrent search websites to collect tracker URLs from their &lt;a href='https://en.wikipedia.org/wiki/Magnet_URI_scheme'&gt;magnet links&lt;/a&gt; instead of relying on one GitHub repository. I'd also want to figure out a way to automate checking if domains are available for sale. That data appears to be gated behind services that require registration and might cost money.&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/adopt-these-trackers/" rel="alternate"/>
-    <category term="bittorrent"/>
-    <category term="nushell"/>
-    <published>2025-06-18T03:38:00+00:00</published>
   </entry>
 </feed>
