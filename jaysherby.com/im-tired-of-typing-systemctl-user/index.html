@@ -7,38 +7,32 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
   
-  <title>Multiple mDNS A Records with a Dynamic IP Address | Jay&#x27;s blog</title>
+  <title>I&#x27;m tired of typing &quot;systemctl --user&quot; | Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
     
 
     <meta name="jaysherby" content="look-for-the-bear-necessities">
-    <meta name="token" content="YFbIcDwJXjQEaSHGZcGY">
+    <meta name="token" content="PsWqiQpEITtspEAyZEnf">
 
     <!-- Primary Meta Tags -->
-<meta name="title" content="Multiple mDNS A Records with a Dynamic IP Address">
-<meta name="description" content="I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.
-
-My home server is ...">
+<meta name="title" content="I&#x27;m tired of typing &quot;systemctl --user&quot;">
+<meta name="description" content="I chose to alias systemctl --user since I use it so often. That&#x27;s not blog post-worthy. What makes it so is that I didn&#x27;t want to lose tab completion when us...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
-<meta property="og:title" content="Multiple mDNS A Records with a Dynamic IP Address">
+<meta property="og:title" content="I&#x27;m tired of typing &quot;systemctl --user&quot;">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/">
-<meta property="og:description" content="I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.
-
-My home server is ...">
+<meta property="og:url" content="https://jaysherby.com/im-tired-of-typing-systemctl-user/">
+<meta property="og:description" content="I chose to alias systemctl --user since I use it so often. That&#x27;s not blog post-worthy. What makes it so is that I didn&#x27;t want to lose tab completion when us...">
 <meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary">
-<meta property="twitter:url" content="https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/">
-<meta property="twitter:title" content="Multiple mDNS A Records with a Dynamic IP Address">
-<meta property="twitter:description" content="I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.
-
-My home server is ...">
+<meta property="twitter:url" content="https://jaysherby.com/im-tired-of-typing-systemctl-user/">
+<meta property="twitter:title" content="I&#x27;m tired of typing &quot;systemctl --user&quot;">
+<meta property="twitter:description" content="I chose to alias systemctl --user since I use it so often. That&#x27;s not blog post-worthy. What makes it so is that I didn&#x27;t want to lose tab completion when us...">
 <meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
 
 
@@ -48,12 +42,10 @@ My home server is ...">
   {
     "@context": "http://schema.org",
     "@type": "article",
-    "name": "Multiple mDNS A Records with a Dynamic IP Address",
-    "headline": "Multiple mDNS A Records with a Dynamic IP Address",
-    "url": "https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/",
-    "description": "I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.
-
-My home server is ...",
+    "name": "I&#x27;m tired of typing &quot;systemctl --user&quot;",
+    "headline": "I&#x27;m tired of typing &quot;systemctl --user&quot;",
+    "url": "https://jaysherby.com/im-tired-of-typing-systemctl-user/",
+    "description": "I chose to alias systemctl --user since I use it so often. That&#x27;s not blog post-worthy. What makes it so is that I didn&#x27;t want to lose tab completion when us...",
     "image": "https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png"
   }
 </script>
@@ -348,81 +340,31 @@ details > summary {
     
 
     
-        <h1>Multiple mDNS A Records with a Dynamic IP Address</h1>
+        <h1>I&#x27;m tired of typing &quot;systemctl --user&quot;</h1>
 
         <p>
             <i>
-                <time datetime="2026-02-26T22:14Z">
-    26 Feb, 2026
+                <time datetime="2026-02-27T00:33Z">
+    27 Feb, 2026
 </time>
             </i>
         </p>
     
 
-    <p>I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.</p>
-<p>My home server is a tiny box that sits on the corner of my desk. I want to treat it like an appliance as much as I can. All configuration should live on the server itself. I don't want to do anything special in my router settings to make it work. My server gets a dynamic IP address just like everything else on my network. I want to be able to turn it on and it should Just Work™ assuming it can successfully connect to a network and get assigned an IP address.</p>
-<p>I host multiple services on this one physical machine, such as a family wiki and a Plex server. My experience with setting up reverse proxies for situations like this has taught me that services I haven't developed to specifically support such a feature don't always play nice when I try to host them at different sub-paths on the same host. Path rewriting gets complicated quickly and can be fragile. Depending on the service I'm trying to run, sometimes it's just not feasible. Because of this, I need my home server to respond to multiple A records to make reverse proxying the various services as painless as possible. Using A records instead of special port numbers makes it easy to remember how to access any given service.</p>
-<p>Here's how I met these requirements using Avahi and some user-level Systemd units.</p>
-<p>The first step is to install Avahi and make sure its daemon is running. Next, add these unit files:</p>
-<h2 id=codeconfigsystemdusermdns-publish-addressservicecode><code>.config/systemd/user/mdns-publish-address@.service</code></h2><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
-<span class="na">Description</span><span class="o">=</span><span class="s">Advertise %i.local address via mDNS</span>
-<span class="na">After</span><span class="o">=</span><span class="s">network-online.target</span>
-<span class="na">Wants</span><span class="o">=</span><span class="s">network-online.target</span>
-<span class="na">PartOf</span><span class="o">=</span><span class="s">mdns.target</span>
+    <p>I chose to alias <code>systemctl --user</code> since I use it so often. That's not blog post-worthy. What makes it so is that I didn't want to lose tab completion when using my alias.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Add this to your .bashrc</span>
 
-<span class="k">[Service]</span>
-<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/sh -c &#39;</span>\
-<span class="w">  </span><span class="s">while [ -z &quot;$(hostname -I)&quot; ]; do sleep 1; done; </span>\
-<span class="w">  </span><span class="s">IP=$(hostname -I | awk &quot;{print \$1}&quot;); </span>\
-<span class="w">  </span><span class="s">exec avahi-publish-address &quot;%i.local&quot; &quot;$IP&quot; -R </span>\
-<span class="s">&#39;</span>
-<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
-<span class="na">RestartSec</span><span class="o">=</span><span class="s">10s</span>
-
-<span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">mdns.target</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">scu</span><span class="o">=</span><span class="s1">&#39;systemctl --user&#39;</span>
+_completion_loader<span class="w"> </span>systemctl
+<span class="k">function</span><span class="w"> </span>_scu_complete<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nv">COMP_WORDS</span><span class="o">=(</span>systemctl<span class="w"> </span>--user<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">COMP_WORDS</span><span class="p">[@]:</span><span class="nv">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">((</span><span class="w"> </span>COMP_CWORD++<span class="w"> </span><span class="o">))</span>
+<span class="w">    </span>_systemctl
+<span class="o">}</span>
+<span class="nb">complete</span><span class="w"> </span>-F<span class="w"> </span>_scu_complete<span class="w"> </span>scu
 </pre></div>
-<p>This is a template for advertising the current IP address as a particular A record in addition to the default one Avahi advertises.</p>
-<p>Let's address the elephant in the room: that sleep loop. That is present because I don't want to attempt to advertise until the machine actual has an IP address. The reason I'm using a sleep loop instead of something more sophisticated like Systemd dependencies is because I'm running Debian 13, which still uses ifupdown to manage networking, not networkd or NetworkManager. It's grog-brained, but it's simple and it works.</p>
-<p>It's worth noting that I don't enable this service template directly. Keep reading.</p>
-<h2 id=codeconfigsystemdusermdns-publish-httpservicecode><code>.config/systemd/user/mdns-publish-http@.service</code></h2><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
-<span class="na">Description</span><span class="o">=</span><span class="s">Advertise %i.local as HTTP via mDNS</span>
-<span class="na">Requires</span><span class="o">=</span><span class="s">mdns-publish-address@%i.service</span>
-<span class="na">After</span><span class="o">=</span><span class="s">network-online.target mdns-publish-address@%i.service</span>
-<span class="na">Wants</span><span class="o">=</span><span class="s">network-online.target</span>
-<span class="na">PartOf</span><span class="o">=</span><span class="s">mdns.target</span>
-
-<span class="k">[Service]</span>
-<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">avahi-publish-service &quot;%i.local&quot; _http._tcp 80</span>
-<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
-<span class="na">RestartSec</span><span class="o">=</span><span class="s">10s</span>
-
-<span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">mdns.target</span>
-</pre></div>
-<p>In order for Avahi to work as expected, it needs to advertise both the A record <em>and</em> a service, like an HTTP server in my case. Instead of making a single shell script that runs both <code>avahi-publish-address</code> and <code>avahi-publish-service</code>, I decided to get a little fancy and make them two separate Systemd templates such that <code>mdns-publish-http@.service</code> depends upon an equivalent <code>mdns-publish-address@.service</code>. That means <em>this</em> is the only template that needs to be actualized. The other one comes along for free. Neat!</p>
-<h2 id=codeconfigsystemdusermdnstargetcode><code>.config/systemd/user/mdns.target</code></h2><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
-<span class="na">Description</span><span class="o">=</span><span class="s">Target for mDNS service advertisement instances</span>
-<span class="na">After</span><span class="o">=</span><span class="s">network-online.target</span>
-<span class="na">Wants</span><span class="o">=</span><span class="s">network-online.target</span>
-
-<span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
-</pre></div>
-<p>This is just a convenience target that makes it easy to bring all of the various Avahi services up and down together.</p>
-<h2 id=enable-the-services>Enable the services</h2><p>The last step is to enable the desired services.</p>
-<div class="highlight"><pre><span></span>systemctl --user enable mdns-publish-http@wiki.service
-systemctl --user enable mdns-publish-http@plex.service
-
-systemctl --user enable mdns.target
-
-systemctl --user start mdns.target
-</pre></div>
-<h2 id=wait-why-not>Wait, why not...?</h2><p>Yes, I'm fully aware that this is an unusual way to accomplish my goal. That's why I'm documenting it. Usually, you'd want to create XML files at <code>/etc/avahi/services</code> and add the necessary entries in <code>/etc/avahi/hosts</code>. But that doesn't work in my case for a few reasons.</p>
-<p>For one, my home server does not have a static IP address, so I don't have a static value to insert into <code>/etc/avahi/hosts</code>. My solution works around that issue.</p>
-<p>Also, when I was attempting the more typical solution, I ran into some issues with the Avahi daemon not liking a bunch of hosts pointing at the same IP address. I honestly might have been doing something else wrong when I tried that approach. But regardless, that approach doesn't meet my stringent requirements and the one I documented here does. 'Nuff said.</p>
+<p>This little snippet ensures that tab completion still functions on the new <code>scu</code> alias.</p>
+<p>I'll still type out <code>systemctl --user</code> when appropriate in my documentation, but you best believe I'm going to be using <code>scu</code> all the time besides.</p>
 
 
     
@@ -430,10 +372,6 @@ systemctl --user start mdns.target
     
         
             <p class="tags">
-                
-                    <a rel="nofollow" href="https://jaysherby.com/blog/?q=avahi">#avahi</a>
-                
-                    <a rel="nofollow" href="https://jaysherby.com/blog/?q=home%20server">#home server</a>
                 
                     <a rel="nofollow" href="https://jaysherby.com/blog/?q=systemd">#systemd</a>
                 
@@ -443,8 +381,8 @@ systemctl --user start mdns.target
         
             <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
-        <input hidden name="uid" value="YFbIcDwJXjQEaSHGZcGY" style="display:none">
-        <input hidden name="title" value="Multiple mDNS A Records with a Dynamic IP Address" style="display:none">
+        <input hidden name="uid" value="PsWqiQpEITtspEAyZEnf" style="display:none">
+        <input hidden name="title" value="I&#x27;m tired of typing &quot;systemctl --user&quot;" style="display:none">
 
         <button
             class="upvote-button"
@@ -464,7 +402,7 @@ systemctl --user start mdns.target
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
 
-    fetch('/upvote-info/YFbIcDwJXjQEaSHGZcGY/').then(response => response.json()).then(data => {
+    fetch('/upvote-info/PsWqiQpEITtspEAyZEnf/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
         if (data.upvoted) {
             $upvoteButton.disabled = true
@@ -514,7 +452,7 @@ systemctl --user start mdns.target
                     const sendHit = score => {
                         const params = new URLSearchParams({
                             blog: "jaysherby",
-                            token: "YFbIcDwJXjQEaSHGZcGY",
+                            token: "PsWqiQpEITtspEAyZEnf",
                             referrer: document.referrer.includes("jaysherby.com") ? "" : document.referrer,
                             title: "",
                             score: score

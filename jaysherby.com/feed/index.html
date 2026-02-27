@@ -17,6 +17,32 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check my résu...</subtitle>
   <entry>
+    <id>https://jaysherby.com/im-tired-of-typing-systemctl-user/</id>
+    <title>I'm tired of typing "systemctl --user"</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;I chose to alias &lt;code&gt;systemctl --user&lt;/code&gt; since I use it so often. That's not blog post-worthy. What makes it so is that I didn't want to lose tab completion when using my alias.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Add this to your .bashrc&lt;/span&gt;
+
+&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;scu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;systemctl --user&amp;#39;&lt;/span&gt;
+_completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
+&lt;span class="k"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;_scu_complete&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;COMP_WORDS&lt;/span&gt;&lt;span class="o"&gt;=(&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;COMP_WORDS&lt;/span&gt;&lt;span class="p"&gt;[@]:&lt;/span&gt;&lt;span class="nv"&gt;1&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;((&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;COMP_CWORD++&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;_systemctl
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="nb"&gt;complete&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-F&lt;span class="w"&gt; &lt;/span&gt;_scu_complete&lt;span class="w"&gt; &lt;/span&gt;scu
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This little snippet ensures that tab completion still functions on the new &lt;code&gt;scu&lt;/code&gt; alias.&lt;/p&gt;
+&lt;p&gt;I'll still type out &lt;code&gt;systemctl --user&lt;/code&gt; when appropriate in my documentation, but you best believe I'm going to be using &lt;code&gt;scu&lt;/code&gt; all the time besides.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/im-tired-of-typing-systemctl-user/" rel="alternate"/>
+    <category term="systemd"/>
+    <published>2026-02-27T00:33:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/</id>
     <title>Multiple mDNS A Records with a Dynamic IP Address</title>
     <author>
@@ -79,7 +105,6 @@ Hiring? Check my résu...</subtitle>
 &lt;h2 id=enable-the-services&gt;Enable the services&lt;/h2&gt;&lt;p&gt;The last step is to enable the desired services.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl --user enable mdns-publish-http@wiki.service
 systemctl --user enable mdns-publish-http@plex.service
-systemctl --user enable mdns-publish-http@traefik.service
 
 systemctl --user enable mdns.target
 
@@ -611,7 +636,7 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 
 systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;tiddlywiki.service
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;So far, this setup seems to be working. I plan on adding some more services and features in the future, like Traefik to route services to friendlier mDNS hostnames, and an IRC bouncer service. I'll be sure to write up more posts as I add those.&lt;/p&gt;
+&lt;p&gt;So far, this setup seems to be working. I plan on adding some more services and features in the future, like a reverse proxy to route services to friendlier mDNS A records, and an IRC bouncer service. I'll be sure to write up more posts as I add those.&lt;/p&gt;
 &lt;p&gt;While I was tinkering with these Quadlet files, sometimes I'd make a mistake. When a Quadlet file is invalid, the corresponding service is not generated. After running &lt;code&gt;daemon-reload&lt;/code&gt;, trying to start the service would give me a "unit not found" error. To see detailed errors explaining what was wrong with my Quadlet file, I'd run the following command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/usr/libexec/podman/quadlet&lt;span class="w"&gt; &lt;/span&gt;--dryrun&lt;span class="w"&gt; &lt;/span&gt;--user
 &lt;/pre&gt;&lt;/div&gt;
@@ -711,26 +736,5 @@ Depending on the repository, "squash commits" may be enabled by default for pull
     <link href="https://jaysherby.com/how-to-add-an-existing-git-repo-to-a-monorepo/" rel="alternate"/>
     <category term="git"/>
     <published>2025-07-05T20:38:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/fixing-open-in-terminal-in-pop_os/</id>
-    <title>Fixing "Open in Terminal" in Pop!_OS</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;Pop!_OS has this feature in its file manager, Nautilus, that allows you to open a terminal in the current directory using the context menu's "Open in Terminal" option. This is provided by a package called &lt;code&gt;nautilus-extension-gnome-terminal&lt;/code&gt;. It opens a new &lt;code&gt;gnome-terminal&lt;/code&gt; using the &lt;code&gt;--working-directory&lt;/code&gt; command line option set to the directory currently open in Nautilus.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/nautilus-open-in-terminal.png" alt="nautilus-open-in-terminal" /&gt;&lt;/p&gt;
-&lt;p&gt;I don't know when this stopped working properly, but I noticed the issue this evening. It will open a terminal window, but the resulting shell session no longer seems to open in the requested directory.&lt;/p&gt;
-&lt;p&gt;I futzed with it quite a bit. It will work properly if I run &lt;code&gt;gnome-terminal --working-directory=&amp;quot;$PWD&amp;quot; -- bash --norc&lt;/code&gt;, which led me to believe that it had something to do with my &lt;code&gt;.bashrc&lt;/code&gt; file. It turns out it has nothing to do with my &lt;code&gt;.bashrc&lt;/code&gt; file because removing my &lt;code&gt;.bashrc&lt;/code&gt; file entirely does not fix it.&lt;/p&gt;
-&lt;p&gt;My fix (or at least workaround) was to change my gnome-terminal profile setting "Preserve working directory" from "Shell only" to "Always". That seems to do the trick.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/gnome-terminal-preferences.png" alt="gnome-terminal-preferences" /&gt;&lt;/p&gt;
-&lt;p&gt;This feels really familiar like I've had to deal with it before, but I never blogged about it. It doesn't look like anything has recently changed that would have caused this to suddenly happen. This feature was added to &lt;code&gt;gnome-terminal&lt;/code&gt; &lt;a href='https://gitlab.gnome.org/GNOME/gnome-terminal/-/issues/126'&gt;more than 4 years ago&lt;/a&gt;. All relevant packages (&lt;code&gt;gnome-terminal&lt;/code&gt;, &lt;code&gt;nautilus&lt;/code&gt;, &lt;code&gt;nautilus-extension-gnome-terminal&lt;/code&gt;) haven't been updated in more than 6 months. Maybe I just noticed it for the first time on this machine tonight, but it's been like that the whole time. 🤷&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/fixing-open-in-terminal-in-pop_os/" rel="alternate"/>
-    <category term="gnome-terminal"/>
-    <category term="nautilus"/>
-    <category term="pop_os"/>
-    <published>2025-06-20T04:08:00+00:00</published>
   </entry>
 </feed>

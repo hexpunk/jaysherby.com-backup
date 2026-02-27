@@ -462,7 +462,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
 
 systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>tiddlywiki.service
 </pre></div>
-<p>So far, this setup seems to be working. I plan on adding some more services and features in the future, like Traefik to route services to friendlier mDNS hostnames, and an IRC bouncer service. I'll be sure to write up more posts as I add those.</p>
+<p>So far, this setup seems to be working. I plan on adding some more services and features in the future, like a reverse proxy to route services to friendlier mDNS A records, and an IRC bouncer service. I'll be sure to write up more posts as I add those.</p>
 <p>While I was tinkering with these Quadlet files, sometimes I'd make a mistake. When a Quadlet file is invalid, the corresponding service is not generated. After running <code>daemon-reload</code>, trying to start the service would give me a "unit not found" error. To see detailed errors explaining what was wrong with my Quadlet file, I'd run the following command:</p>
 <div class="highlight"><pre><span></span>/usr/libexec/podman/quadlet<span class="w"> </span>--dryrun<span class="w"> </span>--user
 </pre></div>
