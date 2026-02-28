@@ -14,6 +14,88 @@ Hiring? Check my résu...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Reverse Proxying Podman Quadlets with Caddy</title>
+      <link>https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/</link>
+      <description>&lt;p&gt;This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only took about an hour of futzing around... using Caddy. For context, this is the fourth time I've attempted this dream setup of mine over the years.&lt;/p&gt;
+&lt;p&gt;The first three times, I tried using Traefik because it's supposed to be so container-friendly. The allure of your service mesh configuration living in tags on your containers is hard to ignore. Sadly, I could never get it to fit with my particular requirements, which I outlined on a previous post about setting up &lt;a href='https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/'&gt;multiple mDNS A records on a single machine with a dynamic IP address&lt;/a&gt;. The snag I hit this time is that rootless podman doesn't play nice with Traefik's docker provider, eliminating any real advantage over other reverse proxy solutions.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/friendship-ended-with-traefik.webp" alt="" /&gt;&lt;/p&gt;
+&lt;p&gt;I've probably spent days trying to get Traefik to work. It took me an hour to get Caddy running exactly how I wanted it. I'm impressed.&lt;/p&gt;
+&lt;p&gt;The first thing I had to do was create a place for my Caddyfile and Caddy's data to live.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy
+mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy/conf
+mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy/data
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=codecaddyconfcaddyfilecode&gt;&lt;code&gt;~/caddy/conf/Caddyfile&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
+    auto_https off
+}
+
+wiki.local:80 {
+    reverse_proxy tiddlywiki:8080
+}
+
+plex.local:80 {
+    reverse_proxy host.containers.internal:32400
+}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I have turned off TLS by including &lt;code&gt;auto_https off&lt;/code&gt; and &lt;code&gt;:80&lt;/code&gt; for the individual services since this is only going to be running on my LAN, and Let's Encrypt doesn't issue certificates for &lt;code&gt;.local&lt;/code&gt; addresses. It's easier to deal with than self-signed certs IMHO.&lt;/p&gt;
+&lt;p&gt;Plex is routed to &lt;code&gt;host.containers.internal&lt;/code&gt; because my Plex quadlet runs on the host network.&lt;/p&gt;
+&lt;p&gt;In order for Caddy to be able to resolve the Tiddlywiki container, both quadlets must share a podman network.&lt;/p&gt;
+&lt;h2 id=codeconfigcontainerssystemdproxynetworkcode&gt;&lt;code&gt;~/.config/containers/systemd/proxy.network&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Podman network for Caddy services&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Network]&lt;/span&gt;
+&lt;span class="na"&gt;NetworkName&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;proxy&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is actually a pattern from Traefik that I nicked. If I want a service to be accessible by Caddy, both Caddy and the service need to share this network to talk to each other. My Tiddlywiki gets &lt;code&gt;Network=proxy&lt;/code&gt; added to its quadlet file and its &lt;code&gt;PublishPort&lt;/code&gt; setting removed so it doesn't leak any ports onto the host network. My Plex server doesn't need anything special since it's already using &lt;code&gt;Network=host&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Remember to load it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
+
+systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;proxy-network.service
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=codeconfigcontainerssystemdcaddycontainercode&gt;&lt;code&gt;~/.config/containers/systemd/caddy.container&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Caddy&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Container]&lt;/span&gt;
+&lt;span class="na"&gt;ContainerName&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;caddy&lt;/span&gt;
+&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;docker.io/library/caddy:2-alpine&lt;/span&gt;
+&lt;span class="na"&gt;AutoUpdate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;registry&lt;/span&gt;
+&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
+
+&lt;span class="na"&gt;Network&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;proxy&lt;/span&gt;
+
+&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/caddy/conf:/etc/caddy:Z&lt;/span&gt;
+&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/caddy/data:/data/caddy:Z&lt;/span&gt;
+
+&lt;span class="na"&gt;PublishPort&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;80:80/tcp&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Nothing particularly special about the actual Caddy quadlet. Remember to load it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
+
+systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;caddy.service
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I chose to add &lt;code&gt;http://plex.local:80&lt;/code&gt; to Plex's settings menu at "Settings" -&gt; "Network" -&gt; "Custom server access URLs". I don't know if that's strictly necessary, but it seems to be recommended.&lt;/p&gt;
+&lt;p&gt;If you can believe it, that's all it takes. It works like I've always dreamed.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/</guid>
+      <category>caddy</category>
+      <category>home server</category>
+      <category>podman</category>
+      <category>systemd</category>
+      <pubDate>Sat, 28 Feb 2026 02:06:00 +0000</pubDate>
+    </item>
+    <item>
       <title>I'm tired of typing "systemctl --user"</title>
       <link>https://jaysherby.com/im-tired-of-typing-systemctl-user/</link>
       <description>&lt;p&gt;I chose to alias &lt;code&gt;systemctl --user&lt;/code&gt; since I use it so often. That's not blog post-worthy. What makes it so is that I didn't want to lose tab completion when using my alias.&lt;/p&gt;
@@ -33,6 +115,7 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 </description>
       <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/im-tired-of-typing-systemctl-user/</guid>
+      <category>bash</category>
       <category>systemd</category>
       <pubDate>Fri, 27 Feb 2026 00:33:00 +0000</pubDate>
     </item>
@@ -44,7 +127,7 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 &lt;p&gt;I host multiple services on this one physical machine, such as a family wiki and a Plex server. My experience with setting up reverse proxies for situations like this has taught me that services I haven't developed to specifically support such a feature don't always play nice when I try to host them at different sub-paths on the same host. Path rewriting gets complicated quickly and can be fragile. Depending on the service I'm trying to run, sometimes it's just not feasible. Because of this, I need my home server to respond to multiple A records to make reverse proxying the various services as painless as possible. Using A records instead of special port numbers makes it easy to remember how to access any given service.&lt;/p&gt;
 &lt;p&gt;Here's how I met these requirements using Avahi and some user-level Systemd units.&lt;/p&gt;
 &lt;p&gt;The first step is to install Avahi and make sure its daemon is running. Next, add these unit files:&lt;/p&gt;
-&lt;h2 id=codeconfigsystemdusermdns-publish-addressservicecode&gt;&lt;code&gt;.config/systemd/user/mdns-publish-address@.service&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;h2 id=codeconfigsystemdusermdns-publish-addressservicecode&gt;&lt;code&gt;~/.config/systemd/user/mdns-publish-address@.service&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Advertise %i.local address via mDNS&lt;/span&gt;
 &lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
 &lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
@@ -66,7 +149,7 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 &lt;p&gt;This is a template for advertising the current IP address as a particular A record in addition to the default one Avahi advertises.&lt;/p&gt;
 &lt;p&gt;Let's address the elephant in the room: that sleep loop. That is present because I don't want to attempt to advertise until the machine actual has an IP address. The reason I'm using a sleep loop instead of something more sophisticated like Systemd dependencies is because I'm running Debian 13, which still uses ifupdown to manage networking, not networkd or NetworkManager. It's grog-brained, but it's simple and it works.&lt;/p&gt;
 &lt;p&gt;It's worth noting that I don't enable this service template directly. Keep reading.&lt;/p&gt;
-&lt;h2 id=codeconfigsystemdusermdns-publish-httpservicecode&gt;&lt;code&gt;.config/systemd/user/mdns-publish-http@.service&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;h2 id=codeconfigsystemdusermdns-publish-httpservicecode&gt;&lt;code&gt;~/.config/systemd/user/mdns-publish-http@.service&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Advertise %i.local as HTTP via mDNS&lt;/span&gt;
 &lt;span class="na"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;mdns-publish-address@%i.service&lt;/span&gt;
 &lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target mdns-publish-address@%i.service&lt;/span&gt;
@@ -83,7 +166,7 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 &lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;mdns.target&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In order for Avahi to work as expected, it needs to advertise both the A record &lt;em&gt;and&lt;/em&gt; a service, like an HTTP server in my case. Instead of making a single shell script that runs both &lt;code&gt;avahi-publish-address&lt;/code&gt; and &lt;code&gt;avahi-publish-service&lt;/code&gt;, I decided to get a little fancy and make them two separate Systemd templates such that &lt;code&gt;mdns-publish-http@.service&lt;/code&gt; depends upon an equivalent &lt;code&gt;mdns-publish-address@.service&lt;/code&gt;. That means &lt;em&gt;this&lt;/em&gt; is the only template that needs to be actualized. The other one comes along for free. Neat!&lt;/p&gt;
-&lt;h2 id=codeconfigsystemdusermdnstargetcode&gt;&lt;code&gt;.config/systemd/user/mdns.target&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;h2 id=codeconfigsystemdusermdnstargetcode&gt;&lt;code&gt;~/.config/systemd/user/mdns.target&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Target for mDNS service advertisement instances&lt;/span&gt;
 &lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
 &lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
@@ -93,12 +176,12 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is just a convenience target that makes it easy to bring all of the various Avahi services up and down together.&lt;/p&gt;
 &lt;h2 id=enable-the-services&gt;Enable the services&lt;/h2&gt;&lt;p&gt;The last step is to enable the desired services.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl --user enable mdns-publish-http@wiki.service
-systemctl --user enable mdns-publish-http@plex.service
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;mdns-publish-http@wiki.service
+systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;mdns-publish-http@plex.service
 
-systemctl --user enable mdns.target
+systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;mdns.target
 
-systemctl --user start mdns.target
+systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;mdns.target
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=wait-why-not&gt;Wait, why not...?&lt;/h2&gt;&lt;p&gt;Yes, I'm fully aware that this is an unusual way to accomplish my goal. That's why I'm documenting it. Usually, you'd want to create XML files at &lt;code&gt;/etc/avahi/services&lt;/code&gt; and add the necessary entries in &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. But that doesn't work in my case for a few reasons.&lt;/p&gt;
 &lt;p&gt;For one, my home server does not have a static IP address, so I don't have a static value to insert into &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. My solution works around that issue.&lt;/p&gt;
@@ -640,69 +723,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
       <guid isPermaLink="false">https://jaysherby.com/macos-26-tahoe-applications-menu/</guid>
       <category>MacOS</category>
       <pubDate>Mon, 29 Sep 2025 22:29:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>How To Add An Existing Git Repo To A Monorepo</title>
-      <link>https://jaysherby.com/how-to-add-an-existing-git-repo-to-a-monorepo/</link>
-      <description>&lt;p&gt;At several points over the course of my career, I've found myself lifting business logic code out of a monolithic application for the purposes of reuse across multiple applications.&lt;/p&gt;
-&lt;p&gt;It's almost never appropriate to simply copy the current snapshot of the files in your main branch to a new directory and &lt;code&gt;git init&lt;/code&gt;. If you leave good commit messages, the repository's commit history can document the reasons why code was changed. You should keep that if you can.&lt;/p&gt;
-&lt;p&gt;Depending on the intended consumers of your new business logic library, it may make sense for the new library to live in its own repository. This makes the code migration very easy. Fork the repo and start trimming away the application portions of the code. I've done this several times and the approach works well.&lt;/p&gt;
-&lt;p&gt;I recently found myself in need of a more complex migration at $JOB. The code is going to be migrated into an existing monorepo. For the purposes of this example, a repository called &lt;code&gt;alpha&lt;/code&gt; is the existing application from which I'd like to harvest its business logic. A repository called &lt;code&gt;omega&lt;/code&gt; is the monorepo I'm targeting.&lt;/p&gt;
-&lt;p&gt;Here's the process I followed to achieve this commit history transplant.&lt;/p&gt;
-&lt;h2 id=step-1-add-the-codealphacode-remote-temporarily-to-codeomegacode&gt;Step 1: Add the &lt;code&gt;alpha&lt;/code&gt; remote temporarily to &lt;code&gt;omega&lt;/code&gt;&lt;/h2&gt;&lt;p&gt;Here's how my remote looks before I start:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;remote&lt;span class="w"&gt; &lt;/span&gt;-v
-origin&lt;span class="w"&gt;  &lt;/span&gt;git@github.com:hexpunk/omega.git&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;fetch&lt;span class="o"&gt;)&lt;/span&gt;
-origin&lt;span class="w"&gt;  &lt;/span&gt;git@github.com:hexpunk/omega.git&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;push&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Add &lt;code&gt;alpha&lt;/code&gt;'s remote. I'm calling it &lt;code&gt;temp&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;remote&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;temp&lt;span class="w"&gt; &lt;/span&gt;git@github.com:hexpunk/alpha.git
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Optionally confirm it worked.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;remote&lt;span class="w"&gt; &lt;/span&gt;-v
-origin&lt;span class="w"&gt;  &lt;/span&gt;git@github.com:hexpunk/omega.git&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;fetch&lt;span class="o"&gt;)&lt;/span&gt;
-origin&lt;span class="w"&gt;  &lt;/span&gt;git@github.com:hexpunk/omega.git&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;push&lt;span class="o"&gt;)&lt;/span&gt;
-temp&lt;span class="w"&gt;    &lt;/span&gt;git@github.com:hexpunk/alpha.git&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;fetch&lt;span class="o"&gt;)&lt;/span&gt;
-temp&lt;span class="w"&gt;    &lt;/span&gt;git@github.com:hexpunk/alpha.git&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;push&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;And don't forget to fetch from the new remote before continuing so branches from the new remote can be referenced.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;fetch&lt;span class="w"&gt; &lt;/span&gt;temp
-From&lt;span class="w"&gt; &lt;/span&gt;github.com:hexpunk/alpha
-&lt;span class="w"&gt; &lt;/span&gt;*&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;new&lt;span class="w"&gt; &lt;/span&gt;branch&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;main&lt;span class="w"&gt;                                                            &lt;/span&gt;-&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;temp/main
-&lt;span class="w"&gt; &lt;/span&gt;*&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;new&lt;span class="w"&gt; &lt;/span&gt;branch&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;staging&lt;span class="w"&gt;                                                         &lt;/span&gt;-&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;temp/staging
-&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=step-2-make-a-new-branch-for-this&gt;Step 2: Make a new branch for this&lt;/h2&gt;&lt;p&gt;Nothing particularly unusual here. Make a new branch for this change and switch to it.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;switch&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;import-alpha&lt;span class="w"&gt; &lt;/span&gt;main
-Switched&lt;span class="w"&gt; &lt;/span&gt;to&lt;span class="w"&gt; &lt;/span&gt;a&lt;span class="w"&gt; &lt;/span&gt;new&lt;span class="w"&gt; &lt;/span&gt;branch&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;import-alpha&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=step-3-use-the-git-subtree-command-to-import-all-files-and-their-histories&gt;Step 3: Use the git subtree command to import all files and their histories&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;subtree&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;--prefix&lt;span class="o"&gt;=&lt;/span&gt;applications/alpha/&lt;span class="w"&gt; &lt;/span&gt;temp/main
-Added&lt;span class="w"&gt; &lt;/span&gt;dir&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;applications/alpha&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;You can see here that I've imported all of &lt;code&gt;alpha&lt;/code&gt;'s main branch (using the &lt;code&gt;temp&lt;/code&gt; remote name) to the path &lt;code&gt;applications/alpha&lt;/code&gt;. This brings all files' histories with it and adds a new commit with a commit message that looks like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Add &amp;#39;applications/alpha/&amp;#39; from commit &amp;#39;123bf0fd7a82a76743adb0ce224a1987fe754093&amp;#39;
-
-git-subtree-dir: applications/alpha
-git-subtree-mainline: a2ac8af27a38f08d4774a4338c5c4a6ed0f24ff0
-git-subtree-split: 123bf0fd7a82a76743adb0ce224a1987fe754093
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Those three lines at the end are called &lt;a href='https://git-scm.com/docs/git-interpret-trailers'&gt;trailers&lt;/a&gt; and they're a powerful and often overlooked feature of git commit messages.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;These&lt;/em&gt; trailers are an artifact of the &lt;code&gt;git subtree&lt;/code&gt; command, a contributed shell script that ships with git. It was written by Avery Pennarun, co-founder and CEO of Tailscale. Huh. It's worth a peruse of &lt;a href='https://manpage.me/?q=git-subtree'&gt;its man page&lt;/a&gt; because it's a powerful tool for situations like this one.&lt;/p&gt;
-&lt;h2 id=step-4-remove-the-temporary-remote&gt;Step 4: Remove the temporary remote&lt;/h2&gt;&lt;p&gt;Now is as good a time as any to remember to remove that temporary remote I added since I won't need it anymore.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;remote&lt;span class="w"&gt; &lt;/span&gt;remove&lt;span class="w"&gt; &lt;/span&gt;temp
-&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=step-5-push-your-branch-to-remote&gt;Step 5: Push your branch to remote&lt;/h2&gt;&lt;p&gt;Nothing unusual here, either. I'm just getting ready to make a pull request.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;jaysherby@framework13:~/omega$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;push&lt;span class="w"&gt; &lt;/span&gt;-u&lt;span class="w"&gt; &lt;/span&gt;origin&lt;span class="w"&gt; &lt;/span&gt;import-alpha
-&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=step-6-make-your-pull-request-emwithout-squashing-commitsem&gt;Step 6: Make your pull request &lt;em&gt;WITHOUT SQUASHING COMMITS!!!&lt;/em&gt;&lt;/h2&gt;&lt;p&gt;The only thing you must remember to do differently compared to most pull requests is this: &lt;strong&gt;&lt;em&gt;DO NOT SQUASH COMMITS ON MERGE&lt;/em&gt;&lt;/strong&gt;. I cannot overstate how important this is.
-Depending on the repository, "squash commits" may be enabled by default for pull requests. Although this may be preferred for typical feature and bugfix merge flows, it would defeat the point of this entire exercise by squashing away all of that beautiful commit history I just worked so hard to maintain.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/repo_settings.png" alt="" title="repository setting for squash commits by default" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/merge_request.png" alt="" title="the squash commits option in the merge request (hi, gitlab!) is unchecked" /&gt;&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;git subtree&lt;/code&gt; command actually has a &lt;code&gt;--squash&lt;/code&gt; option that I specifically chose not to use. Squashing commits from subtree commands makes sense if I was going to use this as an alternative to &lt;code&gt;git submodule&lt;/code&gt;, which is the situation most prominently described in the documentation. In my case, having the files' histories ride along with them as they're assimilated into the monorepo is precisely the value of this operation.&lt;/p&gt;
-&lt;h2 id=step-7-diligently-isolate-the-renaming-of-files-within-their-own-commits&gt;Step 7: Diligently isolate the renaming of files within their own commits&lt;/h2&gt;&lt;p&gt;Wouldn't it be terrible if I did all of this work to keep files' histories just to throw it all away? That's why I need to be really strict with myself as I move and rename files and directories. Git is really good at recognizing file movement as long as it happens in isolated commits. If I were to move the file &lt;em&gt;and&lt;/em&gt; change its contents, I risk the history looking like a delete and a create instead of a rename, which will essentially launder the history of the file for common file-wise history tools like &lt;code&gt;git blame&lt;/code&gt;.&lt;/p&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/how-to-add-an-existing-git-repo-to-a-monorepo/</guid>
-      <category>git</category>
-      <pubDate>Sat, 05 Jul 2025 20:38:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
