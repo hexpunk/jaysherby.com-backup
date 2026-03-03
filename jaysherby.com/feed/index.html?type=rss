@@ -140,19 +140,24 @@ mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy/conf
 mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy/data
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=codecaddyconfcaddyfilecode&gt;&lt;code&gt;~/caddy/conf/Caddyfile&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
-    auto_https off
+    skip_install_trust
 }
 
-wiki.local:80 {
+http://wiki.local {
     reverse_proxy tiddlywiki:8080
 }
 
-plex.local:80 {
+http://plex.local {
     reverse_proxy host.containers.internal:32400
 }
+
+irc.local {
+    reverse_proxy thelounge:9000
+}
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I have turned off TLS by including &lt;code&gt;auto_https off&lt;/code&gt; and &lt;code&gt;:80&lt;/code&gt; for the individual services since this is only going to be running on my LAN, and Let's Encrypt doesn't issue certificates for &lt;code&gt;.local&lt;/code&gt; addresses. It's easier to deal with than self-signed certs IMHO.&lt;/p&gt;
+&lt;p&gt;I have the &lt;code&gt;skip_install_trust&lt;/code&gt; option set since this is running inside a container.&lt;/p&gt;
 &lt;p&gt;Plex is routed to &lt;code&gt;host.containers.internal&lt;/code&gt; because my Plex quadlet runs on the host network.&lt;/p&gt;
+&lt;p&gt;I'm not using TLS for the wiki or plex for simplicity sake, but I am using it for my installation of The Lounge in order to allow for push notifications. I can only issue self-signed certificates for &lt;code&gt;.local&lt;/code&gt; DNS names. Therefore, I need to share Caddy's &lt;code&gt;root.crt&lt;/code&gt; to devices where I plan to use The Lounge. That's a minority of devices, so it's easier to only use TLS where necessary.&lt;/p&gt;
 &lt;p&gt;In order for Caddy to be able to resolve the Tiddlywiki container, both quadlets must share a podman network.&lt;/p&gt;
 &lt;h2 id=codeconfigcontainerssystemdproxynetworkcode&gt;&lt;code&gt;~/.config/containers/systemd/proxy.network&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Podman network for Caddy services&lt;/span&gt;

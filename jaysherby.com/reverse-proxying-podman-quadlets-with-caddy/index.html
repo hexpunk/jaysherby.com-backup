@@ -362,19 +362,24 @@ mkdir<span class="w"> </span>~/caddy/conf
 mkdir<span class="w"> </span>~/caddy/data
 </pre></div>
 <h2 id=codecaddyconfcaddyfilecode><code>~/caddy/conf/Caddyfile</code></h2><div class="highlight"><pre><span></span>{
-    auto_https off
+    skip_install_trust
 }
 
-wiki.local:80 {
+http://wiki.local {
     reverse_proxy tiddlywiki:8080
 }
 
-plex.local:80 {
+http://plex.local {
     reverse_proxy host.containers.internal:32400
 }
+
+irc.local {
+    reverse_proxy thelounge:9000
+}
 </pre></div>
-<p>I have turned off TLS by including <code>auto_https off</code> and <code>:80</code> for the individual services since this is only going to be running on my LAN, and Let's Encrypt doesn't issue certificates for <code>.local</code> addresses. It's easier to deal with than self-signed certs IMHO.</p>
+<p>I have the <code>skip_install_trust</code> option set since this is running inside a container.</p>
 <p>Plex is routed to <code>host.containers.internal</code> because my Plex quadlet runs on the host network.</p>
+<p>I'm not using TLS for the wiki or plex for simplicity sake, but I am using it for my installation of The Lounge in order to allow for push notifications. I can only issue self-signed certificates for <code>.local</code> DNS names. Therefore, I need to share Caddy's <code>root.crt</code> to devices where I plan to use The Lounge. That's a minority of devices, so it's easier to only use TLS where necessary.</p>
 <p>In order for Caddy to be able to resolve the Tiddlywiki container, both quadlets must share a podman network.</p>
 <h2 id=codeconfigcontainerssystemdproxynetworkcode><code>~/.config/containers/systemd/proxy.network</code></h2><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Podman network for Caddy services</span>
