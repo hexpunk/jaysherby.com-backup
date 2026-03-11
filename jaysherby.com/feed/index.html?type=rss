@@ -14,6 +14,24 @@ Hiring? Check my résu...</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <item>
+      <title>Apple MacBook Pro Interference Due To Lack Of Ground</title>
+      <link>https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/</link>
+      <description>&lt;p&gt;My work computer is an M1 MacBook Pro. Aluminum-bodied MacBooks using Apple's official power adapter in the United States have an infamous issue. The power adapter isn't grounded. That's why sometimes the body of the laptop feels... &lt;em&gt;fuzzy&lt;/em&gt;. You're feeling a little bit of stray current from the 60 hertz mains power buzzing through the body of the laptop.&lt;/p&gt;
+&lt;p&gt;It doesn't have to be this way. If you remove the US adapter from Apple's power brick, you'll find it anchors to a metal stud. That's supposed to be for grounding the power supply. In fact, adapters for some other countries properly use that ground. Not in the US, though. Who knows why?&lt;/p&gt;
+&lt;p&gt;Besides being a little uncomfortable to the touch, this can cause real problems. I usually plug my MacBook Pro into an external monitor via a USB-C dongle that connects to an HDMI cable that connects to my monitor. My monitor properly grounds the HDMI cable. That ground is enough to fix the grounding issue of my MacBook Pro. However, my personal laptop, a Framework 13, sits on top of the MacBook. Sometimes when I plug the very same USB-C adapter into my Framework laptop instead, bad things start to happen. Sometimes the power button on my Framework laptop simply refuses to work. (This scared the shit out of me until I realized what was going on.) Very occasionally I'll get interference on the (admittedly super thin) HDMI signal. Unplugging the MacBook Pro from power or moving the Framework laptop solves the issue.&lt;/p&gt;
+&lt;p&gt;What solved the issue more permanently was a recent monitor upgrade. I got a Dell P2425HE monitor today. It has a USB-C port with 90 watt charging capability. I chose to plug the MacBook Pro into that instead of the Apple power brick. Dell properly grounds the monitor and the USB-C port. Finally, the interference is gone even when the MacBook Pro is not connected to the HDMI cable.&lt;/p&gt;
+&lt;p&gt;The issue about Apple's lack of ground on their charger is well-documented throughout the internet. The purpose of this post is to document that the issue can do more harm under the right circumstances than just feeling a little weird to the touch. Also, there are workarounds like the one I found if you really care, but you're going to have to charge your Apple laptop using a properly grounded third-party charging solution.&lt;/p&gt;
+&lt;p&gt;Please, please, &lt;strong&gt;PLEASE&lt;/strong&gt;, Apple. I know you're not reading this, but please ground your charging bricks in the United States already!&lt;/p&gt;
+&lt;p&gt;Also, please, Framework, try to shield your laptops a little better. But this is absolutely Apple's fault, not Framework's.&lt;/p&gt;
+</description>
+      <author>hidden (jaysherby)</author>
+      <guid isPermaLink="false">https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/</guid>
+      <category>Apple</category>
+      <category>Framework</category>
+      <category>electricity</category>
+      <pubDate>Wed, 11 Mar 2026 00:18:00 +0000</pubDate>
+    </item>
+    <item>
       <title>I made stationery using HTML &amp; CSS</title>
       <link>https://jaysherby.com/i-made-stationery-using-html-css/</link>
       <description>&lt;p&gt;I'm so web dev-brained that I reach for HTML &amp; CSS when I need to design stuff for printing on paper. I find the declarative syntax comforting. The CSS of my &lt;a href='https://jaysherby.com/resume/'&gt;résumé page&lt;/a&gt; secretly makes it print pretty well.&lt;/p&gt;
@@ -670,134 +688,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/
       <category>systemd</category>
       <category>tiddlywiki</category>
       <pubDate>Sun, 02 Nov 2025 03:47:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>From Docker Compose to Quadlets</title>
-      <link>https://jaysherby.com/from-docker-compose-to-quadlets/</link>
-      <description>&lt;p&gt;I recently migrated my home server from Debian 12 to 13 and I decided to ditch Docker for Podman. I've written about some of the differences when moving from Docker to Podman &lt;a href='https://jaysherby.com/tips-for-becoming-a-pod-person/'&gt;previously&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Here's my old &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;services&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;plex&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;lscr.io/linuxserver/plex:latest&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;container_name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;plex&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;# Host networking is simpler than trying to forward everything&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;network_mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;host&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;environment&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;TZ=America/Chicago&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;VERSION=docker&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;PUID=1000&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;PGID=1000&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;volumes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/home/server-user/plex/config:/config&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/media/wd-gold/Television:/tv&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/media/wd-gold/Movies:/movies&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;devices&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/dev/dri:/dev/dri&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;restart&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;unless-stopped&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;32400:32400/tcp&lt;/span&gt;
-
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;tiddlywiki&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;node:lts-alpine&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;container_name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;tiddlywiki&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;entrypoint&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;npx --yes tiddlywiki /wiki --listen host=0.0.0.0 port=8080 debug-level=debug&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;healthcheck&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;test&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;wget -q --spider -o /dev/null 127.0.0.1:8080 || exit 1&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;interval&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;60s&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;timeout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;5s&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;volumes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/home/server-user/wiki:/wiki&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;restart&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;unless-stopped&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p p-Indicator"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;80:8080/tcp&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I've got a Plex server, and a TiddlyWiki running on port 80. This is not a particularly apt use of Docker Compose since I'm only really using it because it's familiar and it lets me bring the server up and down with a single command.&lt;/p&gt;
-&lt;p&gt;To move to Podman, I tried what I thought would be the path of least resistance: Podman Compose. It wasn't as turn-key as I would have expected. Because Podman doesn't use a root daemon like Docker, all of my containers would die when I logged out of my user. This wasn't an issue when I used Docker since Docker's daemon was always running. To keep my user session alive, I could have chosen something like &lt;code&gt;nohup&lt;/code&gt;, &lt;code&gt;screen&lt;/code&gt;, or &lt;code&gt;tmux&lt;/code&gt;. I chose instead to turn on lingering for the user with systemd.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;loginctl&lt;span class="w"&gt; &lt;/span&gt;enable-linger&lt;span class="w"&gt; &lt;/span&gt;server-user
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Yes, &lt;a href='https://www.youtube.com/watch?v=G6Kspj3OO0s'&gt;I have to let it linger&lt;/a&gt;. RIP Dolores O'Riordan.&lt;/p&gt;
-&lt;p&gt;This change at least let me continue limping along with Podman Compose until I had to chance to investigate. Because Podman is not daemon-based, &lt;code&gt;restart: unless-stopped&lt;/code&gt; doesn't work. It also means that my containers don't come back up automatically if I reboot the system. Also, my Plex container doesn't get write access to my media library, meaning I can't delete things from the Plex interface. I've tried adding &lt;code&gt;:rw&lt;/code&gt; and &lt;code&gt;:rw,Z&lt;/code&gt; and &lt;code&gt;:rw,z&lt;/code&gt; to those volumes without effect. I think it's probably because Podman Compose is automatically putting everything into a "pod", which is composed of a "Linux network namespace, IPC namespace, and (optionally) PID namespace" that can be shared between containers. There are ways to configure your compose file so that Podman doesn't do this, but the version of Podman Compose present in Debian's repos doesn't understand those options. I'd have to install a newer version of Podman Compose through pip, for example.&lt;/p&gt;
-&lt;p&gt;It was about this point when I figured maybe I was using the wrong tool for the job. I decided to try Quadlets instead. They seem to be the preferred way to orchestrate Podman containers. Podman ships with support for Quadlets included. Quadlets are files that share the syntax of systemd unit files. They are run through a generator that generates actual systemd unit files. From there, the containers are managed just like any other user services, using systemd. What do you expect? Systemd and Podman both come from the folks at &lt;del&gt;Red Hat&lt;/del&gt; IBM.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/plex.container &lt;/span&gt;
-&lt;span class="k"&gt;[Unit]&lt;/span&gt;
-&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Plex Media Server&lt;/span&gt;
-&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
-
-&lt;span class="k"&gt;[Container]&lt;/span&gt;
-&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;lscr.io/linuxserver/plex:latest&lt;/span&gt;
-
-&lt;span class="na"&gt;Network&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;host&lt;/span&gt;
-&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
-
-&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TZ=America/Chicago&lt;/span&gt;
-&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;VERSION=docker&lt;/span&gt;
-
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/plex/config:/config:Z&lt;/span&gt;
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Television:/tv:Z&lt;/span&gt;
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Movies:/movies:Z&lt;/span&gt;
-
-&lt;span class="na"&gt;AddDevice&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/dev/dri:/dev/dri&lt;/span&gt;
-&lt;span class="na"&gt;PublishPort&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;32400:32400/tcp&lt;/span&gt;
-
-&lt;span class="k"&gt;[Service]&lt;/span&gt;
-&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
-
-&lt;span class="k"&gt;[Install]&lt;/span&gt;
-&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I don't think the &lt;code&gt;:Z&lt;/code&gt; is actually doing anything here because I don't think there are any SELinux labels in those paths, but it seems to be considered good practice and I can't imagine it hurts anything.&lt;/p&gt;
-&lt;p&gt;This configuration does not exhibit the media deletion issue I experienced with Podman Compose.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Remember to fix permissions if you&amp;#39;re coming from Docker&lt;/span&gt;
-sudo&lt;span class="w"&gt; &lt;/span&gt;chown&lt;span class="w"&gt; &lt;/span&gt;-R&lt;span class="w"&gt; &lt;/span&gt;server-user:server-user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/home/server-user/plex&amp;quot;&lt;/span&gt;
-
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
-
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;plex.service
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Here's the one for TiddlyWiki:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/tiddlywiki.container &lt;/span&gt;
-&lt;span class="k"&gt;[Unit]&lt;/span&gt;
-&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TiddlyWiki&lt;/span&gt;
-&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
-
-&lt;span class="k"&gt;[Container]&lt;/span&gt;
-&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;docker.io/library/node:lts-alpine&lt;/span&gt;
-
-&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
-
-&lt;span class="na"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;npx --yes tiddlywiki /wiki --listen host=0.0.0.0 port=8080&lt;/span&gt;
-
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/wiki:/wiki:Z&lt;/span&gt;
-
-&lt;span class="na"&gt;PublishPort&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;80:8080/tcp&lt;/span&gt;
-
-&lt;span class="k"&gt;[Service]&lt;/span&gt;
-&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
-
-&lt;span class="k"&gt;[Install]&lt;/span&gt;
-&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;You may notice that I don't have a health check for this service like I had for Docker Compose. It doesn't seem like Quadlets have any equivalent functionality. I could certainly create a systemd service by hand to check the service's health, but I was never really reporting or reacting to the health check's status, so I ditched it instead.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Remember to fix permissions if you&amp;#39;re coming from Docker&lt;/span&gt;
-sudo&lt;span class="w"&gt; &lt;/span&gt;chown&lt;span class="w"&gt; &lt;/span&gt;-R&lt;span class="w"&gt; &lt;/span&gt;server-user:server-user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/home/server-user/wiki&amp;quot;&lt;/span&gt;
-
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
-
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;tiddlywiki.service
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;So far, this setup seems to be working. I plan on adding some more services and features in the future, like a reverse proxy to route services to friendlier mDNS A records, and an IRC bouncer service. I'll be sure to write up more posts as I add those.&lt;/p&gt;
-&lt;p&gt;While I was tinkering with these Quadlet files, sometimes I'd make a mistake. When a Quadlet file is invalid, the corresponding service is not generated. After running &lt;code&gt;daemon-reload&lt;/code&gt;, trying to start the service would give me a "unit not found" error. To see detailed errors explaining what was wrong with my Quadlet file, I'd run the following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/usr/libexec/podman/quadlet&lt;span class="w"&gt; &lt;/span&gt;--dryrun&lt;span class="w"&gt; &lt;/span&gt;--user
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;These posts I write with the &lt;a href='https://jaysherby.com/blog/?q=home%20server'&gt;#home server&lt;/a&gt; tag are mostly just documentation for myself in the future. My previous posts have already come in handy when I make big changes to my system, like upgrading Debian. I highly recommend documenting your own projects for yourself.&lt;/p&gt;
-</description>
-      <author>hidden (jaysherby)</author>
-      <guid isPermaLink="false">https://jaysherby.com/from-docker-compose-to-quadlets/</guid>
-      <category>home server</category>
-      <category>podman</category>
-      <category>systemd</category>
-      <category>tiddlywiki</category>
-      <pubDate>Sun, 26 Oct 2025 00:03:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
