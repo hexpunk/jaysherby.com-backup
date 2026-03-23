@@ -17,6 +17,66 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check my résu...</subtitle>
   <entry>
+    <id>https://jaysherby.com/waiting-for-dns-without-networkd/</id>
+    <title>Waiting for DNS without Networkd</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;I'm running &lt;a href='https://thelounge.chat/'&gt;The Lounge&lt;/a&gt; as a combination IRC bouncer and client on my home server. I'm very happy with it. However, I was having one little hiccup. If I rebooted the server, The Lounge would not automatically reconnect to the IRC server on its own. It's supposed to do that.&lt;/p&gt;
+&lt;p&gt;After consulting with the folks in &lt;code&gt;#thelounge&lt;/code&gt; on Libera.chat and looking at the logs within the client itself, I found this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;01:17:37 PM Network created, connecting to irc.libera.chat:6697...
+01:17:42 PM *** Connection closed unexpectedly: Error: getaddrinfo EAI_AGAIN irc.libera.chat
+01:17:42 PM Disconnected from the network, and will not reconnect. Use /connect to reconnect again.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;My server connects to the internet via wifi, so it takes a little longer to get network access than if it was connected via ethernet. Sure enough, The Lounge was trying to start before I had a network connection.&lt;/p&gt;
+&lt;p&gt;Usually this would just be a matter of adding a dependency on &lt;code&gt;network-online.target&lt;/code&gt; to The Lounge's quadlet. But I'm running Debian 12, which means that won't work. Debian is still using ifupdown for networking on headless servers. I had to make a custom service instead that checks for DNS resolution.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/systemd/user/dns-ready.service&lt;/span&gt;
+&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Wait for DNS Resolution&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;oneshot&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/bin/sh -c &amp;#39;until getent hosts libera.chat &amp;gt;/dev/null 2&amp;gt;&amp;amp;1; do echo &amp;quot;Waiting for DNS...&amp;quot;; sleep 2; done&amp;#39;&lt;/span&gt;
+&lt;span class="na"&gt;TimeoutStartSec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;600&lt;/span&gt;
+&lt;span class="na"&gt;RemainAfterExit&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;yes&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;multi-user.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then I needed to update the quadlet to depend on the new service.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/thelounge.container&lt;/span&gt;
+&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TheLounge&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target dns-ready.service&lt;/span&gt;
+&lt;span class="na"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;dns-ready.service&lt;/span&gt;
+
+&lt;span class="k"&gt;[Container]&lt;/span&gt;
+&lt;span class="na"&gt;ContainerName&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;thelounge&lt;/span&gt;
+&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;ghcr.io/thelounge/thelounge:latest&lt;/span&gt;
+&lt;span class="na"&gt;AutoUpdate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;registry&lt;/span&gt;
+&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
+
+&lt;span class="na"&gt;Network&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;proxy&lt;/span&gt;
+
+&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/thelounge:/var/opt/thelounge:Z&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now The Lounge properly reconnects after a power cycle of my server.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/waiting-for-dns-without-networkd/" rel="alternate"/>
+    <category term="home server"/>
+    <category term="podman"/>
+    <category term="systemd"/>
+    <published>2026-03-22T18:50:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/</id>
     <title>Apple MacBook Pro Interference Due To Lack Of Ground</title>
     <author>
@@ -639,87 +699,5 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
     <category term="plex"/>
     <category term="systemd"/>
     <published>2025-11-09T04:31:06.072827+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/auto-update-podman-quadlet-images/</id>
-    <title>Auto Update Podman Quadlet Images</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I &lt;a href='https://jaysherby.com/from-docker-compose-to-quadlets/'&gt;recently&lt;/a&gt; wrote about moving from Docker Compose to Podman Quadlets. I haven't had any issues with the configuration so far, but I did make one change today.&lt;/p&gt;
-&lt;p&gt;My old setup made it easy to pull newer versions of images when I wanted by running &lt;code&gt;docker compose down&lt;/code&gt; followed by &lt;code&gt;docker compose up --pull=always -d&lt;/code&gt; to actually pull new images and restart the services. It was a manual process, but it was easy.&lt;/p&gt;
-&lt;p&gt;Today, I looked into how I'd accomplish the equivalent action for my Podman Quadlets. It turns out that Podman has a fancy way to do this more or less automatically.&lt;/p&gt;
-&lt;p&gt;First, you must enable a systemd timer that Podman provides for doing automatic updates.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--now&lt;span class="w"&gt; &lt;/span&gt;podman-auto-update.timer
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Note that I'm enabling this timer &lt;em&gt;at the user level&lt;/em&gt;.  That's important since my Quadlets are also user level. The timer needs to run at the same level as the Quadlet services.&lt;/p&gt;
-&lt;p&gt;Second, update the Quadlet files so that &lt;code&gt;AutoUpdate=registry&lt;/code&gt; is added in the &lt;code&gt;[Container]&lt;/code&gt; section of the file.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/plex.container&lt;/span&gt;
-&lt;span class="k"&gt;[Unit]&lt;/span&gt;
-&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Plex Media Server&lt;/span&gt;
-&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
-
-&lt;span class="k"&gt;[Container]&lt;/span&gt;
-&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;lscr.io/linuxserver/plex:latest&lt;/span&gt;
-&lt;span class="na"&gt;AutoUpdate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;registry&lt;/span&gt;
-
-&lt;span class="na"&gt;Network&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;host&lt;/span&gt;
-&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
-
-&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TZ=America/Chicago&lt;/span&gt;
-&lt;span class="na"&gt;Environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;VERSION=docker&lt;/span&gt;
-
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/plex/config:/config:Z&lt;/span&gt;
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Television:/tv:Z&lt;/span&gt;
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/media/wd-gold/Movies:/movies:Z&lt;/span&gt;
-
-&lt;span class="na"&gt;AddDevice&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/dev/dri:/dev/dri&lt;/span&gt;
-&lt;span class="na"&gt;PublishPort&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;32400:32400/tcp&lt;/span&gt;
-
-&lt;span class="k"&gt;[Service]&lt;/span&gt;
-&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
-
-&lt;span class="k"&gt;[Install]&lt;/span&gt;
-&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/tiddlywiki.container&lt;/span&gt;
-&lt;span class="k"&gt;[Unit]&lt;/span&gt;
-&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TiddlyWiki&lt;/span&gt;
-&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
-
-&lt;span class="k"&gt;[Container]&lt;/span&gt;
-&lt;span class="na"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;docker.io/library/node:lts-alpine&lt;/span&gt;
-&lt;span class="na"&gt;AutoUpdate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;registry&lt;/span&gt;
-
-&lt;span class="na"&gt;UserNS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;keep-id&lt;/span&gt;
-
-&lt;span class="na"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;npx --yes tiddlywiki /wiki --listen host=0.0.0.0 port=8080&lt;/span&gt;
-
-&lt;span class="na"&gt;Volume&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/server-user/wiki:/wiki:Z&lt;/span&gt;
-
-&lt;span class="na"&gt;PublishPort&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;80:8080/tcp&lt;/span&gt;
-
-&lt;span class="k"&gt;[Service]&lt;/span&gt;
-&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
-
-&lt;span class="k"&gt;[Install]&lt;/span&gt;
-&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;After updating the Quadlets, reload the systemd daemon and restart the services, and everything should be ready to go. Podman should check for new images daily and restart the services when appropriate.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
-
-systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;plex.service
-
-systemctl&lt;span class="w"&gt; &lt;/span&gt;restart&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;tiddlywiki.service
-&lt;/pre&gt;&lt;/div&gt;
-</content>
-    <link href="https://jaysherby.com/auto-update-podman-quadlet-images/" rel="alternate"/>
-    <category term="home server"/>
-    <category term="plex"/>
-    <category term="podman"/>
-    <category term="systemd"/>
-    <category term="tiddlywiki"/>
-    <published>2025-11-02T03:47:00+00:00</published>
   </entry>
 </feed>
