@@ -17,6 +17,39 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check my résu...</subtitle>
   <entry>
+    <id>https://jaysherby.com/learning-lit-with-7guis-and-todomvc/</id>
+    <title>Learning Lit with 7GUIs and TodoMVC</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;Web components are pretty mature now. Unfortunately, even with web components, the web's default rendering pattern is &lt;a href='https://en.wikipedia.org/wiki/Retained_mode'&gt;retained mode&lt;/a&gt;. In a post-React world, anything that's not &lt;a href='https://en.wikipedia.org/wiki/Immediate_mode_%28computer_graphics%29'&gt;immediate mode&lt;/a&gt; is going to be a hard sell. You could write your own solutions to make web components render in an immediate mode, or you could use Lit. &lt;a href='https://lit.dev/'&gt;Lit&lt;/a&gt; is an off-the-shelf solution that provides similar features to &lt;a href='https://react.dev/'&gt;React&lt;/a&gt; in terms of rendering and state management. However, unlike React, Lit builds upon the browser's web components API.&lt;/p&gt;
+&lt;p&gt;I also found Lit attractive due to how small it is. My understanding is that all of Lit is smaller than even &lt;a href='https://preactjs.com/'&gt;Preact&lt;/a&gt; assuming you add state management to Preact.&lt;/p&gt;
+&lt;p&gt;The other cool thing about using web components is that hydrating your page from the back-end is just a matter of sending HTML over the wire.&lt;/p&gt;
+&lt;p&gt;To get some hands-on experience with Lit, I chose to recreate &lt;a href='https://7guis.github.io/7guis/'&gt;7GUIs&lt;/a&gt; and &lt;a href='https://todomvc.com/'&gt;TodoMVC&lt;/a&gt;. 7GUIs is a set of seven graphical applications meant to compare and contrast different GUI libraries on a level playing field. TodoMVC is a similar idea consisting of a single to-do application.&lt;/p&gt;
+&lt;p&gt;I used &lt;a href='https://storybook.js.org/'&gt;Storybook&lt;/a&gt; as the harness for the various GUIs and I took the opportunity to try out &lt;a href='https://github.com/github/storybook-addon-performance-panel'&gt;Github's new performance add-on&lt;/a&gt; for Storybook. I used the Lit, Typescript, and Vite boilerplate project.&lt;/p&gt;
+&lt;p&gt;The code I wrote is available for your perusal if you so wish at &lt;a href='https://github.com/hexpunk/learning-lit/'&gt;https://github.com/hexpunk/learning-lit/&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The first five GUIs from 7GUIs (Counter, Temperature Converter, Flight Booker, Timer, and CRUD) were all relatively trivial to implement in individual Lit components. However, this also meant they didn't really teach me much about Lit beyond the basics. Since they were all single components, composition didn't come into play.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/7guis-circle-drawer.webp" alt="" /&gt;&lt;/p&gt;
+&lt;p&gt;The sixth GUI, Circle Drawer, taught me something important. I chose to use SVG to render the circles rather than using divs with rounded corners, for example. Because of that choice, I learned that there is an &lt;a href='https://lit.dev/docs/api/templates/#svg'&gt;svg&lt;/a&gt; equivalent to Lit's &lt;a href='https://lit.dev/docs/api/templates/#html'&gt;html&lt;/a&gt; tagged template. It's important to use the correct tagged template to get SVG to render on the fly.&lt;/p&gt;
+&lt;p&gt;For the undo/redo stacks, I chose to record individual actions instead of snapshots of the overall state in order to reduce memory usage. However, that made the undo/redo logic a bit more complex. If I was going to write a larger application, I'd refactor this logic to be more encapsulated.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/7guis-cells.webp" alt="" /&gt;&lt;/p&gt;
+&lt;p&gt;The seventh GUI, Cells, was much more complex than the other six GUIs. It's a basic spreadsheet application that supports text, numbers, references, ranges, and basic nested formulas. It felt like a very well-balanced challenge in that it contained a little bit of everything: parsing, evaluation, change propagation, and performance optimization. I was able to get a full sheet with 2600 cells performing without any dropped frames or excessive CPU or memory usage.&lt;/p&gt;
+&lt;p&gt;I used &lt;a href='https://vitest.dev/'&gt;Vitest&lt;/a&gt; to write tests for my parser.&lt;/p&gt;
+&lt;p&gt;The Github performance plugin helped to guide my performance optimizations, although I was disappointed to find it only supports certain features, like element timing and long animation frames, on Chrome and not on Firefox.&lt;/p&gt;
+&lt;p&gt;I enjoyed the challenge of the Cells GUI. I'd recommend this exercise to any and all developers. It's like a bite-sized version of writing an interpreter. Unfortunately, very little of the Cells application actually focuses on the GUI itself. Most of the code consists of all the other pieces of the puzzle.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/todomvc.webp" alt="" /&gt;&lt;/p&gt;
+&lt;p&gt;Finally, I made a perhaps slightly more spartan version of TodoMVC. I didn't seek to make an exact replica. &lt;a href='https://todomvc.com/examples/lit/dist/'&gt;An official one&lt;/a&gt; created by the Lit team already exists. I sought to match functionality one-to-one, but the styles just mimic the flavor of the original.&lt;/p&gt;
+&lt;p&gt;TodoMVC taught me the most about Lit. I used composition by creating a separate component for list items. I learned the difference between an &lt;a href='https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions'&gt;attribute&lt;/a&gt; (&lt;code&gt;?checked=${this.checked}&lt;/code&gt;) and a &lt;a href='https://lit.dev/docs/templates/expressions/#property-expressions'&gt;property&lt;/a&gt; (&lt;code&gt;.checked=${this.checked}&lt;/code&gt;). It's a really important distinction that will lead to bugs if you don't understand it. In my case, I needed a property so that my application state and the DOM would properly stay synced.&lt;/p&gt;
+&lt;p&gt;I'm really glad I took this opportunity to learn to use Lit. I will definitely reach for it for future front-end projects. I also learned that while the Cells application from 7GUIs was really enjoyable and empowering, the 7GUIs tasks themselves aren't a great measure of anything when you're writing HTML. I think doing 7GUIs in any HTML framework is probably going to be a trivial endeavor, at least for the GUIs themselves. TodoMVC is a better project for kicking the tires on a new web GUI framework.&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/learning-lit-with-7guis-and-todomvc/" rel="alternate"/>
+    <category term="lit"/>
+    <category term="typescript"/>
+    <category term="unit testing"/>
+    <published>2026-03-27T00:15:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/waiting-for-dns-without-networkd/</id>
     <title>Waiting for DNS without Networkd</title>
     <author>
@@ -653,51 +686,5 @@ GRUB_SAVEDEFAULT=true
     <category term="grub"/>
     <category term="home server"/>
     <published>2025-12-14T23:18:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/im-restarting-plex-every-24-hours-now/</id>
-    <title>I'm Restarting Plex Every 24 Hours Now</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I only use Plex because the phone app and the PlayStation app make it convenient. If Jellyfin had a native app on PlayStation, I'd switch tomorrow. I already don't completely trust Plex, which is why I run it in a Podman container. If anything goes &lt;em&gt;really&lt;/em&gt; sideways, at least the blast radius should be minimized.&lt;/p&gt;
-&lt;p&gt;Plex is also flaky. I find myself occasionally needing to SSH into my home server to restart Plex when the app can't connect to the server. No errors are ever logged from the server, and even if I went to the trouble of getting logs from the apps, I doubt I could really do anything to fix it. Plex and its apps are a black box to me. I treat them less like software and more like hermetically sealed appliances. And what do you do when a hermetically sealed appliance acts up? Power cycle it!&lt;/p&gt;
-&lt;p&gt;As much as I'd prefer perfect appliances, sometimes the power cycle approach has to be good enough. Most home routers have settings in their UI nowadays to automatically power cycle themselves on a regular schedule. Even the expensive ones! Especially the expensive ones. My phone runs GrapheneOS, which has an option to automatically power cycle your phone after a set period of inactivity. In that case, it's because your phone is subtly more secure before it's been unlocked after a power cycle. Like it or not, "Have you tried turning it off and on again?" is now the way of the world.&lt;/p&gt;
-&lt;p&gt;I'm currently in my systemd era. Sooner or later, systemd comes for us all. 🪦 The path of least resistance seems to be a service and a timer to trigger that service.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/systemd/user/plex-restart.service&lt;/span&gt;
-&lt;span class="k"&gt;[Unit]&lt;/span&gt;
-&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Restart Plex container service&lt;/span&gt;
-&lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;plex.service&lt;/span&gt;
-&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;plex.service&lt;/span&gt;
-
-&lt;span class="k"&gt;[Service]&lt;/span&gt;
-&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;oneshot&lt;/span&gt;
-&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/systemctl --user is-active --quiet plex.service &amp;amp;&amp;amp; /usr/bin/systemctl --user restart plex.service&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The service itself only attempts to restart the Plex service if the service is already active. If I should decide to manually stop the Plex service, I don't want this job to restart it.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/systemd/user/plex-restart.timer&lt;/span&gt;
-&lt;span class="k"&gt;[Unit]&lt;/span&gt;
-&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Daily restart of Plex container service at 6 AM&lt;/span&gt;
-
-&lt;span class="k"&gt;[Timer]&lt;/span&gt;
-&lt;span class="na"&gt;OnCalendar&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;*-*-* 06:00:00&lt;/span&gt;
-&lt;span class="na"&gt;Unit&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;plex-restart.service&lt;/span&gt;
-
-&lt;span class="k"&gt;[Install]&lt;/span&gt;
-&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;timers.target&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I have the timer set to go off every day at 6 AM because I can't imagine a situation where anyone in my household is using it at that time, so there shouldn't be any service interruption.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
-
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt;  &lt;/span&gt;plex-restart.timer
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;And with that, I hopefully won't have to restart Plex manually any time soon. Sure, I could have tried to rig up a script that detects the server's health and restart it only when necessary. But remember that Plex is a black box. Just because my server can essentially ping itself doesn't mean other devices can reach it. No, an automatic power switch flipper should be good enough.&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/im-restarting-plex-every-24-hours-now/" rel="alternate"/>
-    <category term="home server"/>
-    <category term="plex"/>
-    <category term="systemd"/>
-    <published>2025-11-09T04:31:06.072827+00:00</published>
   </entry>
 </feed>
