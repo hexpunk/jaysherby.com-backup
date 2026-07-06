@@ -9,33 +9,39 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
   
-  <title>Reverse Proxying Podman Quadlets with Caddy – Jay&#x27;s blog</title>
+  <title>Podman&#x27;s pasta networking breaks host.containers.internal compatibility – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
     
 
     <meta name="jaysherby" content="look-for-the-bear-necessities">
-    <meta name="token" content="KEVzcNYAsQHoqIkypInH">
+    <meta name="token" content="iaXsfQtNbiFzCqduTvPr">
 
     
 <!-- Primary Meta Tags -->
-<meta name="title" content="Reverse Proxying Podman Quadlets with Caddy">
-<meta name="description" content="This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only t...">
+<meta name="title" content="Podman&#x27;s pasta networking breaks host.containers.internal compatibility">
+<meta name="description" content="Here&#x27;s my setup in a nutshell.
+
+I&#x27;ve got a Plex quadlet running on the host network because Plex is finicky about networks. If I run it on a bridge network...">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="Jay&#x27;s blog">
-<meta property="og:title" content="Reverse Proxying Podman Quadlets with Caddy">
+<meta property="og:title" content="Podman&#x27;s pasta networking breaks host.containers.internal compatibility">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/">
-<meta property="og:description" content="This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only t...">
+<meta property="og:url" content="https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/">
+<meta property="og:description" content="Here&#x27;s my setup in a nutshell.
+
+I&#x27;ve got a Plex quadlet running on the host network because Plex is finicky about networks. If I run it on a bridge network...">
 <meta property="og:image" content="/static/og-image.png">
 
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary">
-<meta property="twitter:url" content="https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/">
-<meta property="twitter:title" content="Reverse Proxying Podman Quadlets with Caddy">
-<meta property="twitter:description" content="This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only t...">
+<meta property="twitter:url" content="https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/">
+<meta property="twitter:title" content="Podman&#x27;s pasta networking breaks host.containers.internal compatibility">
+<meta property="twitter:description" content="Here&#x27;s my setup in a nutshell.
+
+I&#x27;ve got a Plex quadlet running on the host network because Plex is finicky about networks. If I run it on a bridge network...">
 <meta property="twitter:image" content="/static/og-image.png">
 
 
@@ -45,10 +51,12 @@
   {
     "@context": "http://schema.org",
     "@type": "article",
-    "name": "Reverse Proxying Podman Quadlets with Caddy",
-    "headline": "Reverse Proxying Podman Quadlets with Caddy",
-    "url": "https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/",
-    "description": "This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only t...",
+    "name": "Podman&#x27;s pasta networking breaks host.containers.internal compatibility",
+    "headline": "Podman&#x27;s pasta networking breaks host.containers.internal compatibility",
+    "url": "https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/",
+    "description": "Here&#x27;s my setup in a nutshell.
+
+I&#x27;ve got a Plex quadlet running on the host network because Plex is finicky about networks. If I run it on a bridge network...",
     "image": "/static/og-image.png"
   }
 </script>
@@ -414,91 +422,30 @@ details > summary {
     
 
     
-        <h1>Reverse Proxying Podman Quadlets with Caddy</h1>
+        <h1>Podman&#x27;s pasta networking breaks host.containers.internal compatibility</h1>
 
         <p>
             <i>
-                <time datetime="2026-02-28T02:06Z">
-    28 Feb, 2026
+                <time datetime="2026-07-06T04:57Z">
+    06 Jul, 2026
 </time>
             </i>
         </p>
     
 
-    <p>This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only took about an hour of futzing around... using Caddy. For context, this is the fourth time I've attempted this dream setup of mine over the years.</p>
-<p>The first three times, I tried using Traefik because it's supposed to be so container-friendly. The allure of your service mesh configuration living in tags on your containers is hard to ignore. Sadly, I could never get it to fit with my particular requirements, which I outlined on a previous post about setting up <a href='../multiple-mdns-a-records-with-a-dynamic-ip-address/index.html'>multiple mDNS A records on a single machine with a dynamic IP address</a>. The snag I hit this time is that rootless podman doesn't play nice with Traefik's docker provider, eliminating any real advantage over other reverse proxy solutions.</p>
-<p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/friendship-ended-with-traefik.webp" alt="" /></p>
-<p>I've probably spent days trying to get Traefik to work. It took me an hour to get Caddy running exactly how I wanted it. I'm impressed.</p>
-<p>The first thing I had to do was create a place for my Caddyfile and Caddy's data to live.</p>
-<div class="highlight"><pre><span></span>mkdir<span class="w"> </span>~/caddy
-mkdir<span class="w"> </span>~/caddy/conf
-mkdir<span class="w"> </span>~/caddy/data
+    <p>Here's my setup in a nutshell.</p>
+<p>I've got a Plex quadlet running on the host network because Plex is finicky about networks. If I run it on a bridge network, Plex The Service thinks my server is "remote" and needs a "relay connection" even if I'm trying to stream media on my LAN. And now that Plex The Service charges a subscription to stream remotely, that's not an option for me.</p>
+<p>I'm using Caddy as a reverse proxy for the various services on my server. For everything except Plex, that means the quadlets live on a custom bridge network called "proxy". That makes the Caddy config file easy as I can route traffic to containers by name. Plex is the exception since it lives on the host network. For Plex, <code>plex.local:80</code> routes to <code>host.containers.internal:32400</code>. <code>host.containers.internal</code> is the neutral equivalent to <code>host.docker.internal</code> (which is also supported as of writing this).</p>
+<p>Unfortunately this setup broke at some point between the end of February and today, when I noticed the issue. I probably updated Podman and didn't notice the change. I'm currently running Podman 5.4.2.</p>
+<p>After a bunch of debugging, the issue appears to be a change in default networking from slirp4netns to pasta. The only way to get back the preferred behavior is to set this setting in <code>~/.config/containers/containers.conf</code>.</p>
+<div class="highlight"><pre><span></span># ~/.config/containers/containers.conf
+[network]
+default_rootless_network_cmd = &quot;slirp4netns&quot;
 </pre></div>
-<h2 id=codecaddyconfcaddyfilecode><code>~/caddy/conf/Caddyfile</code></h2><div class="highlight"><pre><span></span>{
-    skip_install_trust
-}
-
-http://wiki.local {
-    reverse_proxy tiddlywiki:8080
-}
-
-http://plex.local {
-    reverse_proxy host.containers.internal:32400
-}
-
-irc.local {
-    reverse_proxy thelounge:9000
-}
-</pre></div>
-<p>I have the <code>skip_install_trust</code> option set since this is running inside a container.</p>
-<p>I'm not using TLS for the wiki or Plex for simplicity sake, but I am using it for my installation of The Lounge in order to allow for push notifications. I can only issue self-signed certificates for <code>.local</code> DNS names. Therefore, I need to share Caddy's <code>root.crt</code> to devices where I plan to use The Lounge. That's a minority of devices, so it's easier to only use TLS where necessary.</p>
-<p>In order for Caddy to be able to resolve the Tiddlywiki container, both quadlets must share a podman network.</p>
-<h2 id=codeconfigcontainerssystemdproxynetworkcode><code>~/.config/containers/systemd/proxy.network</code></h2><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
-<span class="na">Description</span><span class="o">=</span><span class="s">Podman network for Caddy services</span>
-<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
-
-<span class="k">[Network]</span>
-<span class="na">NetworkName</span><span class="o">=</span><span class="s">proxy</span>
-
-<span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
-</pre></div>
-<p>This is actually a pattern from Traefik that I nicked. If I want a service to be accessible by Caddy, both Caddy and the service need to share this network to talk to each other. My Tiddlywiki gets <code>Network=proxy</code> added to its quadlet file and its <code>PublishPort</code> setting removed so it doesn't leak any ports onto the host network. My Plex server doesn't need anything special since it's already using <code>Network=host</code>.</p>
-<p>Remember to reload the config.</p>
-<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
-
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>proxy-network.service
-</pre></div>
-<h2 id=codeconfigcontainerssystemdcaddycontainercode><code>~/.config/containers/systemd/caddy.container</code></h2><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
-<span class="na">Description</span><span class="o">=</span><span class="s">Caddy</span>
-<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
-
-<span class="k">[Container]</span>
-<span class="na">ContainerName</span><span class="o">=</span><span class="s">caddy</span>
-<span class="na">Image</span><span class="o">=</span><span class="s">docker.io/library/caddy:2-alpine</span>
-<span class="na">AutoUpdate</span><span class="o">=</span><span class="s">registry</span>
-<span class="na">UserNS</span><span class="o">=</span><span class="s">keep-id</span>
-
-<span class="na">Network</span><span class="o">=</span><span class="s">proxy</span>
-
-<span class="na">Volume</span><span class="o">=</span><span class="s">/home/server-user/caddy/conf:/etc/caddy:Z</span>
-<span class="na">Volume</span><span class="o">=</span><span class="s">/home/server-user/caddy/data:/data/caddy:Z</span>
-
-<span class="na">PublishPort</span><span class="o">=</span><span class="s">80:80/tcp</span>
-
-<span class="k">[Service]</span>
-<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
-
-<span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
-</pre></div>
-<p>Nothing particularly special about the actual Caddy quadlet. Remember to load it.</p>
-<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
-
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>caddy.service
-</pre></div>
-<p>I chose to add <code>http://plex.local:80</code> to Plex's settings menu at "Settings" -> "Network" -> "Custom server access URLs". I don't know if that's strictly necessary, but it seems to be recommended.</p>
-<p>If you can believe it, that's all it takes. It works like I've always dreamed.</p>
+<p>Then recreate the containers and everything should work again.</p>
+<p>The difference is in how <code>host.containers.internal</code> is resolved. With pasta, it appears to be resolved to an unclaimed synthetic link-local address, 169.254.1.2. Because nothing is actually claiming that address, traffic sent to it goes out through the host kernel and the connection times out waiting for a response that never comes. There appears to be ways to work around this, but only with pasta's default network, not with a custom network like my "proxy" network.</p>
+<p>With slirp4netns on the other hand, <code>host.containers.internal</code> gets resolved to the actual host machine's IP address, which is exactly the behavior I expect.</p>
+<p>This was a frustrating regression to work around. It took me several hours to fix. I spent some time afterwards reading up on the differences between pasta and slirp4netns and I understand why pasta can be considered a big performance win for many cases... except for cases where you need a container to be able to reach the host machine. If I had a nickel for every time I've had to use <code>host.containers.internal</code>, I'd have two nickels, which isn't a lot. But it's weird that it happened twice. Right, Stefano Brivio?</p>
 
 
     
@@ -507,13 +454,9 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
         
             <p class="tags">
                 
-                    <a rel="nofollow" href="https://jaysherby.com/blog/?q=caddy">#caddy</a>
-                
                     <a rel="nofollow" href="https://jaysherby.com/blog/?q=home%20server">#home server</a>
                 
                     <a rel="nofollow" href="https://jaysherby.com/blog/?q=podman">#podman</a>
-                
-                    <a rel="nofollow" href="https://jaysherby.com/blog/?q=systemd">#systemd</a>
                 
             </p>
         
@@ -521,8 +464,8 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
         
             <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
-        <input hidden name="uid" value="KEVzcNYAsQHoqIkypInH" style="display:none">
-        <input hidden name="title" value="Reverse Proxying Podman Quadlets with Caddy" style="display:none">
+        <input hidden name="uid" value="iaXsfQtNbiFzCqduTvPr" style="display:none">
+        <input hidden name="title" value="Podman&#x27;s pasta networking breaks host.containers.internal compatibility" style="display:none">
 
         <button
             class="upvote-button"
@@ -542,7 +485,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
 
-    fetch('/upvote-info/KEVzcNYAsQHoqIkypInH/').then(response => response.json()).then(data => {
+    fetch('/upvote-info/iaXsfQtNbiFzCqduTvPr/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
         if (data.upvoted) {
             $upvoteButton.disabled = true
@@ -592,7 +535,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
                     const sendHit = score => {
                         const params = new URLSearchParams({
                             blog: "jaysherby",
-                            token: "KEVzcNYAsQHoqIkypInH",
+                            token: "iaXsfQtNbiFzCqduTvPr",
                             referrer: document.referrer.includes("jaysherby.com") ? "" : document.referrer,
                             title: "",
                             score: score

@@ -16,6 +16,32 @@ I'm an experienced software developer in Chicago.&#13;
 &#13;
 Hiring? Check my résu...</subtitle>
   <entry>
+    <id>https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/</id>
+    <title>Podman's pasta networking breaks host.containers.internal compatibility</title>
+    <author>
+      <name>jaysherby</name>
+      <email>hidden</email>
+    </author>
+    <content type="html">&lt;p&gt;Here's my setup in a nutshell.&lt;/p&gt;
+&lt;p&gt;I've got a Plex quadlet running on the host network because Plex is finicky about networks. If I run it on a bridge network, Plex The Service thinks my server is "remote" and needs a "relay connection" even if I'm trying to stream media on my LAN. And now that Plex The Service charges a subscription to stream remotely, that's not an option for me.&lt;/p&gt;
+&lt;p&gt;I'm using Caddy as a reverse proxy for the various services on my server. For everything except Plex, that means the quadlets live on a custom bridge network called "proxy". That makes the Caddy config file easy as I can route traffic to containers by name. Plex is the exception since it lives on the host network. For Plex, &lt;code&gt;plex.local:80&lt;/code&gt; routes to &lt;code&gt;host.containers.internal:32400&lt;/code&gt;. &lt;code&gt;host.containers.internal&lt;/code&gt; is the neutral equivalent to &lt;code&gt;host.docker.internal&lt;/code&gt; (which is also supported as of writing this).&lt;/p&gt;
+&lt;p&gt;Unfortunately this setup broke at some point between the end of February and today, when I noticed the issue. I probably updated Podman and didn't notice the change. I'm currently running Podman 5.4.2.&lt;/p&gt;
+&lt;p&gt;After a bunch of debugging, the issue appears to be a change in default networking from slirp4netns to pasta. The only way to get back the preferred behavior is to set this setting in &lt;code&gt;~/.config/containers/containers.conf&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# ~/.config/containers/containers.conf
+[network]
+default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then recreate the containers and everything should work again.&lt;/p&gt;
+&lt;p&gt;The difference is in how &lt;code&gt;host.containers.internal&lt;/code&gt; is resolved. With pasta, it appears to be resolved to an unclaimed synthetic link-local address, 169.254.1.2. Because nothing is actually claiming that address, traffic sent to it goes out through the host kernel and the connection times out waiting for a response that never comes. There appears to be ways to work around this, but only with pasta's default network, not with a custom network like my "proxy" network.&lt;/p&gt;
+&lt;p&gt;With slirp4netns on the other hand, &lt;code&gt;host.containers.internal&lt;/code&gt; gets resolved to the actual host machine's IP address, which is exactly the behavior I expect.&lt;/p&gt;
+&lt;p&gt;This was a frustrating regression to work around. It took me several hours to fix. I spent some time afterwards reading up on the differences between pasta and slirp4netns and I understand why pasta can be considered a big performance win for many cases... except for cases where you need a container to be able to reach the host machine. If I had a nickel for every time I've had to use &lt;code&gt;host.containers.internal&lt;/code&gt;, I'd have two nickels, which isn't a lot. But it's weird that it happened twice. Right, Stefano Brivio?&lt;/p&gt;
+</content>
+    <link href="https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/" rel="alternate"/>
+    <category term="home server"/>
+    <category term="podman"/>
+    <published>2026-07-06T04:57:00+00:00</published>
+  </entry>
+  <entry>
     <id>https://jaysherby.com/learning-lit-with-7guis-and-todomvc/</id>
     <title>Learning Lit with 7GUIs and TodoMVC</title>
     <author>
@@ -279,8 +305,7 @@ irc.local {
 }
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I have the &lt;code&gt;skip_install_trust&lt;/code&gt; option set since this is running inside a container.&lt;/p&gt;
-&lt;p&gt;Plex is routed to &lt;code&gt;host.containers.internal&lt;/code&gt; because my Plex quadlet runs on the host network.&lt;/p&gt;
-&lt;p&gt;I'm not using TLS for the wiki or plex for simplicity sake, but I am using it for my installation of The Lounge in order to allow for push notifications. I can only issue self-signed certificates for &lt;code&gt;.local&lt;/code&gt; DNS names. Therefore, I need to share Caddy's &lt;code&gt;root.crt&lt;/code&gt; to devices where I plan to use The Lounge. That's a minority of devices, so it's easier to only use TLS where necessary.&lt;/p&gt;
+&lt;p&gt;I'm not using TLS for the wiki or Plex for simplicity sake, but I am using it for my installation of The Lounge in order to allow for push notifications. I can only issue self-signed certificates for &lt;code&gt;.local&lt;/code&gt; DNS names. Therefore, I need to share Caddy's &lt;code&gt;root.crt&lt;/code&gt; to devices where I plan to use The Lounge. That's a minority of devices, so it's easier to only use TLS where necessary.&lt;/p&gt;
 &lt;p&gt;In order for Caddy to be able to resolve the Tiddlywiki container, both quadlets must share a podman network.&lt;/p&gt;
 &lt;h2 id=codeconfigcontainerssystemdproxynetworkcode&gt;&lt;code&gt;~/.config/containers/systemd/proxy.network&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Podman network for Caddy services&lt;/span&gt;
@@ -293,7 +318,7 @@ irc.local {
 &lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is actually a pattern from Traefik that I nicked. If I want a service to be accessible by Caddy, both Caddy and the service need to share this network to talk to each other. My Tiddlywiki gets &lt;code&gt;Network=proxy&lt;/code&gt; added to its quadlet file and its &lt;code&gt;PublishPort&lt;/code&gt; setting removed so it doesn't leak any ports onto the host network. My Plex server doesn't need anything special since it's already using &lt;code&gt;Network=host&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Remember to load it.&lt;/p&gt;
+&lt;p&gt;Remember to reload the config.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
 
 systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;proxy-network.service
@@ -601,89 +626,5 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
     <link href="https://jaysherby.com/good-boy-bad-boy-1985-by-bruce-nauman/" rel="alternate"/>
     <category term="art"/>
     <published>2026-02-02T04:56:00+00:00</published>
-  </entry>
-  <entry>
-    <id>https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/</id>
-    <title>Working Around Firmware Lag in Debian 13</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The title of the post used to be "Working Around A Kernel Regression in Debian 13". However, after finally actually solving the issue, I find that title to be inaccurate and a little click-baity.&lt;/p&gt;
-&lt;p&gt;The initial post describes the symptoms of the issue and a workaround I chose that allowed me to stay on an old kernel while installing newer kernels. See &lt;a href='#2252026-update'&gt;the end of the post&lt;/a&gt; for an update that describes the true source of the problem as well as a way to work around it while using up-to-date kernels.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;I did a routine update/upgrade on my home server that runs Debian 13 today and restarted the machine since there was a kernel update and... POW! Machine is no longer on the network. Serves me right for keeping up to date.&lt;/p&gt;
-&lt;p&gt;A quick look around determined that &lt;code&gt;networking.service&lt;/code&gt; is failing because my network device doesn't exist. The logs confirm that the iwlwifi driver is having an oopsy.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: enabling device (0000 -&amp;gt; 0002)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Detected crf-id 0x2001910, cnv-id 0x2001910 wfpm id 0x80000000
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: PCI dev 272b/00f4, rev=0x472, rfid=0x112200
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Detected Intel(R) Wi-Fi 7 BE200 320MHz
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-102.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-102.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-102.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-102.ucode failed with error -2
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-101.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-101.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-101.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-101.ucode failed with error -2
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-100.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-100.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-100.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-100.ucode failed with error -2
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-99.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-99.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-99.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-99.ucode failed with error -2
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-98.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-98.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: firmware: failed to load iwlwifi-gl-c0-fm-c0-98.ucode (-2)
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: Direct firmware load for iwlwifi-gl-c0-fm-c0-98.ucode failed with error -2
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: no suitable firmware found!
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: minimum version required: iwlwifi-gl-c0-fm-c0-98
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: maximum version supported: iwlwifi-gl-c0-fm-c0-102
-Dec 14 14:19:36 m910q kernel: iwlwifi 0000:01:00.0: check git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I rebooted and selected the previous kernel from the Grub boot menu and wifi works again. The old, working kernel is &lt;code&gt;linux-image-6.16.3+deb13-amd64&lt;/code&gt; whereas the new, broken kernel is &lt;code&gt;linux-image-6.17.8+deb13-amd64&lt;/code&gt;. Both are provided by the bookworm-backports package repository.&lt;/p&gt;
-&lt;p&gt;A quick web search found &lt;a href='https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/161'&gt;a lovely issue&lt;/a&gt; filed over at Arch Linux that describes the exact issue I'm experiencing. This bug is upstream in the kernel itself.&lt;/p&gt;
-&lt;p&gt;This put me in a peculiar situation. I need to stay on the old kernel until this is fixed. In the meantime, I want to continue receiving new kernel versions when I update my system so I can test if the issue has been fixed. But until that happens, I want to continue using the known-working kernel.&lt;/p&gt;
-&lt;p&gt;The solution I chose was to change my Grub configuration slightly. There's a line in &lt;code&gt;/etc/default/grub&lt;/code&gt; that looks like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;GRUB_DEFAULT=0
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;That makes Grub boot with the first menu entry by default, which is the newest kernel. I changed it.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#GRUB_DEFAULT=0
-GRUB_DEFAULT=saved
-GRUB_SAVEDEFAULT=true
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;After running &lt;code&gt;sudo update-grub&lt;/code&gt;, Grub now remembers the last option I chose and uses that by default. I had to reboot one more time to choose the preferred kernel so it would remember after I changed this setting.&lt;/p&gt;
-&lt;p&gt;This meets all of my desired criteria. As long as I don't uninstall &lt;code&gt;linux-image-6.16.3+deb13-amd64&lt;/code&gt;, I should be able to receive new kernel versions and test them at my leisure without worrying that any subsequent updates and reboots might make my system drop off the network again.&lt;/p&gt;
-&lt;p&gt;&lt;del&gt;Although experiencing a kernel regression is annoying, this is the first instance of a regression that has affected me personally in probably two decades.&lt;/del&gt; I'm happy it wasn't my fault. And I'm grateful it was easy to diagnose and work around it.&lt;/p&gt;
-&lt;h2 id=2252026-update&gt;2/25/2026 Update&lt;/h2&gt;&lt;p&gt;Today, I installed the latest backports kernel, &lt;code&gt;linux-image-6.18.9+deb13-amd64&lt;/code&gt;, and to my dismay, the issue described above persisted. I did a little more digging and I discovered this wasn't a kernel regression at all! (Apologies to the fine folks who work on the kernel.) It was lag between the latest version of the kernel available via backports and the latest version of the &lt;code&gt;firmware-iwlwifi&lt;/code&gt; package available via backports. Those ucode files mentioned in the logs are supposed to be provided via &lt;code&gt;firmware-iwlwifi&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;After checking I was indeed using the latest version of &lt;code&gt;firmware-iwlwifi&lt;/code&gt;, I fixed the problem by cloning the latest version of the &lt;code&gt;linux-firmware&lt;/code&gt; source from &lt;a href='https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git'&gt;https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git&lt;/a&gt; and checking within the &lt;code&gt;intel/iwlwifi&lt;/code&gt; directory for the files mentioned in the logs.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ls -lah intel/iwlwifi/iwlwifi-gl-c0-fm-c0-*
--rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-100.ucode
--rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-101.ucode
--rw-rw-r-- 1 server-user server-user 1.8M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-83.ucode
--rw-rw-r-- 1 server-user server-user 1.8M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-86.ucode
--rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-90.ucode
--rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-92.ucode
--rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-94.ucode
--rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-96.ucode
--rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-97.ucode
--rw-rw-r-- 1 server-user server-user 1.9M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-98.ucode
--rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-c101.ucode
--rw-rw-r-- 1 server-user server-user 2.2M Feb 25 14:55 intel/iwlwifi/iwlwifi-gl-c0-fm-c0-c102.ucode
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Yep, there are those pesky files. I just needed to copy them (as root) to the proper location: &lt;code&gt;/lib/firmware&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo cp intel/iwlwifi/iwlwifi-gl-c0-fm-c0-*.ucode /lib/firmware/
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Then update the initramfs images.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo update-initramfs -u -k all
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I undid the changes I made to my Grub config from earlier, rebooted, and Bob's your uncle, everything worked again. That's how you run bleeding edge Intel drivers when Debian's firmware package is lagging behind the kernel. 🙌&lt;/p&gt;
-</content>
-    <link href="https://jaysherby.com/working-around-a-kernel-regression-in-debian-13/" rel="alternate"/>
-    <category term="grub"/>
-    <category term="home server"/>
-    <published>2025-12-14T23:18:00+00:00</published>
   </entry>
 </feed>
