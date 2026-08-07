@@ -480,6 +480,7 @@ crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </sp
     <small>
         <input hidden name="uid" value="CEsCQSMxxqLAeqefMRKr" style="display:none">
         <input hidden name="title" value="Programming My QMK Keyboard In Linux" style="display:none">
+        <input hidden name="token" value="CEsCQSMxxqLAeqefMRKr" style="display:none">
 
         <button
             class="upvote-button"
@@ -498,9 +499,11 @@ crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </sp
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/CEsCQSMxxqLAeqefMRKr/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -521,6 +524,7 @@ crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </sp
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;

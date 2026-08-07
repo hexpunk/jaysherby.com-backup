@@ -372,6 +372,7 @@ details > summary {
     <small>
         <input hidden name="uid" value="gZHGGTokFAQSYkVocUJs" style="display:none">
         <input hidden name="title" value="Typescript, Show Me The Whole Error!" style="display:none">
+        <input hidden name="token" value="gZHGGTokFAQSYkVocUJs" style="display:none">
 
         <button
             class="upvote-button"
@@ -390,9 +391,11 @@ details > summary {
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/gZHGGTokFAQSYkVocUJs/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -413,6 +416,7 @@ details > summary {
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;

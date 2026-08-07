@@ -509,6 +509,7 @@ ignore_chown_errors = &quot;true&quot;
     <small>
         <input hidden name="uid" value="iNICPIvAGbKFWececxEJ" style="display:none">
         <input hidden name="title" value="Tips For Becoming A Pod Person" style="display:none">
+        <input hidden name="token" value="iNICPIvAGbKFWececxEJ" style="display:none">
 
         <button
             class="upvote-button"
@@ -527,9 +528,11 @@ ignore_chown_errors = &quot;true&quot;
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/iNICPIvAGbKFWececxEJ/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -550,6 +553,7 @@ ignore_chown_errors = &quot;true&quot;
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;

@@ -466,6 +466,7 @@ default_rootless_network_cmd = &quot;slirp4netns&quot;
     <small>
         <input hidden name="uid" value="iaXsfQtNbiFzCqduTvPr" style="display:none">
         <input hidden name="title" value="Podman&#x27;s pasta networking breaks host.containers.internal compatibility" style="display:none">
+        <input hidden name="token" value="iaXsfQtNbiFzCqduTvPr" style="display:none">
 
         <button
             class="upvote-button"
@@ -484,9 +485,11 @@ default_rootless_network_cmd = &quot;slirp4netns&quot;
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/iaXsfQtNbiFzCqduTvPr/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -507,6 +510,7 @@ default_rootless_network_cmd = &quot;slirp4netns&quot;
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;

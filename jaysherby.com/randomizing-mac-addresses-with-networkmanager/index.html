@@ -497,6 +497,7 @@ wifi.cloned-mac-address=random
     <small>
         <input hidden name="uid" value="mDyFTGFCPjKmngRjkbUQ" style="display:none">
         <input hidden name="title" value="Randomizing My MAC Address With NetworkManager" style="display:none">
+        <input hidden name="token" value="mDyFTGFCPjKmngRjkbUQ" style="display:none">
 
         <button
             class="upvote-button"
@@ -515,9 +516,11 @@ wifi.cloned-mac-address=random
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/mDyFTGFCPjKmngRjkbUQ/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -538,6 +541,7 @@ wifi.cloned-mac-address=random
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;

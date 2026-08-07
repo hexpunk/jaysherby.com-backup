@@ -519,6 +519,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
     <small>
         <input hidden name="uid" value="YFbIcDwJXjQEaSHGZcGY" style="display:none">
         <input hidden name="title" value="Multiple mDNS A Records with a Dynamic IP Address" style="display:none">
+        <input hidden name="token" value="YFbIcDwJXjQEaSHGZcGY" style="display:none">
 
         <button
             class="upvote-button"
@@ -537,9 +538,11 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/YFbIcDwJXjQEaSHGZcGY/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -560,6 +563,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;

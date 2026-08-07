@@ -473,6 +473,7 @@ jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<s
     <small>
         <input hidden name="uid" value="MhfCcxTHDbaXFnbKofpx" style="display:none">
         <input hidden name="title" value="Don&#x27;t Rely On mtime For Anything Important" style="display:none">
+        <input hidden name="token" value="MhfCcxTHDbaXFnbKofpx" style="display:none">
 
         <button
             class="upvote-button"
@@ -491,9 +492,11 @@ jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<s
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/MhfCcxTHDbaXFnbKofpx/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -514,6 +517,7 @@ jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<s
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;

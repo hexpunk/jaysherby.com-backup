@@ -459,6 +459,7 @@ _completion_loader<span class="w"> </span>systemctl
     <small>
         <input hidden name="uid" value="PsWqiQpEITtspEAyZEnf" style="display:none">
         <input hidden name="title" value="I&#x27;m tired of typing &quot;systemctl --user&quot;" style="display:none">
+        <input hidden name="token" value="PsWqiQpEITtspEAyZEnf" style="display:none">
 
         <button
             class="upvote-button"
@@ -477,9 +478,11 @@ _completion_loader<span class="w"> </span>systemctl
 <script>
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
+    let upvoteToken = '';
 
     fetch('/upvote-info/PsWqiQpEITtspEAyZEnf/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
+        upvoteToken = data.token;
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -500,6 +503,7 @@ _completion_loader<span class="w"> </span>systemctl
 
         if (moved) {
             document.querySelector('input[name="title"]').value = "";
+            document.querySelector('input[name="token"]').value = upvoteToken;
         }
         if (Date.now() - pageLoaded < 2000 || !moved) {
             return;
