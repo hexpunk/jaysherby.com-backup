@@ -622,10 +622,12 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
     let upvoteToken = '';
+    let upvoteTokenAt = Infinity;
 
     fetch('/upvote-info/YFbIcDwJXjQEaSHGZcGY/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
         upvoteToken = data.token;
+        upvoteTokenAt = Date.now();
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -645,6 +647,7 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
 
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        if (Date.now() - upvoteTokenAt < 3000) return;
 
         fetch(e.target.action, {
             method: 'post',

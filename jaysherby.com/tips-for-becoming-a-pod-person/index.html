@@ -612,10 +612,12 @@ ignore_chown_errors = &quot;true&quot;
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
     let upvoteToken = '';
+    let upvoteTokenAt = Infinity;
 
     fetch('/upvote-info/iNICPIvAGbKFWececxEJ/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
         upvoteToken = data.token;
+        upvoteTokenAt = Date.now();
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -635,6 +637,7 @@ ignore_chown_errors = &quot;true&quot;
 
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        if (Date.now() - upvoteTokenAt < 3000) return;
 
         fetch(e.target.action, {
             method: 'post',
