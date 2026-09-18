@@ -8,6 +8,12 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  <script>
+    (function() {
+      'use strict';
+      document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`;
+    })();
+  </script>
   
   <title>Podman&#x27;s pasta networking breaks host.containers.internal compatibility – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
@@ -486,7 +492,7 @@ details > summary {
   </style>
 </head>
 
-<body class="post " onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
+<body class="post ">
   
   <header>
     <a class="title" href="../index.html">
@@ -569,10 +575,12 @@ default_rootless_network_cmd = &quot;slirp4netns&quot;
     const $upvoteButton = document.querySelector('.upvote-button');
     const $upvoteCount =  document.querySelector('.upvote-count')
     let upvoteToken = '';
+    let upvoteTokenAt = Infinity;
 
     fetch('/upvote-info/iaXsfQtNbiFzCqduTvPr/').then(response => response.json()).then(data => {
         $upvoteCount.innerText = data.upvote_count;
         upvoteToken = data.token;
+        upvoteTokenAt = Date.now();
         if (data.upvoted) {
             $upvoteButton.disabled = true
             $upvoteButton.style.color = "salmon"
@@ -592,6 +600,7 @@ default_rootless_network_cmd = &quot;slirp4netns&quot;
 
     document.querySelector('#upvote-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        if (Date.now() - upvoteTokenAt < 3000) return;
 
         fetch(e.target.action, {
             method: 'post',

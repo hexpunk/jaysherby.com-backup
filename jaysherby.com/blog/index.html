@@ -8,6 +8,12 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  <script>
+    (function() {
+      'use strict';
+      document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`;
+    })();
+  </script>
   
   <title>Blog – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
@@ -301,7 +307,7 @@ details > summary {
   </style>
 </head>
 
-<body class="blog" onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
+<body class="blog">
   
   <header>
     <a class="title" href="../index.html">
