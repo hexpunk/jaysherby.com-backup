@@ -1,28 +1,20 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <id>https://jaysherby.com</id>
   <title>Jay's blog</title>
+  <subtitle>Hi! I'm Jay Sherby! I'm an experienced software developer in Chicago. Hiring? Check my résumé to see if we're a match.</subtitle>
   <author>
     <name>jaysherby</name>
   </author>
-  <link href="https://jaysherby.com/" rel="alternate"/>
-  <link href="https://jaysherby.com/feed/" rel="self"/>
-  <generator uri="https://lkiesow.github.io/python-feedgen" version="1.0.0">python-feedgen</generator>
-  <subtitle>&lt;h1 style="font-weight: normal"&gt;&#13;
-  Hi! I'm &lt;strong&gt;Jay Sherby&lt;/strong&gt;!&#13;
-&lt;/h1&gt;&#13;
-&#13;
-I'm an experienced software developer in Chicago.&#13;
-&#13;
-Hiring? Check my résu...</subtitle>
+  <link href="https://jaysherby.com/" rel="alternate" type="text/html"/>
+  <link href="https://jaysherby.com/feed/" rel="self" type="application/atom+xml"/>
+  <generator uri="https://bearblog.dev">Bear Blog</generator>
   <entry>
     <id>https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/</id>
     <title>Podman's pasta networking breaks host.containers.internal compatibility</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;Here's my setup in a nutshell.&lt;/p&gt;
+    <link href="https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/" rel="alternate" type="text/html"/>
+    <published>2026-07-06T04:57:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/">&lt;p&gt;Here's my setup in a nutshell.&lt;/p&gt;
 &lt;p&gt;I've got a Plex quadlet running on the host network because Plex is finicky about networks. If I run it on a bridge network, Plex The Service thinks my server is "remote" and needs a "relay connection" even if I'm trying to stream media on my LAN. And now that Plex The Service charges a subscription to stream remotely, that's not an option for me.&lt;/p&gt;
 &lt;p&gt;I'm using Caddy as a reverse proxy for the various services on my server. For everything except Plex, that means the quadlets live on a custom bridge network called "proxy". That makes the Caddy config file easy as I can route traffic to containers by name. Plex is the exception since it lives on the host network. For Plex, &lt;code&gt;plex.local:80&lt;/code&gt; routes to &lt;code&gt;host.containers.internal:32400&lt;/code&gt;. &lt;code&gt;host.containers.internal&lt;/code&gt; is the neutral equivalent to &lt;code&gt;host.docker.internal&lt;/code&gt; (which is also supported as of writing this).&lt;/p&gt;
 &lt;p&gt;Unfortunately this setup broke at some point between the end of February and today, when I noticed the issue. I probably updated Podman and didn't notice the change. I'm currently running Podman 5.4.2.&lt;/p&gt;
@@ -36,19 +28,15 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;With slirp4netns on the other hand, &lt;code&gt;host.containers.internal&lt;/code&gt; gets resolved to the actual host machine's IP address, which is exactly the behavior I expect.&lt;/p&gt;
 &lt;p&gt;This was a frustrating regression to work around. It took me several hours to fix. I spent some time afterwards reading up on the differences between pasta and slirp4netns and I understand why pasta can be considered a big performance win for many cases... except for cases where you need a container to be able to reach the host machine. If I had a nickel for every time I've had to use &lt;code&gt;host.containers.internal&lt;/code&gt;, I'd have two nickels, which isn't a lot. But it's weird that it happened twice. Right, Stefano Brivio?&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/"/>
     <category term="home server"/>
     <category term="podman"/>
-    <published>2026-07-06T04:57:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/learning-lit-with-7guis-and-todomvc/</id>
     <title>Learning Lit with 7GUIs and TodoMVC</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;Web components are pretty mature now. Unfortunately, even with web components, the web's default rendering pattern is &lt;a href='https://en.wikipedia.org/wiki/Retained_mode'&gt;retained mode&lt;/a&gt;. In a post-React world, anything that's not &lt;a href='https://en.wikipedia.org/wiki/Immediate_mode_(computer_graphics)'&gt;immediate mode&lt;/a&gt; is going to be a hard sell. You could write your own solutions to make web components render in an immediate mode, or you could use Lit. &lt;a href='https://lit.dev/'&gt;Lit&lt;/a&gt; is an off-the-shelf solution that provides similar features to &lt;a href='https://react.dev/'&gt;React&lt;/a&gt; in terms of rendering and state management. However, unlike React, Lit builds upon the browser's web components API.&lt;/p&gt;
+    <link href="https://jaysherby.com/learning-lit-with-7guis-and-todomvc/" rel="alternate" type="text/html"/>
+    <published>2026-03-27T00:15:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/learning-lit-with-7guis-and-todomvc/">&lt;p&gt;Web components are pretty mature now. Unfortunately, even with web components, the web's default rendering pattern is &lt;a href='https://en.wikipedia.org/wiki/Retained_mode'&gt;retained mode&lt;/a&gt;. In a post-React world, anything that's not &lt;a href='https://en.wikipedia.org/wiki/Immediate_mode_(computer_graphics)'&gt;immediate mode&lt;/a&gt; is going to be a hard sell. You could write your own solutions to make web components render in an immediate mode, or you could use Lit. &lt;a href='https://lit.dev/'&gt;Lit&lt;/a&gt; is an off-the-shelf solution that provides similar features to &lt;a href='https://react.dev/'&gt;React&lt;/a&gt; in terms of rendering and state management. However, unlike React, Lit builds upon the browser's web components API.&lt;/p&gt;
 &lt;p&gt;I also found Lit attractive due to how small it is. My understanding is that all of Lit is smaller than even &lt;a href='https://preactjs.com/'&gt;Preact&lt;/a&gt; assuming you add state management to Preact.&lt;/p&gt;
 &lt;p&gt;The other cool thing about using web components is that hydrating your page from the back-end is just a matter of sending HTML over the wire.&lt;/p&gt;
 &lt;p&gt;To get some hands-on experience with Lit, I chose to recreate &lt;a href='https://7guis.github.io/7guis/'&gt;7GUIs&lt;/a&gt; and &lt;a href='https://todomvc.com/'&gt;TodoMVC&lt;/a&gt;. 7GUIs is a set of seven graphical applications meant to compare and contrast different GUI libraries on a level playing field. TodoMVC is a similar idea consisting of a single to-do application.&lt;/p&gt;
@@ -68,20 +56,16 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;TodoMVC taught me the most about Lit. I used composition by creating a separate component for list items. I learned the difference between an &lt;a href='https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions'&gt;attribute&lt;/a&gt; (&lt;code&gt;?checked=${this.checked}&lt;/code&gt;) and a &lt;a href='https://lit.dev/docs/templates/expressions/#property-expressions'&gt;property&lt;/a&gt; (&lt;code&gt;.checked=${this.checked}&lt;/code&gt;). It's a really important distinction that will lead to bugs if you don't understand it. In my case, I needed a property so that my application state and the DOM would properly stay synced.&lt;/p&gt;
 &lt;p&gt;I'm really glad I took this opportunity to learn to use Lit. I will definitely reach for it for future front-end projects. I also learned that while the Cells application from 7GUIs was really enjoyable and empowering, the 7GUIs tasks themselves aren't a great measure of anything when you're writing HTML. I think doing 7GUIs in any HTML framework is probably going to be a trivial endeavor, at least for the GUIs themselves. TodoMVC is a better project for kicking the tires on a new web GUI framework.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/learning-lit-with-7guis-and-todomvc/"/>
     <category term="lit"/>
     <category term="typescript"/>
     <category term="unit testing"/>
-    <published>2026-03-27T00:15:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/waiting-for-dns-without-networkd/</id>
     <title>Waiting for DNS without Networkd</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I'm running &lt;a href='https://thelounge.chat/'&gt;The Lounge&lt;/a&gt; as a combination IRC bouncer and client on my home server. I'm very happy with it. However, I was having one little hiccup. If I rebooted the server, The Lounge would not automatically reconnect to the IRC server on its own. It's supposed to do that.&lt;/p&gt;
+    <link href="https://jaysherby.com/waiting-for-dns-without-networkd/" rel="alternate" type="text/html"/>
+    <published>2026-03-22T18:50:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/waiting-for-dns-without-networkd/">&lt;p&gt;I'm running &lt;a href='https://thelounge.chat/'&gt;The Lounge&lt;/a&gt; as a combination IRC bouncer and client on my home server. I'm very happy with it. However, I was having one little hiccup. If I rebooted the server, The Lounge would not automatically reconnect to the IRC server on its own. It's supposed to do that.&lt;/p&gt;
 &lt;p&gt;After consulting with the folks in &lt;code&gt;#thelounge&lt;/code&gt; on Libera.chat and looking at the logs within the client itself, I found this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;01:17:37 PM Network created, connecting to irc.libera.chat:6697...
 01:17:42 PM *** Connection closed unexpectedly: Error: getaddrinfo EAI_AGAIN irc.libera.chat
@@ -128,20 +112,16 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now The Lounge properly reconnects after a power cycle of my server.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/waiting-for-dns-without-networkd/"/>
     <category term="home server"/>
     <category term="podman"/>
     <category term="systemd"/>
-    <published>2026-03-22T18:50:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/</id>
     <title>Apple MacBook Pro Interference Due To Lack Of Ground</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;My work computer is an M1 MacBook Pro. Aluminum-bodied MacBooks using Apple's official power adapter in the United States have an infamous issue. The power adapter isn't grounded. That's why sometimes the body of the laptop feels... &lt;em&gt;fuzzy&lt;/em&gt;. You're feeling a little bit of stray current from the 60 hertz mains power buzzing through the body of the laptop.&lt;/p&gt;
+    <link href="https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/" rel="alternate" type="text/html"/>
+    <published>2026-03-11T00:18:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/">&lt;p&gt;My work computer is an M1 MacBook Pro. Aluminum-bodied MacBooks using Apple's official power adapter in the United States have an infamous issue. The power adapter isn't grounded. That's why sometimes the body of the laptop feels... &lt;em&gt;fuzzy&lt;/em&gt;. You're feeling a little bit of stray current from the 60 hertz mains power buzzing through the body of the laptop.&lt;/p&gt;
 &lt;p&gt;It doesn't have to be this way. If you remove the US adapter from Apple's power brick, you'll find it anchors to a metal stud. That's supposed to be for grounding the power supply. In fact, adapters for some other countries properly use that ground. Not in the US, though. Who knows why?&lt;/p&gt;
 &lt;p&gt;Besides being a little uncomfortable to the touch, this can cause real problems. I usually plug my MacBook Pro into an external monitor via a USB-C dongle that connects to an HDMI cable that connects to my monitor. My monitor properly grounds the HDMI cable. That ground is enough to fix the grounding issue of my MacBook Pro. However, my personal laptop, a Framework 13, sits on top of the MacBook. Sometimes when I plug the very same USB-C adapter into my Framework laptop instead, bad things start to happen. Sometimes the power button on my Framework laptop simply refuses to work. (This scared the shit out of me until I realized what was going on.) Very occasionally I'll get interference on the (admittedly super thin) HDMI signal. Unplugging the MacBook Pro from power or moving the Framework laptop solves the issue.&lt;/p&gt;
 &lt;p&gt;What solved the issue more permanently was a recent monitor upgrade. I got a Dell P2425HE monitor today. It has a USB-C port with 90 watt charging capability. I chose to plug the MacBook Pro into that instead of the Apple power brick. Dell properly grounds the monitor and the USB-C port. Finally, the interference is gone even when the MacBook Pro is not connected to the HDMI cable.&lt;/p&gt;
@@ -149,20 +129,16 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;Please, please, &lt;strong&gt;PLEASE&lt;/strong&gt;, Apple. I know you're not reading this, but please ground your charging bricks in the United States already!&lt;/p&gt;
 &lt;p&gt;Also, please, Framework, try to shield your laptops a little better. But this is absolutely Apple's fault, not Framework's.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/"/>
     <category term="Apple"/>
     <category term="Framework"/>
     <category term="electricity"/>
-    <published>2026-03-11T00:18:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/i-made-stationery-using-html-css/</id>
     <title>I made stationery using HTML &amp; CSS</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I'm so web dev-brained that I reach for HTML &amp; CSS when I need to design stuff for printing on paper. I find the declarative syntax comforting. The CSS of my &lt;a href='https://jaysherby.com/resume/'&gt;résumé page&lt;/a&gt; secretly makes it print pretty well.&lt;/p&gt;
+    <link href="https://jaysherby.com/i-made-stationery-using-html-css/" rel="alternate" type="text/html"/>
+    <published>2026-03-02T01:30:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/i-made-stationery-using-html-css/">&lt;p&gt;I'm so web dev-brained that I reach for HTML &amp; CSS when I need to design stuff for printing on paper. I find the declarative syntax comforting. The CSS of my &lt;a href='https://jaysherby.com/resume/'&gt;résumé page&lt;/a&gt; secretly makes it print pretty well.&lt;/p&gt;
 &lt;p&gt;I recently found myself wanting to print up some stationery on my Brother HL-L2395DW laser printer on 5" x 7" paper I bought at Paper Source. Naturally, I whipped up a simple HTML page and tweaked the printer settings until it worked. I have to manually feed the paper. I set the paper setting to "heavyweight paper" to avoid ghosting due to improper fusing. I had to create a custom paper size in the printer dialog to support this size of paper. But besides that, it was actually pretty straight-forward and worked a treat.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt; &lt;span class="na"&gt;lang&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
@@ -269,17 +245,13 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/from-the-desk-of-me.webp" alt="" /&gt;&lt;/p&gt;
 &lt;p&gt;I also made a version for printing on the back that only contains lines. That version really is as easy as removing the header and adding some divs to represent more lines.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/i-made-stationery-using-html-css/"/>
-    <published>2026-03-02T01:30:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/</id>
     <title>Reverse Proxying Podman Quadlets with Caddy</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only took about an hour of futzing around... using Caddy. For context, this is the fourth time I've attempted this dream setup of mine over the years.&lt;/p&gt;
+    <link href="https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/" rel="alternate" type="text/html"/>
+    <published>2026-02-28T02:06:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/">&lt;p&gt;This is a momentous occasion for me. This evening I was able to finally finish setting up a reverse proxy for my podman quadlets on my home server. It only took about an hour of futzing around... using Caddy. For context, this is the fourth time I've attempted this dream setup of mine over the years.&lt;/p&gt;
 &lt;p&gt;The first three times, I tried using Traefik because it's supposed to be so container-friendly. The allure of your service mesh configuration living in tags on your containers is hard to ignore. Sadly, I could never get it to fit with my particular requirements, which I outlined on a previous post about setting up &lt;a href='https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/'&gt;multiple mDNS A records on a single machine with a dynamic IP address&lt;/a&gt;. The snag I hit this time is that rootless podman doesn't play nice with Traefik's docker provider, eliminating any real advantage over other reverse proxy solutions.&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/friendship-ended-with-traefik.webp" alt="" /&gt;&lt;/p&gt;
 &lt;p&gt;I've probably spent days trying to get Traefik to work. It took me an hour to get Caddy running exactly how I wanted it. I'm impressed.&lt;/p&gt;
@@ -354,21 +326,17 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;p&gt;I chose to add &lt;code&gt;http://plex.local:80&lt;/code&gt; to Plex's settings menu at "Settings" -&gt; "Network" -&gt; "Custom server access URLs". I don't know if that's strictly necessary, but it seems to be recommended.&lt;/p&gt;
 &lt;p&gt;If you can believe it, that's all it takes. It works like I've always dreamed.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/"/>
     <category term="caddy"/>
     <category term="home server"/>
     <category term="podman"/>
     <category term="systemd"/>
-    <published>2026-02-28T02:06:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/im-tired-of-typing-systemctl-user/</id>
     <title>I'm tired of typing "systemctl --user"</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I chose to alias &lt;code&gt;systemctl --user&lt;/code&gt; since I use it so often. That's not blog post-worthy. What makes it so is that I didn't want to lose tab completion when using my alias.&lt;/p&gt;
+    <link href="https://jaysherby.com/im-tired-of-typing-systemctl-user/" rel="alternate" type="text/html"/>
+    <published>2026-02-27T00:33:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/im-tired-of-typing-systemctl-user/">&lt;p&gt;I chose to alias &lt;code&gt;systemctl --user&lt;/code&gt; since I use it so often. That's not blog post-worthy. What makes it so is that I didn't want to lose tab completion when using my alias.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Add this to your .bashrc&lt;/span&gt;
 
 &lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;scu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;systemctl --user&amp;#39;&lt;/span&gt;
@@ -383,19 +351,15 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 &lt;p&gt;This little snippet ensures that tab completion still functions on the new &lt;code&gt;scu&lt;/code&gt; alias.&lt;/p&gt;
 &lt;p&gt;I'll still type out &lt;code&gt;systemctl --user&lt;/code&gt; when appropriate in my documentation, but you best believe I'm going to be using &lt;code&gt;scu&lt;/code&gt; all the time besides.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/im-tired-of-typing-systemctl-user/"/>
     <category term="bash"/>
     <category term="systemd"/>
-    <published>2026-02-27T00:33:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/</id>
     <title>Multiple mDNS A Records with a Dynamic IP Address</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.&lt;/p&gt;
+    <link href="https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/" rel="alternate" type="text/html"/>
+    <published>2026-02-26T22:14:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/">&lt;p&gt;I have very specific needs for my home server. Before I jump into my slightly unusual solution, let me briefly explain my requirements.&lt;/p&gt;
 &lt;p&gt;My home server is a tiny box that sits on the corner of my desk. I want to treat it like an appliance as much as I can. All configuration should live on the server itself. I don't want to do anything special in my router settings to make it work. My server gets a dynamic IP address just like everything else on my network. I want to be able to turn it on and it should Just Work™ assuming it can successfully connect to a network and get assigned an IP address.&lt;/p&gt;
 &lt;p&gt;I host multiple services on this one physical machine, such as a family wiki and a Plex server. My experience with setting up reverse proxies for situations like this has taught me that services I haven't developed to specifically support such a feature don't always play nice when I try to host them at different sub-paths on the same host. Path rewriting gets complicated quickly and can be fragile. Depending on the service I'm trying to run, sometimes it's just not feasible. Because of this, I need my home server to respond to multiple A records to make reverse proxying the various services as painless as possible. Using A records instead of special port numbers makes it easy to remember how to access any given service.&lt;/p&gt;
 &lt;p&gt;Here's how I met these requirements using Avahi and some user-level Systemd units.&lt;/p&gt;
@@ -460,20 +424,16 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;p&gt;For one, my home server does not have a static IP address, so I don't have a static value to insert into &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. My solution works around that issue.&lt;/p&gt;
 &lt;p&gt;Also, when I was attempting the more typical solution, I ran into some issues with the Avahi daemon not liking a bunch of hosts pointing at the same IP address. I honestly might have been doing something else wrong when I tried that approach. But regardless, that approach doesn't meet my stringent requirements and the one I documented here does. 'Nuff said.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/"/>
     <category term="avahi"/>
     <category term="home server"/>
     <category term="systemd"/>
-    <published>2026-02-26T22:14:00+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/how-to-change-your-apple-accounts-primary-email-address-without-losing-your-sanity/</id>
     <title>How To Change Your Apple Account's Primary Email Address Without Losing Your Sanity</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;Surely it can't be that complicated, &lt;em&gt;right?&lt;/em&gt;&lt;/p&gt;
+    <link href="https://jaysherby.com/how-to-change-your-apple-accounts-primary-email-address-without-losing-your-sanity/" rel="alternate" type="text/html"/>
+    <published>2026-02-22T02:45:04.846801+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/how-to-change-your-apple-accounts-primary-email-address-without-losing-your-sanity/">&lt;p&gt;Surely it can't be that complicated, &lt;em&gt;right?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;It took me nearly two months, three or four levels of support staff, multiple hours on the phone, multiple emails, submission of system diagnostics, and my very own ticket in Apple's internal issue tracking system, but I was successful. And I'm going to share the surprisingly nuanced set of steps required with you so you don't have to go through the same.&lt;/p&gt;
 &lt;p&gt;First, let's set the stage. I have a MacBook Pro that is signed into my Apple account at the system level. I do not own any iOS devices. I still have access to my account and both the old and new email addresses. For the purposes of this tutorial, we'll say the current primary email address of my Apple account is &lt;em&gt;old@example.com&lt;/em&gt; and I want to change it to &lt;em&gt;new@example.com&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Please read this post in its entirety before starting the process, because if you do something Apple doesn't like, you'll be locked out of the process for 24 hours.&lt;/p&gt;
@@ -489,18 +449,14 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;hr /&gt;
 &lt;p&gt;That's right. The trick for changing your primary email address is to sign in using a secondary email address. If you fail to follow this process and instead sign in using the &lt;em&gt;old&lt;/em&gt; primary email address, this process will fail. If you attempt to complete this process with a browser that's not Safari, the ability to change your account may be locked for 24 hours.&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/how-to-change-your-apple-accounts-primary-email-address-without-losing-your-sanity/"/>
     <category term="Apple"/>
-    <published>2026-02-22T02:45:04.846801+00:00</published>
   </entry>
   <entry>
     <id>https://jaysherby.com/good-boy-bad-boy-1985-by-bruce-nauman/</id>
     <title>Good Boy, Bad Boy (1985) by Bruce Nauman</title>
-    <author>
-      <name>jaysherby</name>
-      <email>hidden</email>
-    </author>
-    <content type="html">&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/good-boy-bad-boy-1.webp" alt="" /&gt;&lt;/p&gt;
+    <link href="https://jaysherby.com/good-boy-bad-boy-1985-by-bruce-nauman/" rel="alternate" type="text/html"/>
+    <published>2026-02-02T04:56:00+00:00</published>
+    <content type="html" xml:base="https://jaysherby.com/good-boy-bad-boy-1985-by-bruce-nauman/">&lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/good-boy-bad-boy-1.webp" alt="" /&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"Good Boy, Bad Boy" is the name of an installation artwork created by Bruce Nauman in 1985.&lt;/p&gt;
 &lt;p&gt;Source: &lt;a href='https://www.artchive.com/artwork/good-boy-bad-boy-bruce-nauman-1985/'&gt;Artchive&lt;/a&gt;&lt;/p&gt;
@@ -623,8 +579,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;hr /&gt;
 &lt;p&gt;Portions of this post reproducing aspects of "Good Boy, Bad Boy" © 2018 Bruce Nauman / Artists Rights Society (ARS), New York&lt;/p&gt;
 </content>
-    <link href="https://jaysherby.com/good-boy-bad-boy-1985-by-bruce-nauman/"/>
     <category term="art"/>
-    <published>2026-02-02T04:56:00+00:00</published>
   </entry>
 </feed>
