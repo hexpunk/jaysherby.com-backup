@@ -1,18 +1,13 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Jay's blog</title>
-    <link>https://jaysherby.com</link>
-    <description>&lt;h1 style="font-weight: normal"&gt;&#13;
-  Hi! I'm &lt;strong&gt;Jay Sherby&lt;/strong&gt;!&#13;
-&lt;/h1&gt;&#13;
-&#13;
-I'm an experienced software developer in Chicago.&#13;
-&#13;
-Hiring? Check my résu...</description>
+    <link>https://jaysherby.com/</link>
+    <description>Hi! I'm Jay Sherby! I'm an experienced software developer in Chicago. Hiring? Check my résumé to see if we're a match.</description>
+    <language>en</language>
+    <docs>https://www.rssboard.org/rss-specification</docs>
+    <generator>Bear Blog</generator>
     <atom:link href="https://jaysherby.com/feed/?type=rss" rel="self" type="application/rss+xml"/>
-    <docs>http://www.rssboard.org/rss-specification</docs>
-    <generator>python-feedgen</generator>
     <item>
       <title>Podman's pasta networking breaks host.containers.internal compatibility</title>
       <link>https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/</link>
@@ -30,7 +25,6 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;With slirp4netns on the other hand, &lt;code&gt;host.containers.internal&lt;/code&gt; gets resolved to the actual host machine's IP address, which is exactly the behavior I expect.&lt;/p&gt;
 &lt;p&gt;This was a frustrating regression to work around. It took me several hours to fix. I spent some time afterwards reading up on the differences between pasta and slirp4netns and I understand why pasta can be considered a big performance win for many cases... except for cases where you need a container to be able to reach the host machine. If I had a nickel for every time I've had to use &lt;code&gt;host.containers.internal&lt;/code&gt;, I'd have two nickels, which isn't a lot. But it's weird that it happened twice. Right, Stefano Brivio?&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/podmans-pasta-networking-breaks-hostcontainersinternal-compatibility/</guid>
       <category>home server</category>
       <category>podman</category>
@@ -59,7 +53,6 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;TodoMVC taught me the most about Lit. I used composition by creating a separate component for list items. I learned the difference between an &lt;a href='https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions'&gt;attribute&lt;/a&gt; (&lt;code&gt;?checked=${this.checked}&lt;/code&gt;) and a &lt;a href='https://lit.dev/docs/templates/expressions/#property-expressions'&gt;property&lt;/a&gt; (&lt;code&gt;.checked=${this.checked}&lt;/code&gt;). It's a really important distinction that will lead to bugs if you don't understand it. In my case, I needed a property so that my application state and the DOM would properly stay synced.&lt;/p&gt;
 &lt;p&gt;I'm really glad I took this opportunity to learn to use Lit. I will definitely reach for it for future front-end projects. I also learned that while the Cells application from 7GUIs was really enjoyable and empowering, the 7GUIs tasks themselves aren't a great measure of anything when you're writing HTML. I think doing 7GUIs in any HTML framework is probably going to be a trivial endeavor, at least for the GUIs themselves. TodoMVC is a better project for kicking the tires on a new web GUI framework.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/learning-lit-with-7guis-and-todomvc/</guid>
       <category>lit</category>
       <category>typescript</category>
@@ -116,7 +109,6 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now The Lounge properly reconnects after a power cycle of my server.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/waiting-for-dns-without-networkd/</guid>
       <category>home server</category>
       <category>podman</category>
@@ -134,7 +126,6 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;Please, please, &lt;strong&gt;PLEASE&lt;/strong&gt;, Apple. I know you're not reading this, but please ground your charging bricks in the United States already!&lt;/p&gt;
 &lt;p&gt;Also, please, Framework, try to shield your laptops a little better. But this is absolutely Apple's fault, not Framework's.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/apple-macbook-pro-interference-due-to-lack-of-ground/</guid>
       <category>Apple</category>
       <category>Framework</category>
@@ -251,7 +242,6 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/from-the-desk-of-me.webp" alt="" /&gt;&lt;/p&gt;
 &lt;p&gt;I also made a version for printing on the back that only contains lines. That version really is as easy as removing the header and adding some divs to represent more lines.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/i-made-stationery-using-html-css/</guid>
       <pubDate>Mon, 02 Mar 2026 01:30:00 +0000</pubDate>
     </item>
@@ -333,7 +323,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;p&gt;I chose to add &lt;code&gt;http://plex.local:80&lt;/code&gt; to Plex's settings menu at "Settings" -&gt; "Network" -&gt; "Custom server access URLs". I don't know if that's strictly necessary, but it seems to be recommended.&lt;/p&gt;
 &lt;p&gt;If you can believe it, that's all it takes. It works like I've always dreamed.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/reverse-proxying-podman-quadlets-with-caddy/</guid>
       <category>caddy</category>
       <category>home server</category>
@@ -359,7 +348,6 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 &lt;p&gt;This little snippet ensures that tab completion still functions on the new &lt;code&gt;scu&lt;/code&gt; alias.&lt;/p&gt;
 &lt;p&gt;I'll still type out &lt;code&gt;systemctl --user&lt;/code&gt; when appropriate in my documentation, but you best believe I'm going to be using &lt;code&gt;scu&lt;/code&gt; all the time besides.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/im-tired-of-typing-systemctl-user/</guid>
       <category>bash</category>
       <category>systemd</category>
@@ -433,7 +421,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;p&gt;For one, my home server does not have a static IP address, so I don't have a static value to insert into &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. My solution works around that issue.&lt;/p&gt;
 &lt;p&gt;Also, when I was attempting the more typical solution, I ran into some issues with the Avahi daemon not liking a bunch of hosts pointing at the same IP address. I honestly might have been doing something else wrong when I tried that approach. But regardless, that approach doesn't meet my stringent requirements and the one I documented here does. 'Nuff said.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/multiple-mdns-a-records-with-a-dynamic-ip-address/</guid>
       <category>avahi</category>
       <category>home server</category>
@@ -459,7 +446,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;hr /&gt;
 &lt;p&gt;That's right. The trick for changing your primary email address is to sign in using a secondary email address. If you fail to follow this process and instead sign in using the &lt;em&gt;old&lt;/em&gt; primary email address, this process will fail. If you attempt to complete this process with a browser that's not Safari, the ability to change your account may be locked for 24 hours.&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/how-to-change-your-apple-accounts-primary-email-address-without-losing-your-sanity/</guid>
       <category>Apple</category>
       <pubDate>Sun, 22 Feb 2026 02:45:04 +0000</pubDate>
@@ -590,7 +576,6 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;hr /&gt;
 &lt;p&gt;Portions of this post reproducing aspects of "Good Boy, Bad Boy" © 2018 Bruce Nauman / Artists Rights Society (ARS), New York&lt;/p&gt;
 </description>
-      <author>hidden (jaysherby)</author>
       <guid isPermaLink="false">https://jaysherby.com/good-boy-bad-boy-1985-by-bruce-nauman/</guid>
       <category>art</category>
       <pubDate>Mon, 02 Feb 2026 04:56:00 +0000</pubDate>
