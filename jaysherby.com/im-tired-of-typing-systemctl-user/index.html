@@ -476,7 +476,9 @@ _completion_loader<span class="w"> </span>systemctl
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
+            
             <small class="upvote-count" aria-hidden="true">&nbsp;</small>
+            
         </button>
     </small>        
 </form>
@@ -488,7 +490,7 @@ _completion_loader<span class="w"> </span>systemctl
     let upvoteTokenAt = Infinity;
 
     fetch('/upvote-info/PsWqiQpEITtspEAyZEnf/').then(response => response.json()).then(data => {
-        $upvoteCount.innerText = data.upvote_count;
+        if ($upvoteCount) $upvoteCount.innerText = data.upvote_count;
         upvoteToken = data.token;
         upvoteTokenAt = Date.now();
         if (data.upvoted) {
@@ -497,7 +499,7 @@ _completion_loader<span class="w"> </span>systemctl
             $upvoteButton.ariaLabel = "Toasted"
             $upvoteButton.title = "Toasted"
         }
-        $upvoteButton.ariaLabel += ` (${data.upvote_count})`
+        if ($upvoteCount) $upvoteButton.ariaLabel += ` (${data.upvote_count})`
 
         document.addEventListener('touchmove', interaction, {once: true});
         document.addEventListener('mousemove', interaction, {once: true});
@@ -521,9 +523,11 @@ _completion_loader<span class="w"> </span>systemctl
         $upvoteButton.style.color = "salmon"
         $upvoteButton.ariaLabel = "Toasted"
         $upvoteButton.title = "Toasted"
-        const newUpvoteCount = `${(parseInt($upvoteCount.innerHTML.split(" ")[0]) + 1)}`
-        $upvoteCount.innerHTML = newUpvoteCount
-        $upvoteButton.ariaLabel += ` (${newUpvoteCount})`
+        if ($upvoteCount) {
+            const newUpvoteCount = `${(parseInt($upvoteCount.innerHTML.split(" ")[0]) + 1)}`
+            $upvoteCount.innerHTML = newUpvoteCount
+            $upvoteButton.ariaLabel += ` (${newUpvoteCount})`
+        }
     });
 </script>
 
