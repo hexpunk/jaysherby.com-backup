@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>From Docker Compose to Quadlets – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -434,48 +435,48 @@ details > summary {
     <p>I recently migrated my home server from Debian 12 to 13 and I decided to ditch Docker for Podman. I've written about some of the differences when moving from Docker to Podman <a href='../tips-for-becoming-a-pod-person/index.html'>previously</a>.</p>
 <p>Here's my old <code>docker-compose.yml</code> file:</p>
 <div class="highlight"><pre><span></span><span class="nt">services</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">plex</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lscr.io/linuxserver/plex:latest</span>
-<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plex</span>
-<span class="w">    </span><span class="c1"># Host networking is simpler than trying to forward everything</span>
-<span class="w">    </span><span class="nt">network_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span>
-<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=America/Chicago</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VERSION=docker</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PUID=1000</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PGID=1000</span>
-<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/server-user/plex/config:/config</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/media/wd-gold/Television:/tv</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/media/wd-gold/Movies:/movies</span>
-<span class="w">    </span><span class="nt">devices</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/dri:/dev/dri</span>
-<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32400:32400/tcp</span>
+  <span class="nt">plex</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> lscr.io/linuxserver/plex:latest
+    <span class="nt">container_name</span><span class="p">:</span> plex
+    <span class="c1"># Host networking is simpler than trying to forward everything</span>
+    <span class="nt">network_mode</span><span class="p">:</span> host
+    <span class="nt">environment</span><span class="p">:</span>
+      <span class="p">-</span> TZ=America/Chicago
+      <span class="p">-</span> VERSION=docker
+      <span class="p">-</span> PUID=1000
+      <span class="p">-</span> PGID=1000
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p">-</span> /home/server-user/plex/config:/config
+      <span class="p">-</span> /media/wd-gold/Television:/tv
+      <span class="p">-</span> /media/wd-gold/Movies:/movies
+    <span class="nt">devices</span><span class="p">:</span>
+      <span class="p">-</span> /dev/dri:/dev/dri
+    <span class="nt">restart</span><span class="p">:</span> unless-stopped
+    <span class="nt">ports</span><span class="p">:</span>
+      <span class="p">-</span> 32400:32400/tcp
 
-<span class="w">  </span><span class="nt">tiddlywiki</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:lts-alpine</span>
-<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tiddlywiki</span>
-<span class="w">    </span><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npx --yes tiddlywiki /wiki --listen host=0.0.0.0 port=8080 debug-level=debug</span>
-<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wget -q --spider -o /dev/null 127.0.0.1:8080 || exit 1</span>
-<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60s</span>
-<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
-<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/server-user/wiki:/wiki</span>
-<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80:8080/tcp</span>
+  <span class="nt">tiddlywiki</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> node:lts-alpine
+    <span class="nt">container_name</span><span class="p">:</span> tiddlywiki
+    <span class="nt">entrypoint</span><span class="p">:</span> npx --yes tiddlywiki /wiki --listen host=0.0.0.0 port=8080 debug-level=debug
+    <span class="nt">healthcheck</span><span class="p">:</span>
+      <span class="nt">test</span><span class="p">:</span> wget -q --spider -o /dev/null 127.0.0.1:8080 || exit 1
+      <span class="nt">interval</span><span class="p">:</span> 60s
+      <span class="nt">timeout</span><span class="p">:</span> 5s
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p">-</span> /home/server-user/wiki:/wiki
+    <span class="nt">restart</span><span class="p">:</span> unless-stopped
+    <span class="nt">ports</span><span class="p">:</span>
+      <span class="p">-</span> 80:8080/tcp
 </pre></div>
 <p>I've got a Plex server, and a TiddlyWiki running on port 80. This is not a particularly apt use of Docker Compose since I'm only really using it because it's familiar and it lets me bring the server up and down with a single command.</p>
 <p>To move to Podman, I tried what I thought would be the path of least resistance: Podman Compose. It wasn't as turn-key as I would have expected. Because Podman doesn't use a root daemon like Docker, all of my containers would die when I logged out of my user. This wasn't an issue when I used Docker since Docker's daemon was always running. To keep my user session alive, I could have chosen something like <code>nohup</code>, <code>screen</code>, or <code>tmux</code>. I chose instead to turn on lingering for the user with systemd.</p>
-<div class="highlight"><pre><span></span>sudo<span class="w"> </span>loginctl<span class="w"> </span>enable-linger<span class="w"> </span>server-user
+<div class="highlight"><pre><span></span>sudo loginctl enable-linger server-user
 </pre></div>
 <p>Yes, <a href='https://www.youtube.com/watch?v=G6Kspj3OO0s'>I have to let it linger</a>. RIP Dolores O'Riordan.</p>
 <p>This change at least let me continue limping along with Podman Compose until I had to chance to investigate. Because Podman is not daemon-based, <code>restart: unless-stopped</code> doesn't work. It also means that my containers don't come back up automatically if I reboot the system. Also, my Plex container doesn't get write access to my media library, meaning I can't delete things from the Plex interface. I've tried adding <code>:rw</code> and <code>:rw,Z</code> and <code>:rw,z</code> to those volumes without effect. I think it's probably because Podman Compose is automatically putting everything into a "pod", which is composed of a "Linux network namespace, IPC namespace, and (optionally) PID namespace" that can be shared between containers. There are ways to configure your compose file so that Podman doesn't do this, but the version of Podman Compose present in Debian's repos doesn't understand those options. I'd have to install a newer version of Podman Compose through pip, for example.</p>
 <p>It was about this point when I figured maybe I was using the wrong tool for the job. I decided to try Quadlets instead. They seem to be the preferred way to orchestrate Podman containers. Podman ships with support for Quadlets included. Quadlets are files that share the syntax of systemd unit files. They are run through a generator that generates actual systemd unit files. From there, the containers are managed just like any other user services, using systemd. What do you expect? Systemd and Podman both come from the folks at <del>Red Hat</del> IBM.</p>
-<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/containers/systemd/plex.container </span>
+<div class="highlight"><pre><span></span><span class="c"># /home/server-user/.config/containers/systemd/plex.container </span>
 <span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Plex Media Server</span>
 <span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
@@ -505,14 +506,14 @@ details > summary {
 <p>I don't think the <code>:Z</code> is actually doing anything here because I don't think there are any SELinux labels in those paths, but it seems to be considered good practice and I can't imagine it hurts anything.</p>
 <p>This configuration does not exhibit the media deletion issue I experienced with Podman Compose.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Remember to fix permissions if you&#39;re coming from Docker</span>
-sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>server-user:server-user<span class="w"> </span><span class="s2">&quot;/home/server-user/plex&quot;</span>
+sudo chown -R server-user:server-user <span class="s2">&quot;/home/server-user/plex&quot;</span>
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+systemctl --user daemon-reload
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>plex.service
+systemctl --user start plex.service
 </pre></div>
 <p>Here's the one for TiddlyWiki:</p>
-<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/containers/systemd/tiddlywiki.container </span>
+<div class="highlight"><pre><span></span><span class="c"># /home/server-user/.config/containers/systemd/tiddlywiki.container </span>
 <span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">TiddlyWiki</span>
 <span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
@@ -536,15 +537,15 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
 </pre></div>
 <p>You may notice that I don't have a health check for this service like I had for Docker Compose. It doesn't seem like Quadlets have any equivalent functionality. I could certainly create a systemd service by hand to check the service's health, but I was never really reporting or reacting to the health check's status, so I ditched it instead.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Remember to fix permissions if you&#39;re coming from Docker</span>
-sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>server-user:server-user<span class="w"> </span><span class="s2">&quot;/home/server-user/wiki&quot;</span>
+sudo chown -R server-user:server-user <span class="s2">&quot;/home/server-user/wiki&quot;</span>
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+systemctl --user daemon-reload
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>tiddlywiki.service
+systemctl --user start tiddlywiki.service
 </pre></div>
 <p>So far, this setup seems to be working. I plan on adding some more services and features in the future, like a reverse proxy to route services to friendlier mDNS A records, and an IRC bouncer service. I'll be sure to write up more posts as I add those.</p>
 <p>While I was tinkering with these Quadlet files, sometimes I'd make a mistake. When a Quadlet file is invalid, the corresponding service is not generated. After running <code>daemon-reload</code>, trying to start the service would give me a "unit not found" error. To see detailed errors explaining what was wrong with my Quadlet file, I'd run the following command:</p>
-<div class="highlight"><pre><span></span>/usr/libexec/podman/quadlet<span class="w"> </span>--dryrun<span class="w"> </span>--user
+<div class="highlight"><pre><span></span>/usr/libexec/podman/quadlet --dryrun --user
 </pre></div>
 <p>These posts I write with the <a href='https://jaysherby.com/blog/?q=home%20server'>#home server</a> tag are mostly just documentation for myself in the future. My previous posts have already come in handy when I make big changes to my system, like upgrading Debian. I highly recommend documenting your own projects for yourself.</p>
 

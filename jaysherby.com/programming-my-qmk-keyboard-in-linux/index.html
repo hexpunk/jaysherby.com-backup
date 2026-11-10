@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Programming My QMK Keyboard In Linux – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -435,12 +436,12 @@ details > summary {
 <p>In order to successfully connect to the keyboard, I need to have read/write access to it. Here's how to set this up in a relatively strict and sane way using udev.</p>
 <h2 id=pick-a-group-to-own-the-device>Pick a group to own the device</h2><p>Some people choose <code>users</code>, but I picked <code>plugdev</code>. Funny enough, my default user in Pop!_OS was a member of <code>plugdev</code> by default, but not a member of <code>users</code>. 🤷</p>
 <p>Make sure your user is a member of the group you pick.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~$<span class="w"> </span>groups
-jaysherby<span class="w"> </span>adm<span class="w"> </span>sudo<span class="w"> </span>plugdev<span class="w"> </span>lpadmin
+<div class="highlight"><pre><span></span>jaysherby@framework13:~$ groups
+jaysherby adm sudo plugdev lpadmin
 </pre></div>
-<h2 id=find-the-devices-vendor-id-and-product-id>Find the device's vendor id and product id</h2><div class="highlight"><pre><span></span>jaysherby@framework13:~$<span class="w"> </span>lsusb
+<h2 id=find-the-devices-vendor-id-and-product-id>Find the device's vendor id and product id</h2><div class="highlight"><pre><span></span>jaysherby@framework13:~$ lsusb
 <span class="c1"># ...snip...</span>
-Bus<span class="w"> </span><span class="m">003</span><span class="w"> </span>Device<span class="w"> </span><span class="m">015</span>:<span class="w"> </span>ID<span class="w"> </span><span class="m">3434</span>:08c0<span class="w"> </span>Keychron<span class="w"> </span>Keychron<span class="w"> </span>Q60<span class="w"> </span>Max
+Bus <span class="mi">003</span> Device <span class="mi">015</span>: ID <span class="mi">3434</span>:08c0 Keychron Keychron Q60 Max
 <span class="c1"># ...snip...</span>
 </pre></div>
 <p>My keyboard's vendor id is 3434 and its product id is 08c0.</p>
@@ -449,18 +450,18 @@ Bus<span class="w"> </span><span class="m">003</span><span class="w"> </span>Dev
 </pre></div>
 <p>Notice the usage of the vendor and product ids and the name of the group. The tags are also cargo culted and may not be strictly necessary.</p>
 <h2 id=reload-the-udev-rules>Reload the udev rules</h2><p>To reload the udev rules without having to restart the computer, run the following command.</p>
-<div class="highlight"><pre><span></span>sudo<span class="w"> </span>udevadm<span class="w"> </span>control<span class="w"> </span>--reload-rules<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>udevadm<span class="w"> </span>trigger
+<div class="highlight"><pre><span></span>sudo udevadm control --reload-rules <span class="o">&amp;&amp;</span> sudo udevadm trigger
 </pre></div>
 <p>You can make sure the rules applied correctly by checking the permissions and ownership of the <code>/dev/hidraw*</code> devices.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<span class="w"> </span>/dev/hidraw*
-crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>root<span class="w">    </span><span class="m">241</span>,<span class="w"> </span><span class="m">0</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:24<span class="w"> </span>/dev/hidraw0
-crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>root<span class="w">    </span><span class="m">241</span>,<span class="w"> </span><span class="m">1</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:24<span class="w"> </span>/dev/hidraw1
-crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>root<span class="w">    </span><span class="m">241</span>,<span class="w"> </span><span class="m">2</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:24<span class="w"> </span>/dev/hidraw2
-crw-rw----<span class="w">  </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>plugdev<span class="w"> </span><span class="m">241</span>,<span class="w"> </span><span class="m">3</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:31<span class="w"> </span>/dev/hidraw3
-crw-rw----<span class="w">  </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>plugdev<span class="w"> </span><span class="m">241</span>,<span class="w"> </span><span class="m">4</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:31<span class="w"> </span>/dev/hidraw4
-crw-rw----<span class="w">  </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>plugdev<span class="w"> </span><span class="m">241</span>,<span class="w"> </span><span class="m">5</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:31<span class="w"> </span>/dev/hidraw5
-crw-rw----+<span class="w"> </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>root<span class="w">    </span><span class="m">241</span>,<span class="w"> </span><span class="m">6</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:24<span class="w"> </span>/dev/hidraw6
-crw-------<span class="w">  </span><span class="m">1</span><span class="w"> </span>root<span class="w"> </span>root<span class="w">    </span><span class="m">241</span>,<span class="w"> </span><span class="m">7</span><span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">22</span>:24<span class="w"> </span>/dev/hidraw7
+<div class="highlight"><pre><span></span>jaysherby@framework13:~$ ls -lah /dev/hidraw*
+crw-------  <span class="mi">1</span> root root    <span class="mi">241</span>, <span class="mi">0</span> Feb <span class="mi">26</span> <span class="mi">22</span>:24 /dev/hidraw0
+crw-------  <span class="mi">1</span> root root    <span class="mi">241</span>, <span class="mi">1</span> Feb <span class="mi">26</span> <span class="mi">22</span>:24 /dev/hidraw1
+crw-------  <span class="mi">1</span> root root    <span class="mi">241</span>, <span class="mi">2</span> Feb <span class="mi">26</span> <span class="mi">22</span>:24 /dev/hidraw2
+crw-rw----  <span class="mi">1</span> root plugdev <span class="mi">241</span>, <span class="mi">3</span> Feb <span class="mi">26</span> <span class="mi">22</span>:31 /dev/hidraw3
+crw-rw----  <span class="mi">1</span> root plugdev <span class="mi">241</span>, <span class="mi">4</span> Feb <span class="mi">26</span> <span class="mi">22</span>:31 /dev/hidraw4
+crw-rw----  <span class="mi">1</span> root plugdev <span class="mi">241</span>, <span class="mi">5</span> Feb <span class="mi">26</span> <span class="mi">22</span>:31 /dev/hidraw5
+crw-rw----+ <span class="mi">1</span> root root    <span class="mi">241</span>, <span class="mi">6</span> Feb <span class="mi">26</span> <span class="mi">22</span>:24 /dev/hidraw6
+crw-------  <span class="mi">1</span> root root    <span class="mi">241</span>, <span class="mi">7</span> Feb <span class="mi">26</span> <span class="mi">22</span>:24 /dev/hidraw7
 </pre></div>
 <p>Devices 3, 4, and 5 are owned by the <code>plugdev</code> group with read/write access.</p>
 <p>If something goes wrong, it's worth trying to connect to the keyboard using Keychron's Launcher and then checking <a href='chrome://device-log/'>chrome://device-log/</a> for any clues or interesting messages.</p>

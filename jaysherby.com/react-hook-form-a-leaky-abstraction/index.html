@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>React Hook Form: A Leaky Abstraction – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -434,35 +435,35 @@ details > summary {
     <p>I have used a handful of helper libraries for wrangling form state in React over the course of my career. In my current job, we're using React Hook Form<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup>, specifically v6, although I think my story might still apply to those using the newer v7 branch. I enjoy working with it for the most part. I've found it to be a lighter-weight alternative to Formik.</p>
 <p>However, this past week I ran into a weird edge case. To set the stage, a friend and colleague<sup class="footnote-ref" id="fnref-2"><a href="index.html#fn-2">2</a></sup> was working on a ticket to add a field to an existing form that's powered by React Hook Form. The new field was a <code>&lt;select&gt;</code> style dropdown menu with dynamically populated options based on the user's configuration. This field is required. However, most users will probably only have one option. In that case, we chose not to show this new field at all. Instead, that field will automatically default to the only option available to that user.</p>
 <p>Here's a tiny example:</p>
-<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">groups</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useUser</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span> <span class="p">{</span> <span class="n">groups</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useUser</span><span class="p">();</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">userHasMultipleGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">groups</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<span class="kd">const</span> <span class="n">userHasMultipleGroups</span> <span class="o">=</span> <span class="n">groups</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mf">1</span><span class="p">;</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">defaultValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">group</span><span class="o">:</span><span class="w"> </span><span class="kt">userHasMultipleGroups</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">groups</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">value</span><span class="p">,</span>
+<span class="kd">const</span> <span class="n">defaultValues</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">name</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+  <span class="n">group</span><span class="o">:</span> <span class="kt">userHasMultipleGroups</span> <span class="o">?</span> <span class="s1">&#39;&#39;</span> <span class="o">:</span> <span class="kt">groups</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="n">value</span><span class="p">,</span>
 <span class="p">};</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">control</span><span class="p">,</span><span class="w"> </span><span class="nx">handleSubmit</span><span class="p">,</span><span class="w"> </span><span class="nx">formState</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">errors</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useForm</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">defaultValues</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">resolver</span><span class="o">:</span><span class="w"> </span><span class="kt">yupResolver</span><span class="p">(</span><span class="nx">schema</span><span class="p">),</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="n">control</span><span class="p">,</span> <span class="n">handleSubmit</span><span class="p">,</span> <span class="n">formState</span><span class="o">:</span> <span class="p">{</span> <span class="n">errors</span> <span class="p">}</span> <span class="p">}</span> <span class="o">=</span> <span class="n">useForm</span><span class="p">({</span>
+  <span class="n">defaultValues</span><span class="p">,</span>
+  <span class="n">resolver</span><span class="o">:</span> <span class="kt">yupResolver</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span>
 <span class="p">});</span>
 
 <span class="c1">// ...snip...</span>
 
-<span class="o">&lt;</span><span class="nx">Controller</span>
-<span class="w">  </span><span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">TextInput</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">}</span>
-<span class="w">  </span><span class="nx">control</span><span class="o">=</span><span class="p">{</span><span class="nx">control</span><span class="p">}</span>
-<span class="w">  </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span>
-<span class="err">/&gt;</span>
+<span class="o">&lt;</span><span class="n">Controller</span>
+  <span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="n">TextInput</span> <span class="o">/&gt;</span><span class="p">}</span>
+  <span class="n">control</span><span class="o">=</span><span class="p">{</span><span class="n">control</span><span class="p">}</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span>
+<span class="o">/&gt;</span>
 
-<span class="p">{</span><span class="nx">userHasMultipleGroups</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
-<span class="w">  </span><span class="o">&lt;</span><span class="nx">Controller</span>
-<span class="w">    </span><span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">SelectInput</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">}</span>
-<span class="w">    </span><span class="nx">control</span><span class="o">=</span><span class="p">{</span><span class="nx">control</span><span class="p">}</span>
-<span class="w">    </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span>
-<span class="w">    </span><span class="nx">options</span><span class="o">=</span><span class="p">{</span><span class="nx">groups</span><span class="p">}</span>
-<span class="w">  </span><span class="o">/&gt;</span>
+<span class="p">{</span><span class="n">userHasMultipleGroups</span> <span class="o">&amp;&amp;</span> <span class="p">(</span>
+  <span class="o">&lt;</span><span class="n">Controller</span>
+    <span class="kr">as</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="n">SelectInput</span> <span class="o">/&gt;</span><span class="p">}</span>
+    <span class="n">control</span><span class="o">=</span><span class="p">{</span><span class="n">control</span><span class="p">}</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span>
+    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="n">groups</span><span class="p">}</span>
+  <span class="o">/&gt;</span>
 <span class="p">)}</span>
 </pre></div>
 <p>Let me break this down in words briefly to make sure we're on the same page.</p>

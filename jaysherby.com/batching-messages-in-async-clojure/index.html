@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Batching Messages in Async Clojure – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -433,47 +434,47 @@ details > summary {
 
     <p>I read this interesting blog post called <a href='https://matklad.github.io/2025/05/14/scalar-select-aniti-pattern.html'>Scalar Select Anti-Pattern</a> by Alex Kladov about the advantages to batching the processing of messages when you're working with an event-driven asynchronous loop pattern. I recommend you go and read it.</p>
 <p>It came at just the right time, too, because I was recently working with just such a pattern in Clojure using its <a href='https://github.com/clojure/core.async'>async library</a>. Here's the basic outline of what I had before I read the aforementioned blog post.</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">require</span><span class="w"> </span><span class="o">&#39;</span><span class="p">[</span><span class="nv">clojure.core.async</span><span class="w"> </span><span class="ss">:refer</span><span class="w"> </span><span class="p">[</span><span class="nv">&lt;!</span><span class="w"> </span><span class="nv">chan</span><span class="w"> </span><span class="nv">go-loop</span><span class="p">]])</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">require</span> <span class="ss">&#39;[clojure.core.async</span> <span class="ss">:refer</span> <span class="p">[</span><span class="n">&lt;!</span> <span class="n">chan</span> <span class="n">go-loop</span><span class="p">]])</span>
 
-<span class="p">(</span><span class="kd">defonce </span><span class="nv">running?</span><span class="w"> </span><span class="p">(</span><span class="nf">atom</span><span class="w"> </span><span class="nv">true</span><span class="p">))</span>
-<span class="p">(</span><span class="kd">defonce </span><span class="nv">ch</span><span class="w"> </span><span class="p">(</span><span class="nf">chan</span><span class="p">))</span>
+<span class="p">(</span><span class="kd">defonce</span> <span class="n">running?</span> <span class="p">(</span><span class="nf">atom</span> <span class="n">true</span><span class="p">))</span>
+<span class="p">(</span><span class="kd">defonce</span> <span class="n">ch</span> <span class="p">(</span><span class="nf">chan</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nf">go-loop</span><span class="w"> </span><span class="p">[]</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">when </span><span class="o">@</span><span class="nv">running?</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">when-let </span><span class="p">[</span><span class="nv">message</span><span class="w"> </span><span class="p">(</span><span class="nf">&lt;!</span><span class="w"> </span><span class="nv">ch</span><span class="p">)]</span>
-<span class="w">      </span><span class="c1">;; Process a message</span>
-<span class="w">      </span><span class="c1">;; When I want to quit:</span>
-<span class="w">      </span><span class="c1">;; (reset! running? false)</span>
-<span class="w">      </span><span class="p">(</span><span class="nf">recur</span><span class="p">))))</span>
+<span class="p">(</span><span class="nf">go-loop</span> <span class="p">[]</span>
+  <span class="p">(</span><span class="nf">when</span> <span class="n">@running?</span>
+    <span class="p">(</span><span class="nf">when-let</span> <span class="p">[</span><span class="n">message</span> <span class="p">(</span><span class="nf">&lt;!</span> <span class="n">ch</span><span class="p">)]</span>
+      <span class="c1">;; Process a message</span>
+      <span class="c1">;; When I want to quit:</span>
+      <span class="c1">;; (reset! running? false)</span>
+      <span class="p">(</span><span class="nf">recur</span><span class="p">))))</span>
 </pre></div>
 <p>My <code>go-loop</code> block is a state machine that waits for a val from the channel <code>ch</code> and then processes it. It does this loop until the <code>running?</code> atom is set to <code>false</code>.</p>
 <p>In order to process messages in batches, I need a function that will drain a channel of vals and return a vector of them.</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">require</span><span class="w"> </span><span class="o">&#39;</span><span class="p">[</span><span class="nv">clojure.core.async</span><span class="w"> </span><span class="ss">:refer</span><span class="w"> </span><span class="p">[</span><span class="nv">poll!</span><span class="p">]])</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">require</span> <span class="ss">&#39;[clojure.core.async</span> <span class="ss">:refer</span> <span class="p">[</span><span class="n">poll!</span><span class="p">]])</span>
 
-<span class="p">(</span><span class="kd">defn </span><span class="nv">collect-available!</span><span class="w"> </span><span class="p">[</span><span class="nv">ch</span><span class="p">]</span>
-<span class="w">  </span><span class="p">(</span><span class="k">loop </span><span class="p">[</span><span class="nv">acc</span><span class="w"> </span><span class="p">[]]</span>
-<span class="w">    </span><span class="p">(</span><span class="nf">if-some</span><span class="w"> </span><span class="p">[</span><span class="nv">msg</span><span class="w"> </span><span class="p">(</span><span class="nf">poll!</span><span class="w"> </span><span class="nv">ch</span><span class="p">)]</span>
-<span class="w">      </span><span class="p">(</span><span class="nf">recur</span><span class="w"> </span><span class="p">(</span><span class="nb">conj </span><span class="nv">acc</span><span class="w"> </span><span class="nv">msg</span><span class="p">))</span>
-<span class="w">      </span><span class="nv">acc</span><span class="p">)))</span>
+<span class="p">(</span><span class="kd">defn</span> <span class="n">collect-available!</span> <span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+  <span class="p">(</span><span class="k">loop</span> <span class="p">[</span><span class="n">acc</span> <span class="p">[]]</span>
+    <span class="p">(</span><span class="nf">if-some</span> <span class="p">[</span><span class="n">msg</span> <span class="p">(</span><span class="nf">poll!</span> <span class="n">ch</span><span class="p">)]</span>
+      <span class="p">(</span><span class="nf">recur</span> <span class="p">(</span><span class="nf">conj</span> <span class="n">acc</span> <span class="n">msg</span><span class="p">))</span>
+      <span class="n">acc</span><span class="p">)))</span>
 </pre></div>
 <p>Okay, I'm half-way there. Now I want to encapsulate this idea to include awaiting the first value within a <code>go-loop</code> before draining the rest of the channel.</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn </span><span class="nv">collect-batch!</span><span class="w"> </span><span class="p">[</span><span class="nv">ch</span><span class="p">]</span>
-<span class="w">  </span><span class="p">(</span><span class="nf">go</span>
-<span class="w">    </span><span class="p">(</span><span class="nf">if-some</span><span class="w"> </span><span class="p">[</span><span class="nv">first-msg</span><span class="w"> </span><span class="p">(</span><span class="nf">&lt;!</span><span class="w"> </span><span class="nv">ch</span><span class="p">)]</span>
-<span class="w">      </span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">rest-msgs</span><span class="w"> </span><span class="p">(</span><span class="nf">collect-available!</span><span class="w"> </span><span class="nv">ch</span><span class="p">)]</span>
-<span class="w">        </span><span class="p">(</span><span class="nb">conj </span><span class="nv">rest-msgs</span><span class="w"> </span><span class="nv">first-msg</span><span class="p">))</span>
-<span class="w">      </span><span class="nv">nil</span><span class="p">)))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defn</span> <span class="n">collect-batch!</span> <span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">go</span>
+    <span class="p">(</span><span class="nf">if-some</span> <span class="p">[</span><span class="n">first-msg</span> <span class="p">(</span><span class="nf">&lt;!</span> <span class="n">ch</span><span class="p">)]</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">[</span><span class="n">rest-msgs</span> <span class="p">(</span><span class="nf">collect-available!</span> <span class="n">ch</span><span class="p">)]</span>
+        <span class="p">(</span><span class="nf">conj</span> <span class="n">rest-msgs</span> <span class="n">first-msg</span><span class="p">))</span>
+      <span class="n">nil</span><span class="p">)))</span>
 </pre></div>
 <p>Cool! Now I can process messages in batches with a little tweak to my <code>go-loop</code>.</p>
-<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">go-loop</span><span class="w"> </span><span class="p">[]</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">when </span><span class="o">@</span><span class="nv">running?</span>
-<span class="w">    </span><span class="p">(</span><span class="nf">if-some</span><span class="w"> </span><span class="p">[</span><span class="nv">messages</span><span class="w"> </span><span class="p">(</span><span class="nf">&lt;!</span><span class="w"> </span><span class="p">(</span><span class="nf">collect-batch!</span><span class="w"> </span><span class="nv">ch</span><span class="p">))]</span>
-<span class="w">      </span><span class="p">(</span><span class="nf">do</span>
-<span class="w">        </span><span class="p">(</span><span class="nb">doseq </span><span class="p">[</span><span class="nv">message</span><span class="w"> </span><span class="nv">messages</span><span class="p">]</span>
-<span class="w">          </span><span class="c1">;; Process a message</span>
-<span class="w">          </span><span class="p">)</span>
-<span class="w">        </span><span class="p">(</span><span class="nf">recur</span><span class="p">))</span>
-<span class="w">      </span><span class="p">(</span><span class="nf">reset!</span><span class="w"> </span><span class="nv">running?</span><span class="w"> </span><span class="nv">false</span><span class="p">))))</span>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="nf">go-loop</span> <span class="p">[]</span>
+  <span class="p">(</span><span class="nf">when</span> <span class="n">@running?</span>
+    <span class="p">(</span><span class="nf">if-some</span> <span class="p">[</span><span class="n">messages</span> <span class="p">(</span><span class="nf">&lt;!</span> <span class="p">(</span><span class="nf">collect-batch!</span> <span class="n">ch</span><span class="p">))]</span>
+      <span class="p">(</span><span class="k">do</span>
+        <span class="p">(</span><span class="nf">doseq</span> <span class="p">[</span><span class="n">message</span> <span class="n">messages</span><span class="p">]</span>
+          <span class="c1">;; Process a message</span>
+          <span class="p">)</span>
+        <span class="p">(</span><span class="nf">recur</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">reset!</span> <span class="n">running?</span> <span class="n">false</span><span class="p">))))</span>
 </pre></div>
 <p>I've added some safety so that my <code>go-loop</code> exits if the channel <code>ch</code> is closed.</p>
 <p>This is already an improvement since I only have to yield to the scheduler once per <em>batch</em> of messages rather than once per individual message. It also establishes the pattern, which will make it easier to utilize other optimization strategies like the ones Alex discusses in his blog post when I find I need them.</p>

@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Multiple mDNS A Records with a Dynamic IP Address – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -452,11 +453,11 @@ details > summary {
 
 <span class="k">[Service]</span>
 <span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/sh -c &#39;</span>\
-<span class="w">  </span><span class="s">while [ -z &quot;$(hostname -I)&quot; ]; do sleep 1; done; </span>\
-<span class="w">  </span><span class="s">IP=$(hostname -I | awk &quot;{print \$1}&quot;); </span>\
-<span class="w">  </span><span class="s">exec avahi-publish-address &quot;%i.local&quot; &quot;$IP&quot; -R </span>\
-<span class="s">&#39;</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/sh -c &#39;\</span>
+  while [ -z &quot;$(hostname -I)&quot; ]; do sleep 1; done; \
+  <span class="na">IP</span><span class="o">=</span><span class="s">$(hostname -I | awk &quot;{print \$1}&quot;); \</span>
+  exec avahi-publish-address &quot;%i.local&quot; &quot;$IP&quot; -R \
+&#39;
 <span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
 <span class="na">RestartSec</span><span class="o">=</span><span class="s">10s</span>
 
@@ -493,12 +494,12 @@ details > summary {
 </pre></div>
 <p>This is just a convenience target that makes it easy to bring all of the various Avahi services up and down together.</p>
 <h2 id=enable-the-services>Enable the services</h2><p>The last step is to enable the desired services.</p>
-<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mdns-publish-http@wiki.service
-systemctl<span class="w"> </span>--user<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mdns-publish-http@plex.service
+<div class="highlight"><pre><span></span>systemctl --user <span class="nb">enable</span> mdns-publish-http@wiki.service
+systemctl --user <span class="nb">enable</span> mdns-publish-http@plex.service
 
-systemctl<span class="w"> </span>--user<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mdns.target
+systemctl --user <span class="nb">enable</span> mdns.target
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>mdns.target
+systemctl --user start mdns.target
 </pre></div>
 <h2 id=wait-why-not>Wait, why not...?</h2><p>Yes, I'm fully aware that this is an unusual way to accomplish my goal. That's why I'm documenting it. Usually, you'd want to create XML files at <code>/etc/avahi/services</code> and add the necessary entries in <code>/etc/avahi/hosts</code>. But that doesn't work in my case for a few reasons.</p>
 <p>For one, my home server does not have a static IP address, so I don't have a static value to insert into <code>/etc/avahi/hosts</code>. My solution works around that issue.</p>

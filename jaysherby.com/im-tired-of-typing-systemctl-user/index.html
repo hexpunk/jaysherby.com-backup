@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>I&#x27;m tired of typing &quot;systemctl --user&quot; – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -434,14 +435,14 @@ details > summary {
     <p>I chose to alias <code>systemctl --user</code> since I use it so often. That's not blog post-worthy. What makes it so is that I didn't want to lose tab completion when using my alias.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Add this to your .bashrc</span>
 
-<span class="nb">alias</span><span class="w"> </span><span class="nv">scu</span><span class="o">=</span><span class="s1">&#39;systemctl --user&#39;</span>
-_completion_loader<span class="w"> </span>systemctl
-<span class="k">function</span><span class="w"> </span>_scu_complete<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="nv">COMP_WORDS</span><span class="o">=(</span>systemctl<span class="w"> </span>--user<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">COMP_WORDS</span><span class="p">[@]:</span><span class="nv">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">)</span>
-<span class="w">    </span><span class="o">((</span><span class="w"> </span>COMP_CWORD++<span class="w"> </span><span class="o">))</span>
-<span class="w">    </span>_systemctl
+<span class="nb">alias</span> <span class="nv">scu</span><span class="o">=</span><span class="s1">&#39;systemctl --user&#39;</span>
+_completion_loader systemctl
+<span class="k">function</span> _scu_complete<span class="o">()</span> <span class="o">{</span>
+    <span class="nv">COMP_WORDS</span><span class="o">=(</span>systemctl --user <span class="s2">&quot;</span><span class="si">${</span><span class="nv">COMP_WORDS</span><span class="s2">[@]:1</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">)</span>
+    <span class="o">((</span> COMP_CWORD++ <span class="o">))</span>
+    _systemctl
 <span class="o">}</span>
-<span class="nb">complete</span><span class="w"> </span>-F<span class="w"> </span>_scu_complete<span class="w"> </span>scu
+<span class="nb">complete</span> -F _scu_complete scu
 </pre></div>
 <p>This little snippet ensures that tab completion still functions on the new <code>scu</code> alias.</p>
 <p>I'll still type out <code>systemctl --user</code> when appropriate in my documentation, but you best believe I'm going to be using <code>scu</code> all the time besides.</p>

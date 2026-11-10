@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Terraform Cloud + CDKTF + Auth0 – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -449,7 +450,7 @@ details > summary {
 </blockquote>
 <p>It'll highlight some seemingly random little bit of the long and mangled string that was once your Javascript source file.</p>
 <p>Every time I've ever seen this happen, the culprit is string interpolation in the Javascript file.</p>
-<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`app.</span><span class="si">${</span><span class="nx">environment</span><span class="si">}</span><span class="sb">.my-really-cool-app.com`</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span> <span class="n">domain</span> <span class="o">=</span> <span class="sb">`app.</span><span class="si">${</span><span class="n">environment</span><span class="si">}</span><span class="sb">.my-really-cool-app.com`</span><span class="p">;</span>
 </pre></div>
 <p>Terraform's parser sees <code>${</code> in your string, which happens to be <em>its</em> string interpolation syntax as well, and falls flat on its face trying to figure out what you're trying to accomplish.</p>
 <p>There are ways around this.  <a href='https://developer.hashicorp.com/terraform/language/expressions/strings#escape-sequences-1'>According to the docs</a>, you can escape <code>${</code> with <code>$${</code>.<sup class="footnote-ref" id="fnref-1"><a href="index.html#fn-1">1</a></sup></p>
@@ -457,7 +458,7 @@ details > summary {
 <p>IMHO, doing this is asking for trouble.  Plus it feels gross.</p>
 <p>Worse yet, what if the name of the variable inside your interpolated string (<code>environment</code> in the example above) <em>does</em> mean something to Terraform and it replaces it with a value? The code would probably throw an error if the replaced value wasn't a variable in your script.  What if it was!?  In any case, the code deployed won't match the code in your repository.  Good luck chasing down that bug!</p>
 <p>The workaround I chose was to avoid template string interpolation all together and revert back to string concatenation like we did in the days before template literals were introduced.</p>
-<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;app.&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;.my-really-cool-app.com&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span> <span class="n">domain</span> <span class="o">=</span> <span class="s1">&#39;app.&#39;</span> <span class="o">+</span> <span class="n">environment</span> <span class="o">+</span> <span class="s1">&#39;.my-really-cool-app.com&#39;</span><span class="p">;</span>
 </pre></div>
 <h2 id=terraform-variables-vs-environment-variables>Terraform Variables vs Environment Variables</h2><p>Using environment variables when writing your config with CDKTF and deploying with Terraform Cloud can be fraught, to say the least.  There's at least one very good reason to use environment variables when using the Auth0 provider: they recommend it <a href='https://registry.terraform.io/providers/auth0/auth0/0.44.0/docs#environment-variables'>in the docs</a>.</p>
 <p>Let's clarify something first.  Because of how CDKTF works, environment variables can be inserted in at least two stages: synthesis and planning.</p>

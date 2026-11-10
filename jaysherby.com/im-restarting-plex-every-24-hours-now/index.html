@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>I&#x27;m Restarting Plex Every 24 Hours Now – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -435,7 +436,7 @@ details > summary {
 <p>Plex is also flaky. I find myself occasionally needing to SSH into my home server to restart Plex when the app can't connect to the server. No errors are ever logged from the server, and even if I went to the trouble of getting logs from the apps, I doubt I could really do anything to fix it. Plex and its apps are a black box to me. I treat them less like software and more like hermetically sealed appliances. And what do you do when a hermetically sealed appliance acts up? Power cycle it!</p>
 <p>As much as I'd prefer perfect appliances, sometimes the power cycle approach has to be good enough. Most home routers have settings in their UI nowadays to automatically power cycle themselves on a regular schedule. Even the expensive ones! Especially the expensive ones. My phone runs GrapheneOS, which has an option to automatically power cycle your phone after a set period of inactivity. In that case, it's because your phone is subtly more secure before it's been unlocked after a power cycle. Like it or not, "Have you tried turning it off and on again?" is now the way of the world.</p>
 <p>I'm currently in my systemd era. Sooner or later, systemd comes for us all. 🪦 The path of least resistance seems to be a service and a timer to trigger that service.</p>
-<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/systemd/user/plex-restart.service</span>
+<div class="highlight"><pre><span></span><span class="c"># /home/server-user/.config/systemd/user/plex-restart.service</span>
 <span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Restart Plex container service</span>
 <span class="na">Wants</span><span class="o">=</span><span class="s">plex.service</span>
@@ -446,7 +447,7 @@ details > summary {
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/systemctl --user is-active --quiet plex.service &amp;&amp; /usr/bin/systemctl --user restart plex.service</span>
 </pre></div>
 <p>The service itself only attempts to restart the Plex service if the service is already active. If I should decide to manually stop the Plex service, I don't want this job to restart it.</p>
-<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/systemd/user/plex-restart.timer</span>
+<div class="highlight"><pre><span></span><span class="c"># /home/server-user/.config/systemd/user/plex-restart.timer</span>
 <span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Daily restart of Plex container service at 6 AM</span>
 
@@ -458,9 +459,9 @@ details > summary {
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">timers.target</span>
 </pre></div>
 <p>I have the timer set to go off every day at 6 AM because I can't imagine a situation where anyone in my household is using it at that time, so there shouldn't be any service interruption.</p>
-<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+<div class="highlight"><pre><span></span>systemctl --user daemon-reload
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w">  </span>plex-restart.timer
+systemctl --user start  plex-restart.timer
 </pre></div>
 <p>And with that, I hopefully won't have to restart Plex manually any time soon. Sure, I could have tried to rig up a script that detects the server's health and restart it only when necessary. But remember that Plex is a black box. Just because my server can essentially ping itself doesn't mean other devices can reach it. No, an automatic power switch flipper should be good enough.</p>
 

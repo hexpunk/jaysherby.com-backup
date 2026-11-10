@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Unit Testing Strategies – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -436,40 +437,40 @@ details > summary {
 <h2 id=table-driven-tests>Table-Driven Tests</h2><p>Table-driven tests have a long history, but my first exposure to the concept was via Go's built-in unit test functionality.</p>
 <p>The basic idea is, if you're planning to test a function with a given set of inputs and an expected output, rather than repeat the tedious boilerplate for each test case, create a 2D array of values (the titular table) and iterate over it.</p>
 <p>Here's how it looks in Vitest and Jest:</p>
-<div class="highlight"><pre><span></span><span class="nx">test</span><span class="p">.</span><span class="nx">each</span><span class="p">([</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
-<span class="p">])(</span><span class="s1">&#39;add(%i, %i) -&gt; %i&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">expected</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">expected</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="n">test</span><span class="p">.</span><span class="n">each</span><span class="p">([</span>
+  <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">],</span>
+  <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">3</span><span class="p">],</span>
+  <span class="p">[</span><span class="mf">2</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">3</span><span class="p">],</span>
+<span class="p">])(</span><span class="s1">&#39;add(%i, %i) -&gt; %i&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="n">expect</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)).</span><span class="n">toBe</span><span class="p">(</span><span class="n">expected</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
 <p>Notice the <code>printf</code>-like syntax allowing you to produce a name for each individual test that incorporates its unique values.</p>
 <p>If your test runner doesn't have such functionality built-in, you can try to recreate it by hand.</p>
-<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">testCases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span> <span class="n">testCases</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">],</span>
+  <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">3</span><span class="p">],</span>
+  <span class="p">[</span><span class="mf">2</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">3</span><span class="p">],</span>
 <span class="p">];</span>
 
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">expected</span><span class="p">]</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">testCases</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">test</span><span class="p">(</span><span class="sb">`add(</span><span class="si">${</span><span class="nx">a</span><span class="si">}</span><span class="sb">, </span><span class="si">${</span><span class="nx">b</span><span class="si">}</span><span class="sb">) -&gt; </span><span class="si">${</span><span class="nx">expected</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">expected</span><span class="p">);</span>
-<span class="w">  </span><span class="p">});</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">]</span> <span class="k">of</span> <span class="n">testCases</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">test</span><span class="p">(</span><span class="sb">`add(</span><span class="si">${</span><span class="n">a</span><span class="si">}</span><span class="sb">, </span><span class="si">${</span><span class="n">b</span><span class="si">}</span><span class="sb">) -&gt; </span><span class="si">${</span><span class="n">expected</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)).</span><span class="n">toBe</span><span class="p">(</span><span class="n">expected</span><span class="p">);</span>
+  <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 <p>Your mileage may vary. I seem to recall the past experience of some test runner choking on runtime-generated tests, but I just tested this approach in Vitest, Jest, and <a href='https://mochajs.org/'>Mocha</a>, and they all handled it properly.</p>
 <p>If you do happen to find your test runner of choice doesn't handle this properly, you can fall back to a monolithic test case that runs all rows in your table.</p>
-<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">testCases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
-<span class="w">  </span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">],</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span> <span class="n">testCases</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">],</span>
+  <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">3</span><span class="p">],</span>
+  <span class="p">[</span><span class="mf">2</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">3</span><span class="p">],</span>
 <span class="p">];</span>
 
-<span class="nx">test</span><span class="p">(</span><span class="sb">`add()`</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">,</span><span class="w"> </span><span class="nx">expected</span><span class="p">]</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">testCases</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="nx">expected</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="n">test</span><span class="p">(</span><span class="sb">`add()`</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">]</span> <span class="k">of</span> <span class="n">testCases</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)).</span><span class="n">toBe</span><span class="p">(</span><span class="n">expected</span><span class="p">);</span>
+  <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
 <p>The disadvantage to this approach is that a single row will cause the entire test case to fail, and the row at fault may not be readily apparent depending on your reporter configuration.</p>
@@ -492,11 +493,11 @@ details > summary {
 <p>That's not to say <a href='https://vitest.dev/guide/in-source.html'>Vitest's solution</a> is perfect. It does involve depending upon a relatively new feature of the module system. Getting it to work correctly in Typescript involves setting up your <code>tsconfig.json</code> file <em>just so</em>. But it's the sanest solution to this problem I've encountered so far.</p>
 <p>Here's the <code>tsconfig.json</code> settings that got it working seamlessly for me:</p>
 <div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// ...</span>
-<span class="w">    </span><span class="nv">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;es2022&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">&quot;moduleResolution&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;node10&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nv">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vitest/importMeta&quot;</span><span class="p">],</span><span class="w"> </span>
-<span class="w">    </span><span class="c1">// ...</span>
+    <span class="c1">// ...</span>
+    <span class="nt">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;es2022&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;moduleResolution&quot;</span><span class="p">:</span> <span class="s2">&quot;node10&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="s2">&quot;vitest/importMeta&quot;</span><span class="p">],</span> 
+    <span class="c1">// ...</span>
 <span class="p">}</span>
 </pre></div>
 <p>When your unit tests live within the module under test, everything in the module's scope is available to your unit tests: classes, functions, constants, imports, everything! Being able to test private functions has been a revelation and a relief. If your test coverage of your private functions is sufficient enough that you trust them, you typically no longer need to test those aspects of the functions that call them.</p>

@@ -73,7 +73,7 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;My server connects to the internet via wifi, so it takes a little longer to get network access than if it was connected via ethernet. Sure enough, The Lounge was trying to start before I had a network connection.&lt;/p&gt;
 &lt;p&gt;Usually this would just be a matter of adding a dependency on &lt;code&gt;network-online.target&lt;/code&gt; to The Lounge's quadlet. But I'm running Debian 12, which means that won't work. Debian is still using ifupdown for networking on headless servers. I had to make a custom service instead that checks for DNS resolution.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/systemd/user/dns-ready.service&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;# /home/server-user/.config/systemd/user/dns-ready.service&lt;/span&gt;
 &lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Wait for DNS Resolution&lt;/span&gt;
 &lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
@@ -88,7 +88,7 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;multi-user.target&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then I needed to update the quadlet to depend on the new service.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# /home/server-user/.config/containers/systemd/thelounge.container&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;# /home/server-user/.config/containers/systemd/thelounge.container&lt;/span&gt;
 &lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TheLounge&lt;/span&gt;
 &lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target dns-ready.service&lt;/span&gt;
@@ -147,69 +147,69 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
     &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;meta&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;content&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;/&amp;gt;&lt;/span&gt;
     &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Stationery&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;style&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="k"&gt;page&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;size&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;5in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;7in&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;margin&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;17in&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="k"&gt;page&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;size&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="kt"&gt;in&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="kt"&gt;in&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.17&lt;/span&gt;&lt;span class="kt"&gt;in&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="nt"&gt;html&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="nt"&gt;body&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;flex&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;flex-direction&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;column&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;align-items&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;center&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;flex&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;flex-direction&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;column&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;align-items&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;center&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;background-color&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;white&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;background-color&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;white&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;header&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;inline-block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="nt"&gt;header&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;inline-block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;margin-top&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="kt"&gt;in&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;margin-top&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="kt"&gt;in&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;h2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;font-family&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Times New Roman&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;serif&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;text-align&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;center&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;text-transform&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;uppercase&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+      &lt;span class="nt"&gt;h2&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;font-family&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Times New Roman&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;serif&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;text-align&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;center&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;text-transform&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;uppercase&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;font-size&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="kt"&gt;pt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="nt"&gt;h1&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;font-size&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="kt"&gt;pt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;h2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;font-size&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="kt"&gt;pt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="nt"&gt;h2&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;font-size&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="kt"&gt;pt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="nn"&gt;writing-area&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;grid&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nv"&gt;--line-gap&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;0.28&lt;/span&gt;&lt;span class="kt"&gt;in&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nv"&gt;--line-thickness&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="kt"&gt;px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nv"&gt;--line-width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;95&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;grid-auto-rows&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;--line-gap&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;flex&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;align-items&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;end&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;margin-top&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1.2&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="nn"&gt;writing-area&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="k"&gt;grid&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="nv"&gt;--line-gap&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.28&lt;/span&gt;&lt;span class="kt"&gt;in&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="nv"&gt;--line-thickness&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="kt"&gt;px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="nv"&gt;--line-width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;95&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;grid-auto-rows&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;--line-gap&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;flex&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;align-items&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;end&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;margin-top&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;1.2&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="nn"&gt;writing-area&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;justify-self&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;center&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;--line-width&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;border-bottom&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;--line-thickness&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;solid&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;black&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;style&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="nn"&gt;writing-area&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;justify-self&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;center&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;--line-width&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="k"&gt;border-bottom&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;--line-thickness&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="kc"&gt;solid&lt;/span&gt; &lt;span class="kc"&gt;black&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;style&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
   &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
   &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;header&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
@@ -217,7 +217,7 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
       &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Jay Sherby&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;header&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;writing-area&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-      &lt;span class="cm"&gt;&amp;lt;!-- Each div represents a line --&amp;gt;&lt;/span&gt;
+      &lt;span class="c"&gt;&amp;lt;!-- Each div represents a line --&amp;gt;&lt;/span&gt;
       &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
       &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
       &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
@@ -256,9 +256,9 @@ default_rootless_network_cmd = &amp;quot;slirp4netns&amp;quot;
 &lt;p&gt;&lt;img src="https://bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/friendship-ended-with-traefik.webp" alt="" /&gt;&lt;/p&gt;
 &lt;p&gt;I've probably spent days trying to get Traefik to work. It took me an hour to get Caddy running exactly how I wanted it. I'm impressed.&lt;/p&gt;
 &lt;p&gt;The first thing I had to do was create a place for my Caddyfile and Caddy's data to live.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy
-mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy/conf
-mkdir&lt;span class="w"&gt; &lt;/span&gt;~/caddy/data
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mkdir ~/caddy
+mkdir ~/caddy/conf
+mkdir ~/caddy/data
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=codecaddyconfcaddyfilecode&gt;&lt;code&gt;~/caddy/conf/Caddyfile&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
     skip_install_trust
@@ -291,9 +291,9 @@ irc.local {
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is actually a pattern from Traefik that I nicked. If I want a service to be accessible by Caddy, both Caddy and the service need to share this network to talk to each other. My Tiddlywiki gets &lt;code&gt;Network=proxy&lt;/code&gt; added to its quadlet file and its &lt;code&gt;PublishPort&lt;/code&gt; setting removed so it doesn't leak any ports onto the host network. My Plex server doesn't need anything special since it's already using &lt;code&gt;Network=host&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Remember to reload the config.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl --user daemon-reload
 
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;proxy-network.service
+systemctl --user start proxy-network.service
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=codeconfigcontainerssystemdcaddycontainercode&gt;&lt;code&gt;~/.config/containers/systemd/caddy.container&lt;/code&gt;&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
 &lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Caddy&lt;/span&gt;
@@ -319,9 +319,9 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
 &lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;default.target&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Nothing particularly special about the actual Caddy quadlet. Remember to load it.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;daemon-reload
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl --user daemon-reload
 
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;caddy.service
+systemctl --user start caddy.service
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I chose to add &lt;code&gt;http://plex.local:80&lt;/code&gt; to Plex's settings menu at "Settings" -&gt; "Network" -&gt; "Custom server access URLs". I don't know if that's strictly necessary, but it seems to be recommended.&lt;/p&gt;
 &lt;p&gt;If you can believe it, that's all it takes. It works like I've always dreamed.&lt;/p&gt;
@@ -339,14 +339,14 @@ systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/s
     <content type="html" xml:base="https://jaysherby.com/im-tired-of-typing-systemctl-user/">&lt;p&gt;I chose to alias &lt;code&gt;systemctl --user&lt;/code&gt; since I use it so often. That's not blog post-worthy. What makes it so is that I didn't want to lose tab completion when using my alias.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Add this to your .bashrc&lt;/span&gt;
 
-&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;scu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;systemctl --user&amp;#39;&lt;/span&gt;
-_completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
-&lt;span class="k"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;_scu_complete&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;COMP_WORDS&lt;/span&gt;&lt;span class="o"&gt;=(&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;COMP_WORDS&lt;/span&gt;&lt;span class="p"&gt;[@]:&lt;/span&gt;&lt;span class="nv"&gt;1&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;((&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;COMP_CWORD++&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;_systemctl
+&lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="nv"&gt;scu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;systemctl --user&amp;#39;&lt;/span&gt;
+_completion_loader systemctl
+&lt;span class="k"&gt;function&lt;/span&gt; _scu_complete&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="nv"&gt;COMP_WORDS&lt;/span&gt;&lt;span class="o"&gt;=(&lt;/span&gt;systemctl --user &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;COMP_WORDS&lt;/span&gt;&lt;span class="s2"&gt;[@]:1&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;((&lt;/span&gt; COMP_CWORD++ &lt;span class="o"&gt;))&lt;/span&gt;
+    _systemctl
 &lt;span class="o"&gt;}&lt;/span&gt;
-&lt;span class="nb"&gt;complete&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-F&lt;span class="w"&gt; &lt;/span&gt;_scu_complete&lt;span class="w"&gt; &lt;/span&gt;scu
+&lt;span class="nb"&gt;complete&lt;/span&gt; -F _scu_complete scu
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This little snippet ensures that tab completion still functions on the new &lt;code&gt;scu&lt;/code&gt; alias.&lt;/p&gt;
 &lt;p&gt;I'll still type out &lt;code&gt;systemctl --user&lt;/code&gt; when appropriate in my documentation, but you best believe I'm going to be using &lt;code&gt;scu&lt;/code&gt; all the time besides.&lt;/p&gt;
@@ -372,11 +372,11 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 
 &lt;span class="k"&gt;[Service]&lt;/span&gt;
 &lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;simple&lt;/span&gt;
-&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/bin/sh -c &amp;#39;&lt;/span&gt;\
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s"&gt;while [ -z &amp;quot;$(hostname -I)&amp;quot; ]; do sleep 1; done; &lt;/span&gt;\
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s"&gt;IP=$(hostname -I | awk &amp;quot;{print \$1}&amp;quot;); &lt;/span&gt;\
-&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s"&gt;exec avahi-publish-address &amp;quot;%i.local&amp;quot; &amp;quot;$IP&amp;quot; -R &lt;/span&gt;\
-&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/bin/sh -c &amp;#39;\&lt;/span&gt;
+  while [ -z &amp;quot;$(hostname -I)&amp;quot; ]; do sleep 1; done; \
+  &lt;span class="na"&gt;IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;$(hostname -I | awk &amp;quot;{print \$1}&amp;quot;); \&lt;/span&gt;
+  exec avahi-publish-address &amp;quot;%i.local&amp;quot; &amp;quot;$IP&amp;quot; -R \
+&amp;#39;
 &lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;on-failure&lt;/span&gt;
 &lt;span class="na"&gt;RestartSec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;10s&lt;/span&gt;
 
@@ -413,12 +413,12 @@ _completion_loader&lt;span class="w"&gt; &lt;/span&gt;systemctl
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is just a convenience target that makes it easy to bring all of the various Avahi services up and down together.&lt;/p&gt;
 &lt;h2 id=enable-the-services&gt;Enable the services&lt;/h2&gt;&lt;p&gt;The last step is to enable the desired services.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;mdns-publish-http@wiki.service
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;mdns-publish-http@plex.service
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;systemctl --user &lt;span class="nb"&gt;enable&lt;/span&gt; mdns-publish-http@wiki.service
+systemctl --user &lt;span class="nb"&gt;enable&lt;/span&gt; mdns-publish-http@plex.service
 
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;mdns.target
+systemctl --user &lt;span class="nb"&gt;enable&lt;/span&gt; mdns.target
 
-systemctl&lt;span class="w"&gt; &lt;/span&gt;--user&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;mdns.target
+systemctl --user start mdns.target
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=wait-why-not&gt;Wait, why not...?&lt;/h2&gt;&lt;p&gt;Yes, I'm fully aware that this is an unusual way to accomplish my goal. That's why I'm documenting it. Usually, you'd want to create XML files at &lt;code&gt;/etc/avahi/services&lt;/code&gt; and add the necessary entries in &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. But that doesn't work in my case for a few reasons.&lt;/p&gt;
 &lt;p&gt;For one, my home server does not have a static IP address, so I don't have a static value to insert into &lt;code&gt;/etc/avahi/hosts&lt;/code&gt;. My solution works around that issue.&lt;/p&gt;

@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Don&#x27;t Rely On mtime For Anything Important – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -445,12 +446,12 @@ details > summary {
 </pre></div>
 <p>This command, available to every user to use on any file they can write to, is explicitly for modifying atime and mtime. Here's a bit of an ontological question. If I can update the modification time of a file without actually modifying the contents of the file, does mtime still have any real meaning?</p>
 <p>The most common usage of <code>touch</code> is with default settings, <code>touch filename</code>, which simply updates mtime to the current date and time. However, it's not like it's hard to change mtime to whatever value you want.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~$<span class="w"> </span>touch<span class="w"> </span>filename
-jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<span class="w"> </span>filename
--rw-rw-r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>jaysherby<span class="w"> </span>jaysherby<span class="w"> </span><span class="m">0</span><span class="w"> </span>Jun<span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="m">15</span>:54<span class="w"> </span>filename
-jaysherby@framework13:~$<span class="w"> </span>touch<span class="w"> </span>--date<span class="o">=</span><span class="s2">&quot;1970-01-01 16:20:00 UTC&quot;</span><span class="w"> </span>filename
-jaysherby@framework13:~$<span class="w"> </span>ls<span class="w"> </span>-lah<span class="w"> </span>filename
--rw-rw-r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>jaysherby<span class="w"> </span>jaysherby<span class="w"> </span><span class="m">0</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">1970</span><span class="w"> </span>filename
+<div class="highlight"><pre><span></span>jaysherby@framework13:~$ touch filename
+jaysherby@framework13:~$ ls -lah filename
+-rw-rw-r-- <span class="mi">1</span> jaysherby jaysherby <span class="mi">0</span> Jun  <span class="mi">1</span> <span class="mi">15</span>:54 filename
+jaysherby@framework13:~$ touch --date<span class="o">=</span><span class="s2">&quot;1970-01-01 16:20:00 UTC&quot;</span> filename
+jaysherby@framework13:~$ ls -lah filename
+-rw-rw-r-- <span class="mi">1</span> jaysherby jaysherby <span class="mi">0</span> Jan  <span class="mi">1</span>  <span class="mi">1970</span> filename
 </pre></div>
 <p>It's just that easy to forge a file's mtime. I suspect that's what happened to Rachel's system file. Why would someone change a file's contents making sure not to change its length and then modify its mtime to match the file before the change occurred? It seems very suspicious if not necessarily malicious.</p>
 <p>Mtime is so notoriously unreliable that <code>git</code>, for example, keeps its own internal file modification timestamp records and notably does not update mtime values to match its internal records. I found this out once upon a time when I was curious about the oldest files in a repository and found that I had to parse git logs to do so.</p>

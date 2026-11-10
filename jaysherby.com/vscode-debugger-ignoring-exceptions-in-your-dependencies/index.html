@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>VSCode Debugger: Ignoring Exceptions In Your Dependencies – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -439,22 +440,22 @@ details > summary {
 <p>Checking "caught exceptions" will stop on every caught exception, which will eventually catch the exception you're looking for. However, it will also stop on all of the other exceptions that are thrown. I've noticed that my dependencies often throw a lot of exceptions that they catch. Hey, throwing and catching is just another method of control flow. Who am I to say my dependencies can't use it? But it does create a lot more noise when I'm trying to debug a problem in my own code.</p>
 <p>Here's a debugger launch configuration that runs <code>npm run start:server</code>.</p>
 <div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Use IntelliSense to learn about possible attributes.</span>
-<span class="w">    </span><span class="c1">// Hover to view descriptions of existing attributes.</span>
-<span class="w">    </span><span class="c1">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span>
-<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Start Server&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;runtimeExecutable&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;runtimeArgs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start:server&quot;</span><span class="p">],</span>
-<span class="w">            </span><span class="nt">&quot;console&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integratedTerminal&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;skipFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;node_internals&gt;/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/node_modules/**&quot;</span><span class="p">],</span>
-<span class="w">            </span><span class="nt">&quot;internalConsoleOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;neverOpen&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
+    <span class="c1">// Use IntelliSense to learn about possible attributes.</span>
+    <span class="c1">// Hover to view descriptions of existing attributes.</span>
+    <span class="c1">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;configurations&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;request&quot;</span><span class="p">:</span> <span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Start Server&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;runtimeExecutable&quot;</span><span class="p">:</span> <span class="s2">&quot;npm&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;runtimeArgs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="s2">&quot;start:server&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;console&quot;</span><span class="p">:</span> <span class="s2">&quot;integratedTerminal&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;skipFiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&lt;node_internals&gt;/**&quot;</span><span class="p">,</span> <span class="s2">&quot;**/node_modules/**&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;internalConsoleOptions&quot;</span><span class="p">:</span> <span class="s2">&quot;neverOpen&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 <p>The crucial addition here is in the <code>skipFiles</code> array. The <code>&quot;&lt;node_internals&gt;/**&quot;</code> element is there by default in VSCode. I've added the <code>&quot;**/node_modules/**&quot;</code> element for the same reason the default entry is present. I'm only interested in where the exceptions are introduced inside <em>my</em> code. If an exception is thrown and caught within Node's implementation or within my dependencies, I don't care about it. I only care about exceptions that were caused by my code, that my code needs to handle.</p>
@@ -462,9 +463,9 @@ details > summary {
 <p>Quick aside, I love the JavaScript Debug Terminal feature in VSCode. I can run Node or NPM in a terminal session and VSCode's debugger automatically attaches.</p>
 <p>In any case, I want this configuration for the JavaScript Debug Terminal, too! The way to do this is to add a new key in my <code>settings.json</code> file.</p>
 <div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;debug.javascript.terminalOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;skipFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;node_internals&gt;/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/node_modules/**&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="p">},</span>
+  <span class="nt">&quot;debug.javascript.terminalOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;skipFiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&lt;node_internals&gt;/**&quot;</span><span class="p">,</span> <span class="s2">&quot;**/node_modules/**&quot;</span><span class="p">]</span>
+  <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 <p>With this addition, I now get to ignore noisy exceptions inside my dependencies. And if an exception is thrown in a dependency and my code is expected to handle it, the debugger stops at the line in my code where the exception was thrown instead of in the deepest bowels of the dependency's probably minified code.</p>

@@ -436,9 +436,9 @@ details > summary {
 <p><img src="../../bear-images.sfo2.cdn.digitaloceanspaces.com/jaysherby/friendship-ended-with-traefik.webp" alt="" /></p>
 <p>I've probably spent days trying to get Traefik to work. It took me an hour to get Caddy running exactly how I wanted it. I'm impressed.</p>
 <p>The first thing I had to do was create a place for my Caddyfile and Caddy's data to live.</p>
-<div class="highlight"><pre><span></span>mkdir<span class="w"> </span>~/caddy
-mkdir<span class="w"> </span>~/caddy/conf
-mkdir<span class="w"> </span>~/caddy/data
+<div class="highlight"><pre><span></span>mkdir ~/caddy
+mkdir ~/caddy/conf
+mkdir ~/caddy/data
 </pre></div>
 <h2 id=codecaddyconfcaddyfilecode><code>~/caddy/conf/Caddyfile</code></h2><div class="highlight"><pre><span></span>{
     skip_install_trust
@@ -471,9 +471,9 @@ irc.local {
 </pre></div>
 <p>This is actually a pattern from Traefik that I nicked. If I want a service to be accessible by Caddy, both Caddy and the service need to share this network to talk to each other. My Tiddlywiki gets <code>Network=proxy</code> added to its quadlet file and its <code>PublishPort</code> setting removed so it doesn't leak any ports onto the host network. My Plex server doesn't need anything special since it's already using <code>Network=host</code>.</p>
 <p>Remember to reload the config.</p>
-<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+<div class="highlight"><pre><span></span>systemctl --user daemon-reload
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>proxy-network.service
+systemctl --user start proxy-network.service
 </pre></div>
 <h2 id=codeconfigcontainerssystemdcaddycontainercode><code>~/.config/containers/systemd/caddy.container</code></h2><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Caddy</span>
@@ -499,9 +499,9 @@ systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class=
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
 </pre></div>
 <p>Nothing particularly special about the actual Caddy quadlet. Remember to load it.</p>
-<div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+<div class="highlight"><pre><span></span>systemctl --user daemon-reload
 
-systemctl<span class="w"> </span>--user<span class="w"> </span>start<span class="w"> </span>caddy.service
+systemctl --user start caddy.service
 </pre></div>
 <p>I chose to add <code>http://plex.local:80</code> to Plex's settings menu at "Settings" -> "Network" -> "Custom server access URLs". I don't know if that's strictly necessary, but it seems to be recommended.</p>
 <p>If you can believe it, that's all it takes. It works like I've always dreamed.</p>

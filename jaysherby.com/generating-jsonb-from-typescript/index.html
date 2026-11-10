@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Generating JSONB From Typescript – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -438,10 +439,10 @@ details > summary {
 <p>I set out to solve this by hashing a JSONB structure that represents the entity I intend to insert and comparing that to hashes of the existing entities that share the same name and description in the PRODUCTS table.</p>
 <h2 id=jsonb-vs-json>JSONB vs JSON</h2><p>Comparing two JSON objects is fraught because key order is insignificant.</p>
 <div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;one&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;hello&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;world&quot;</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;two&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+  <span class="nt">&quot;one&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;hello&quot;</span><span class="p">:</span> <span class="s2">&quot;world&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;two&quot;</span><span class="p">:</span> <span class="mi">2</span>
 <span class="p">}</span>
 </pre></div>
 <div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;two&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;one&quot;</span><span class="p">:{</span><span class="nt">&quot;hello&quot;</span><span class="p">:</span><span class="s2">&quot;world&quot;</span><span class="p">}}</span>
@@ -460,41 +461,41 @@ details > summary {
 <h2 id=just-show-me-the-code-already>Just show me the code already</h2><p>Now that I've briefly explained what JSONB is, and why I'm choosing to use it, let me show you how to generate it from Typescript.</p>
 <p>I'm leaning on the <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify'><code>JSON.stringify()</code></a> function to do most of the heavy lifting. Most of its default behavior is adequate. I only need to change how it orders keys within objects, and how it adds syntactic whitespace.</p>
 <p>The second argument to <code>JSON.stringify()</code> can be a function that replaces values as they're being serialized. I only want to modify objects.</p>
-<div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
-<span class="w">    </span><span class="nx">data</span><span class="p">,</span>
-<span class="w">    </span><span class="p">(</span><span class="nx">_key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// TODO: Sort the object&#39;s keys</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="mf">0</span>
+<div class="highlight"><pre><span></span><span class="kd">const</span> <span class="n">json</span> <span class="o">=</span> <span class="nb">JSON</span><span class="p">.</span><span class="n">stringify</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">_key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">typeof</span> <span class="n">value</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="n">isArray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">value</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// TODO: Sort the object&#39;s keys</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="mf">0</span>
 <span class="p">);</span>
 </pre></div>
 <p>Note that I'm checking to make sure <code>value</code> is not null because <code>typeof null</code> is <code>'object'</code> as well.</p>
 <p>Here's my comparison function that can be passed to a sorting function. It assumes an array of key-value tuples are being sorted.</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">compare</span><span class="p">(</span>
-<span class="w">    </span><span class="p">[</span><span class="nx">keyA</span><span class="p">,</span><span class="w"> </span><span class="nx">_valueA</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="nx">keyB</span><span class="p">,</span><span class="w"> </span><span class="nx">_valueB</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="p">]</span>
-<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">keyA</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">keyB</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">keyA</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">charCodeA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keyA</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
-<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">charCodeB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keyB</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="n">compare</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">keyA</span><span class="p">,</span> <span class="n">_valueA</span><span class="p">]</span><span class="o">:</span> <span class="p">[</span><span class="kt">string</span><span class="p">,</span> <span class="kt">unknown</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">keyB</span><span class="p">,</span> <span class="n">_valueB</span><span class="p">]</span><span class="o">:</span> <span class="p">[</span><span class="kt">string</span><span class="p">,</span> <span class="kt">unknown</span><span class="p">]</span>
+<span class="p">)</span><span class="o">:</span> <span class="kt">number</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">keyA</span><span class="p">.</span><span class="n">length</span> <span class="o">===</span> <span class="n">keyB</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="n">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">keyA</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="n">charCodeA</span> <span class="o">=</span> <span class="n">keyA</span><span class="p">.</span><span class="n">charCodeAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+            <span class="kd">const</span> <span class="n">charCodeB</span> <span class="o">=</span> <span class="n">keyB</span><span class="p">.</span><span class="n">charCodeAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">charCodeA</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">charCodeB</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">charCodeA</span> <span class="o">===</span> <span class="n">charCodeB</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">continue</span><span class="p">;</span>
+            <span class="p">}</span>
 
-<span class="w">            </span><span class="c1">// Sort the same way as memcmp</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">charCodeA</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">charCodeB</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+            <span class="c1">// Sort the same way as memcmp</span>
+            <span class="k">return</span> <span class="n">charCodeA</span> <span class="o">-</span> <span class="n">charCodeB</span><span class="p">;</span>
+        <span class="p">}</span>
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+        <span class="k">return</span> <span class="mf">0</span><span class="p">;</span>
+    <span class="p">}</span>
 
-<span class="w">    </span><span class="c1">// Return shorter keys before longer keys</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">keyA</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nx">keyB</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span>
+    <span class="c1">// Return shorter keys before longer keys</span>
+    <span class="k">return</span> <span class="n">keyA</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="n">keyB</span><span class="p">.</span><span class="n">length</span> <span class="o">?</span> <span class="mf">1</span> <span class="o">:</span> <span class="o">-</span><span class="mf">1</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 <p>This sorting algorithm matches how Postgresql does it: from short keys to long keys with keys of identical length being sorted ascending byte-wise. The relevant function in the Postgresql source code is <a href='https://github.com/postgres/postgres/blob/98fc31d6499163a0a781aa6f13582a07f09cd7c6/src/backend/utils/adt/jsonb_util.c#L1906'><code>lengthCompareJsonbString</code></a>.</p>
@@ -511,75 +512,75 @@ details > summary {
 </li>
 </ol>
 <p>Here's what I've come up with to work around the special case of non-negative integer keys.</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">createOrderedObject</span><span class="p">(</span><span class="nx">entries</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="p">][])</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="o">&lt;</span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">symbol</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">entries</span><span class="p">);</span><span class="w"> </span><span class="c1">// Store keys in insertion order</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="n">createOrderedObject</span><span class="p">(</span><span class="n">entries</span><span class="o">:</span> <span class="p">[</span><span class="kt">string</span><span class="p">,</span> <span class="kt">unknown</span><span class="p">][])</span><span class="o">:</span> <span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">unknown</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="n">map</span> <span class="o">=</span> <span class="ow">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kt">string</span> <span class="o">|</span> <span class="n">symbol</span><span class="p">,</span> <span class="kt">unknown</span><span class="o">&gt;</span><span class="p">(</span><span class="n">entries</span><span class="p">);</span> <span class="c1">// Store keys in insertion order</span>
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Proxy</span><span class="p">(</span>
-<span class="w">        </span><span class="p">{},</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">get</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nx">set</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nx">map</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">prop</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">);</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nx">has</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nx">deleteProperty</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nx">ownKeys</span><span class="p">(</span><span class="nx">_target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="p">[...</span><span class="nx">map</span><span class="p">.</span><span class="nx">keys</span><span class="p">()];</span><span class="w"> </span><span class="c1">// Preserve ordered keys for Object.keys()</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nx">getOwnPropertyDescriptor</span><span class="p">(</span><span class="nx">_target</span><span class="p">,</span><span class="w"> </span><span class="nx">prop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">map</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">prop</span><span class="p">)</span>
-<span class="w">                    </span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                          </span><span class="nx">enumerable</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<span class="w">                          </span><span class="nx">configurable</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<span class="w">                      </span><span class="p">}</span>
-<span class="w">                    </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">);</span>
+    <span class="k">return</span> <span class="ow">new</span> <span class="nb">Proxy</span><span class="p">(</span>
+        <span class="p">{},</span>
+        <span class="p">{</span>
+            <span class="n">get</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">prop</span><span class="p">);</span>
+            <span class="p">},</span>
+            <span class="n">set</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">map</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+                <span class="k">return</span> <span class="kt">true</span><span class="p">;</span>
+            <span class="p">},</span>
+            <span class="n">has</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="n">prop</span><span class="p">);</span>
+            <span class="p">},</span>
+            <span class="n">deleteProperty</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prop</span><span class="p">);</span>
+            <span class="p">},</span>
+            <span class="n">ownKeys</span><span class="p">(</span><span class="n">_target</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">[...</span><span class="n">map</span><span class="p">.</span><span class="n">keys</span><span class="p">()];</span> <span class="c1">// Preserve ordered keys for Object.keys()</span>
+            <span class="p">},</span>
+            <span class="n">getOwnPropertyDescriptor</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
+                    <span class="o">?</span> <span class="p">{</span>
+                          <span class="n">enumerable</span><span class="o">:</span> <span class="kt">true</span><span class="p">,</span>
+                          <span class="n">configurable</span><span class="o">:</span> <span class="kt">true</span><span class="p">,</span>
+                      <span class="p">}</span>
+                    <span class="o">:</span> <span class="kc">undefined</span><span class="p">;</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 <p>The only difference between a plain old JavaScript object and the object <code>createOrderedObject</code> returns is that my version really does return keys in insertion order.</p>
 <p>The last thing to fix is how whitespace is handled. <code>JSON.stringify()</code>'s third argument allows you to control syntactic whitespace, but there's no value that will format the output like JSONB. The closest I can do is pass in <code>0</code> to minify the JSON and then handle adding a space after colons and commas myself. My final function for serializing to JSONB looks like this:</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
-<span class="w">        </span><span class="nx">data</span><span class="p">,</span>
-<span class="w">        </span><span class="p">(</span><span class="nx">_key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">createOrderedObject</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">entries</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">sort</span><span class="p">(</span><span class="nx">compare</span><span class="p">));</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="mf">0</span>
-<span class="w">    </span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="n">stringify</span><span class="p">(</span><span class="n">data</span><span class="o">:</span> <span class="kt">unknown</span><span class="p">)</span><span class="o">:</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="n">json</span> <span class="o">=</span> <span class="nb">JSON</span><span class="p">.</span><span class="n">stringify</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">_key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">typeof</span> <span class="n">value</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="n">isArray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">value</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">createOrderedObject</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="n">entries</span><span class="p">(</span><span class="n">value</span><span class="p">).</span><span class="n">sort</span><span class="p">(</span><span class="n">compare</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="mf">0</span>
+    <span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// Safely add spaces after `:` and `,` characters. REGEX CANNOT DO THIS!</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">formatted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">inString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+    <span class="c1">// Safely add spaces after `:` and `,` characters. REGEX CANNOT DO THIS!</span>
+    <span class="kd">let</span> <span class="n">formatted</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="n">inString</span> <span class="o">=</span> <span class="kt">false</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="kr">char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">prevChar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="n">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">json</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="kr">char</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="kd">let</span> <span class="n">prevChar</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mf">0</span> <span class="o">?</span> <span class="n">json</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mf">1</span><span class="p">]</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kr">char</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">prevChar</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;\\&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">inString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="nx">inString</span><span class="p">;</span><span class="w"> </span><span class="c1">// Toggle string mode only if it&#39;s NOT an escaped quote</span>
-<span class="w">        </span><span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kr">char</span> <span class="o">===</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">prevChar</span> <span class="o">!==</span> <span class="s1">&#39;\\&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">inString</span> <span class="o">=</span> <span class="o">!</span><span class="n">inString</span><span class="p">;</span> <span class="c1">// Toggle string mode only if it&#39;s NOT an escaped quote</span>
+        <span class="p">}</span>
 
-<span class="w">        </span><span class="nx">formatted</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="kr">char</span><span class="p">;</span>
+        <span class="n">formatted</span> <span class="o">+=</span> <span class="kr">char</span><span class="p">;</span>
 
-<span class="w">        </span><span class="c1">// Add space after `:` and `,` only when outside a string</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">inString</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="kr">char</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;:&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kr">char</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">formatted</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+        <span class="c1">// Add space after `:` and `,` only when outside a string</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">inString</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="kr">char</span> <span class="o">===</span> <span class="s1">&#39;:&#39;</span> <span class="o">||</span> <span class="kr">char</span> <span class="o">===</span> <span class="s1">&#39;,&#39;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">formatted</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">formatted</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">formatted</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 

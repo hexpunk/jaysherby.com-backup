@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Waiting for DNS without Networkd – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -439,7 +440,7 @@ details > summary {
 </pre></div>
 <p>My server connects to the internet via wifi, so it takes a little longer to get network access than if it was connected via ethernet. Sure enough, The Lounge was trying to start before I had a network connection.</p>
 <p>Usually this would just be a matter of adding a dependency on <code>network-online.target</code> to The Lounge's quadlet. But I'm running Debian 12, which means that won't work. Debian is still using ifupdown for networking on headless servers. I had to make a custom service instead that checks for DNS resolution.</p>
-<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/systemd/user/dns-ready.service</span>
+<div class="highlight"><pre><span></span><span class="c"># /home/server-user/.config/systemd/user/dns-ready.service</span>
 <span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">Wait for DNS Resolution</span>
 <span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
@@ -454,7 +455,7 @@ details > summary {
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </pre></div>
 <p>Then I needed to update the quadlet to depend on the new service.</p>
-<div class="highlight"><pre><span></span><span class="c1"># /home/server-user/.config/containers/systemd/thelounge.container</span>
+<div class="highlight"><pre><span></span><span class="c"># /home/server-user/.config/containers/systemd/thelounge.container</span>
 <span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">TheLounge</span>
 <span class="na">After</span><span class="o">=</span><span class="s">network.target dns-ready.service</span>

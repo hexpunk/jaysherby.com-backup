@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>How To Add An Existing Git Repo To A Monorepo – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -437,32 +438,32 @@ details > summary {
 <p>I recently found myself in need of a more complex migration at $JOB. The code is going to be migrated into an existing monorepo. For the purposes of this example, a repository called <code>alpha</code> is the existing application from which I'd like to harvest its business logic. A repository called <code>omega</code> is the monorepo I'm targeting.</p>
 <p>Here's the process I followed to achieve this commit history transplant.</p>
 <h2 id=step-1-add-the-codealphacode-remote-temporarily-to-codeomegacode>Step 1: Add the <code>alpha</code> remote temporarily to <code>omega</code></h2><p>Here's how my remote looks before I start:</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>-v
-origin<span class="w">  </span>git@github.com:hexpunk/omega.git<span class="w"> </span><span class="o">(</span>fetch<span class="o">)</span>
-origin<span class="w">  </span>git@github.com:hexpunk/omega.git<span class="w"> </span><span class="o">(</span>push<span class="o">)</span>
+<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git remote -v
+origin  git@github.com:hexpunk/omega.git <span class="o">(</span>fetch<span class="o">)</span>
+origin  git@github.com:hexpunk/omega.git <span class="o">(</span>push<span class="o">)</span>
 </pre></div>
 <p>Add <code>alpha</code>'s remote. I'm calling it <code>temp</code>.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>temp<span class="w"> </span>git@github.com:hexpunk/alpha.git
+<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git remote add temp git@github.com:hexpunk/alpha.git
 </pre></div>
 <p>Optionally confirm it worked.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>-v
-origin<span class="w">  </span>git@github.com:hexpunk/omega.git<span class="w"> </span><span class="o">(</span>fetch<span class="o">)</span>
-origin<span class="w">  </span>git@github.com:hexpunk/omega.git<span class="w"> </span><span class="o">(</span>push<span class="o">)</span>
-temp<span class="w">    </span>git@github.com:hexpunk/alpha.git<span class="w"> </span><span class="o">(</span>fetch<span class="o">)</span>
-temp<span class="w">    </span>git@github.com:hexpunk/alpha.git<span class="w"> </span><span class="o">(</span>push<span class="o">)</span>
+<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git remote -v
+origin  git@github.com:hexpunk/omega.git <span class="o">(</span>fetch<span class="o">)</span>
+origin  git@github.com:hexpunk/omega.git <span class="o">(</span>push<span class="o">)</span>
+temp    git@github.com:hexpunk/alpha.git <span class="o">(</span>fetch<span class="o">)</span>
+temp    git@github.com:hexpunk/alpha.git <span class="o">(</span>push<span class="o">)</span>
 </pre></div>
 <p>And don't forget to fetch from the new remote before continuing so branches from the new remote can be referenced.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span>temp
-From<span class="w"> </span>github.com:hexpunk/alpha
-<span class="w"> </span>*<span class="w"> </span><span class="o">[</span>new<span class="w"> </span>branch<span class="o">]</span><span class="w">        </span>main<span class="w">                                                            </span>-&gt;<span class="w"> </span>temp/main
-<span class="w"> </span>*<span class="w"> </span><span class="o">[</span>new<span class="w"> </span>branch<span class="o">]</span><span class="w">        </span>staging<span class="w">                                                         </span>-&gt;<span class="w"> </span>temp/staging
+<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git fetch temp
+From github.com:hexpunk/alpha
+ * <span class="o">[</span>new branch<span class="o">]</span>        main                                                            -&gt; temp/main
+ * <span class="o">[</span>new branch<span class="o">]</span>        staging                                                         -&gt; temp/staging
 </pre></div>
 <h2 id=step-2-make-a-new-branch-for-this>Step 2: Make a new branch for this</h2><p>Nothing particularly unusual here. Make a new branch for this change and switch to it.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>import-alpha<span class="w"> </span>main
-Switched<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>new<span class="w"> </span>branch<span class="w"> </span><span class="s1">&#39;import-alpha&#39;</span>
+<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git switch -c import-alpha main
+Switched to a new branch <span class="s1">&#39;import-alpha&#39;</span>
 </pre></div>
-<h2 id=step-3-use-the-git-subtree-command-to-import-all-files-and-their-histories>Step 3: Use the git subtree command to import all files and their histories</h2><div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>subtree<span class="w"> </span>add<span class="w"> </span>--prefix<span class="o">=</span>applications/alpha/<span class="w"> </span>temp/main
-Added<span class="w"> </span>dir<span class="w"> </span><span class="s1">&#39;applications/alpha&#39;</span>
+<h2 id=step-3-use-the-git-subtree-command-to-import-all-files-and-their-histories>Step 3: Use the git subtree command to import all files and their histories</h2><div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git subtree add --prefix<span class="o">=</span>applications/alpha/ temp/main
+Added dir <span class="s1">&#39;applications/alpha&#39;</span>
 </pre></div>
 <p>You can see here that I've imported all of <code>alpha</code>'s main branch (using the <code>temp</code> remote name) to the path <code>applications/alpha</code>. This brings all files' histories with it and adds a new commit with a commit message that looks like this:</p>
 <div class="highlight"><pre><span></span>Add &#39;applications/alpha/&#39; from commit &#39;123bf0fd7a82a76743adb0ce224a1987fe754093&#39;
@@ -474,10 +475,10 @@ git-subtree-split: 123bf0fd7a82a76743adb0ce224a1987fe754093
 <p>Those three lines at the end are called <a href='https://git-scm.com/docs/git-interpret-trailers'>trailers</a> and they're a powerful and often overlooked feature of git commit messages.</p>
 <p><em>These</em> trailers are an artifact of the <code>git subtree</code> command, a contributed shell script that ships with git. It was written by Avery Pennarun, co-founder and CEO of Tailscale. Huh. It's worth a peruse of <a href='https://manpage.me/?q=git-subtree'>its man page</a> because it's a powerful tool for situations like this one.</p>
 <h2 id=step-4-remove-the-temporary-remote>Step 4: Remove the temporary remote</h2><p>Now is as good a time as any to remember to remove that temporary remote I added since I won't need it anymore.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>remove<span class="w"> </span>temp
+<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git remote remove temp
 </pre></div>
 <h2 id=step-5-push-your-branch-to-remote>Step 5: Push your branch to remote</h2><p>Nothing unusual here, either. I'm just getting ready to make a pull request.</p>
-<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>import-alpha
+<div class="highlight"><pre><span></span>jaysherby@framework13:~/omega$ git push -u origin import-alpha
 </pre></div>
 <h2 id=step-6-make-your-pull-request-emwithout-squashing-commitsem>Step 6: Make your pull request <em>WITHOUT SQUASHING COMMITS!!!</em></h2><p>The only thing you must remember to do differently compared to most pull requests is this: <strong><em>DO NOT SQUASH COMMITS ON MERGE</em></strong>. I cannot overstate how important this is.
 Depending on the repository, "squash commits" may be enabled by default for pull requests. Although this may be preferred for typical feature and bugfix merge flows, it would defeat the point of this entire exercise by squashing away all of that beautiful commit history I just worked so hard to maintain.</p>

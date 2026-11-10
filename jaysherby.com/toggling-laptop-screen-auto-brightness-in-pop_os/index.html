@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Toggling Laptop Screen Auto Brightness in Pop!_OS – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -436,10 +437,10 @@ details > summary {
 <p>On the last Dell XPS 13 I owned, I think there was an option to toggle this feature in the BIOS. The HP Dev One didn't have an ambient light sensor. On my Framework laptop, there is no option in the BIOS for this. Newer versions of GNOME's settings application have a GUI option to toggle this. But the latest version of Pop!_OS is still 22.04 LTS, nearly three years old now. I don't see that GUI option on my machine.</p>
 <p>No matter, though. I was able to toggle this feature off using the <code>gsettings</code> command-line app. The setting I care about is <code>ambient-enabled</code> in <code>org.gnome.settings-daemon.plugins.power</code>.</p>
 <p>To see the current value of this setting, run this command:</p>
-<div class="highlight"><pre><span></span>gsettings<span class="w"> </span>get<span class="w"> </span>org.gnome.settings-daemon.plugins.power<span class="w"> </span>ambient-enabled
+<div class="highlight"><pre><span></span>gsettings get org.gnome.settings-daemon.plugins.power ambient-enabled
 </pre></div>
 <p>This setting defaults to being turned on. To turn it off, run this command:</p>
-<div class="highlight"><pre><span></span>gsettings<span class="w"> </span><span class="nb">set</span><span class="w"> </span>org.gnome.settings-daemon.plugins.power<span class="w"> </span>ambient-enabled<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span>gsettings <span class="nb">set</span> org.gnome.settings-daemon.plugins.power ambient-enabled <span class="nb">false</span>
 </pre></div>
 
 

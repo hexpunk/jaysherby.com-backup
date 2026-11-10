@@ -15,6 +15,7 @@
     })();
   </script>
   
+
   <title>Express&#x27;s &quot;finish&quot; Event – Jay&#x27;s blog</title>
   <link rel="canonical" href="index.html">
   
@@ -432,12 +433,12 @@ details > summary {
     
 
     <p>Let's say you want to write some middleware for <a href='https://expressjs.com/'>Express</a> that does something after the request is complete. The standard advice on the web is to add an event listener to the response object listening for the "finish" event.</p>
-<div class="highlight"><pre><span></span><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// DON&#39;T USE THIS!!!</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Request finished&#39;</span><span class="p">);</span>
-<span class="w">  </span><span class="p">});</span>
-<span class="w">  </span><span class="nx">next</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><span class="n">app</span><span class="p">.</span><span class="n">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// DON&#39;T USE THIS!!!</span>
+  <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Request finished&#39;</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="n">next</span><span class="p">();</span>
 <span class="p">});</span>
 </pre></div>
 <p>I learned the hard way that the "finish" event doesn't always get fired. There are lots of ways you can screw this up as a programmer.  "finish" may not fire if:</p>
@@ -448,11 +449,11 @@ details > summary {
 </ul>
 <p>But even if you're the best, most diligent programmer on Earth, if the client closes the connection before the request has been completed, that's enough to cause the "finish" event to never fire for that request.</p>
 <p>Maybe that's the behavior you want. Maybe you only want your event listener to fire on <em>successful</em> requests. If so, carry on. But if you're like me and you want your event listener to fire after <em>every</em> request, you should listen for a different event. I fixed my issue by listening for the "close" event, which is always fired.</p>
-<div class="highlight"><pre><span></span><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Request finished&#39;</span><span class="p">);</span>
-<span class="w">  </span><span class="p">});</span>
-<span class="w">  </span><span class="nx">next</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><span class="n">app</span><span class="p">.</span><span class="n">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Request finished&#39;</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="n">next</span><span class="p">();</span>
 <span class="p">});</span>
 </pre></div>
 
