@@ -575,9 +575,9 @@ def main [] {
         
             <form id="upvote-form" action="https://jaysherby.com/upvote/" method="post" style="display: inline">
     <small>
-        <input hidden name="uid" value="ypHWjQURZHzthzPCZkgE" style="display:none">
-        <input hidden name="title" value="Adopt These Trackers" style="display:none">
-        <input hidden name="token" value="ypHWjQURZHzthzPCZkgE" style="display:none">
+        <input type="hidden" name="uid" value="ypHWjQURZHzthzPCZkgE">
+        <input type="hidden" name="title" value="Adopt These Trackers">
+        <input type="hidden" name="token" value="ypHWjQURZHzthzPCZkgE">
 
         <button
             class="upvote-button"
@@ -585,6 +585,7 @@ def main [] {
             title="Toast this post"
         >
             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <title>Toast this post</title>
                 <polyline points="17 11 12 6 7 11"></polyline>
                 <polyline points="17 18 12 13 7 18"></polyline>
             </svg>
@@ -610,6 +611,7 @@ def main [] {
             $upvoteButton.style.color = "salmon"
             $upvoteButton.ariaLabel = "Toasted"
             $upvoteButton.title = "Toasted"
+            $upvoteButton.querySelector('title').textContent = "Toasted"
         }
         if ($upvoteCount) $upvoteButton.ariaLabel += ` (${data.upvote_count})`
 
@@ -635,6 +637,7 @@ def main [] {
         $upvoteButton.style.color = "salmon"
         $upvoteButton.ariaLabel = "Toasted"
         $upvoteButton.title = "Toasted"
+        $upvoteButton.querySelector('title').textContent = "Toasted"
         if ($upvoteCount) {
             const newUpvoteCount = `${(parseInt($upvoteCount.innerHTML.split(" ")[0]) + 1)}`
             $upvoteCount.innerHTML = newUpvoteCount
